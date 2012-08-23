@@ -71,6 +71,7 @@ public class Register extends HttpServlet {
 		String msg = null;
 		switch (_storage.addUser(user)) {
 		case ADDUSER_OK:
+			logger.info("User " + user.toString() + " was successfully added to DB");
 			msg = "Registration successful";
 			break;
 		case ADDUSER_EXISTS:

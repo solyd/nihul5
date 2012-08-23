@@ -33,13 +33,20 @@ public class MySQLStorage implements Storage {
 		
 		assert(_dbcPool != null);
 		List<String> initStatements = new ArrayList<String>();
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb;
+		
+		if (CONST.RESET_DB) {
+			initStatements.add("DROP TABLE IF EXISTS user_roles;");
+			initStatements.add("DROP TABLE IF EXISTS users;");
+			initStatements.add("DROP TABLE IF EXISTS roles;");
+		}
 		
 		// Create the basic tables - users, roles and user_roles. 
 		// This way any user can have multiple roles
 		
 		// roles TABLE
 		// ++++++++++++++++++++++++++++++++++++++++
+		sb = new StringBuilder();
 		sb.append(String.format
 		          ("CREATE TABLE IF NOT EXISTS roles (role VARCHAR(%d) NOT NULL PRIMARY KEY) ENGINE = InnoDB;", 
 		           CONST.MAX_ROLENAME_LEN));
@@ -191,6 +198,8 @@ public class MySQLStorage implements Storage {
 			logger.error("Exception while adding user: " + user.toString(), e);
 			if (conn != null)
 				try { conn.rollback(); } catch (SQLException e1) { logger.error("Can't roll back", e1); }
+			
+			return StorageResponse.ADDUSER_FAILED;
 		}
 		finally {
 			if (s1 != null)
@@ -203,7 +212,6 @@ public class MySQLStorage implements Storage {
 				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
 		}
 
-		logger.info("User " + user.toString() + " was successfully added to DB");
 		return StorageResponse.ADDUSER_OK;
 	}
 

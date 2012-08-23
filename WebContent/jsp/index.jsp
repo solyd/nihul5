@@ -33,13 +33,12 @@
 	<%@ include file="/jsp/menu.jsp"%>
 
 	<div id="container" class="right">
-		<div id="content" class="left">
+		<div id="map_canvas" class="left"></div>
+		<div id="content" class="right">
 			<p>some content blabla</p>
 			<button onclick="onLoadButtonClick()">Load other content</button>
 			<button onclick="onUsersOnlyClick()">Users only</button>
 		</div>
-
-		<div id="map_canvas" class="right"></div>
 	</div>
 
 	<%@ include file="/jsp/footer.jsp"%>
