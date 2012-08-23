@@ -23,7 +23,8 @@ function onMenuHomeClicked() {
 }
 
 function onMenuUsersClicked() {
-	
+	var x =5 ;
+	var y = 'girsha';
 }
 
 function onMenuEventsClicked() {
