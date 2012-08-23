@@ -23,7 +23,7 @@ function onMenuHomeClicked() {
 }
 
 function onMenuUsersClicked() {
-	
+	var t=0;
 }
 
 function onMenuEventsClicked() {
