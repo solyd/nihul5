@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+	<!-- maxActive: Maximum number of database connections in pool. Make sure 
+		you configure your mysqld max_connections large enough to handle all of your 
+		db connections. Set to -1 for no limit. -->
+
+	<!-- maxIdle: Maximum number of idle database connections to retain in pool. 
+		Set to -1 for no limit. See also the DBCP documentation on this and the minEvictableIdleTimeMillis 
+		configuration parameter. -->
+
+	<!-- maxWait: Maximum time to wait for a database connection to become available 
+		in ms, in this example 10 seconds. An Exception is thrown if this timeout 
+		is exceeded. Set to -1 to wait indefinitely. -->
+
+	<!-- removeAbandoned: When available database connections run low DBCP will recover and recycle 
+		any abandoned database connections it finds. The default is false. -->
+
+	<!-- removeAbandonedTimeout: Use the removeAbandonedTimeout attribute to 
+		set the number of seconds a database connection has been idle before it is 
+		considered abandoned. default is 300 secs. -->
+
+	<!-- logAbandoned: The logAbandoned attribute can be set to true if you 
+		want DBCP to log a stack trace of the code which abandoned the database connection 
+		resources. -->
+
+	<!-- username and password: MySQL username and password for database connections -->
+
+	<!-- driverClassName: Class name for the old mm.mysql JDBC driver is org.gjt.mm.mysql.Driver 
+		- we recommend using Connector/J though. Class name for the official MySQL 
+		Connector/J driver is com.mysql.jdbc.Driver. -->
+
+	<!-- url: The JDBC connection url for connecting to your MySQL database. -->
+
+    <Resource 
+    	name="db306932039" 
+    	auth="Container" 
+    	type="javax.sql.DataSource"
+        maxActive="100" 
+        maxIdle="30" 
+        maxWait="10000"
+        removeAbandoned="true"
+        removeAbandonedTimeout="120"
+        logAbandoned="true"
+        username="306932039" 
+        password="306932039" 
+        driverClassName="com.mysql.jdbc.Driver"
+       	url="jdbc:mysql://localhost:3306/db306932039"/>
+
+
+	<Realm 
+		className="org.apache.catalina.realm.JDBCRealm" 
+		driverName="com.mysql.jdbc.Driver" 
+		connectionURL="jdbc:mysql://localhost:3306/db306932039"
+		connectionName="306932039" 
+		connectionPassword="306932039" 
+		digest="MD5"
+		userTable="users"
+		userNameCol="username" 
+		userCredCol="password" 
+		userRoleTable="user_roles"
+		roleNameCol="role" />
+	
+</Context>

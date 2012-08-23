@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<script type="text/javascript" src="scripts/jquery.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+  $("#register, #login").click(function(event) {
+    var name = ($(event.target).attr('id') == 'register') ? 'Registration' : 'Login';
+    $('#message').slideUp('slow');
+
+    var tmp = $('#mainform').serialize() +'&action='+ $(event.target).attr('id');
+    $.post('TestServlet', tmp, function(data) {
+    	//var code = $(data)[0].nodeName.toLowerCase();
+    	var code = data.result;
+      
+
+      $('#message').removeClass('error');
+      $('#message').removeClass('success');
+      $('#message').addClass(code);
+      if(code == 'success') {
+        $('#message').html(name + ' was successful.');
+      }
+      else if(code == 'error') {
+        $('#message').html('An error occurred, please try again.');
+      }
+      $('#message').slideDown('fast');
+    });
+    return event.preventDefault();
+  });
+});
+</script>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+<title>Insert title here</title>
+</head>
+<body>
+	<div id="container">
+		<div id="message"></div>
+		<form method="post" id="mainform">
+			<label for="username">Username</label> 
+			<input type="text" name="username" id="username" value="" /> 
+			<label for="password">Password</label>
+			<input type="password" name="password" value="" /> 
+			<input type="submit" name="action" id="login" value="Log in" />
+
+			<h2>Extra options (registration only)</h2>
+
+			<label for="firstname">First name</label> <input type="text" name="firstname" value="" /> 
+			<label for="lastname"> Last name</label>
+			<input type="text" name="lastname" value="" /> 
+			<label for="email">Email</label> 
+			<input type="text" name="email" value="" />
+
+			<input type="submit" name="action" id="register" value="Register" />
+		</form>
+	</div>
+</body>
+</html>
