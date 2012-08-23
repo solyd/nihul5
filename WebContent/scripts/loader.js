@@ -23,7 +23,12 @@ function onMenuHomeClicked() {
 }
 
 function onMenuUsersClicked() {
+
 	var t=0;
+
+	var x =5 ;
+	var y = 'grisha';
+
 }
 
 function onMenuEventsClicked() {
