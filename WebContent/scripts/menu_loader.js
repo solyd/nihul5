@@ -19,7 +19,8 @@ function bindMenuClicks() {
 }
 
 function onMenuHomeClicked() {
-	alert('home clicked');
+	
+	//alert('home clicked');
 }
 
 function onMenuUsersClicked() {

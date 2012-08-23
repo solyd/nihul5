@@ -16,14 +16,14 @@
 <script type="text/javascript">
 
 	function onLoadButtonClick() {
-		$("#content").load("jsp/register.jsp #center_box");
+		$("#content").load("/<%=CONST.WEBAPP_NAME%>/jsp/register.jsp #center_box");
 	}
 
 	function onUsersOnlyClick() {
 
 	}
-</script>
 
+</script>
 
 <title>Welcome</title>
 </head>

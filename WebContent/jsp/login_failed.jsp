@@ -8,8 +8,25 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" type="text/css" rel="stylesheet/index" href="/<%=CONST.WEBAPP_NAME %>/styles/style.css" />
+<script type="text/javascript"
+	src="http://maps.googleapis.com/maps/api/js?key=<%=CONST.GOOGLE_APIKEY%>&sensor=false"></script>
+<script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/jquery.js"></script>
+<script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/menu_loader.js"></script>
+<script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/map_loader.js"></script>
+
+<script type="text/javascript">
+
+	// needes to be fixed !!!
+	
+	$(document).ready(function() {
+		setTimeout(function() 
+				{$("#container").load("/<%=CONST.WEBAPP_NAME%>/jsp/.jsp #container");}, 1500);
+	});
+
+</script>
 
 <title>Login</title>
+
 </head>
 <body>
 	<%@ include file="/jsp/status_bar.jsp" %>
@@ -20,7 +37,7 @@
 			Login Failed
 		</div>
 	</div>
-	
+
 	<%@ include file="/jsp/footer.jsp" %>
 </body>
 </html>
