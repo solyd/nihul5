@@ -79,7 +79,6 @@ function inRange(min, number, max){
     }
 }
 
-
 //Place a new marker on the map
 function placeMarker(position) {
 	clearMap();

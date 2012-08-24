@@ -22,11 +22,41 @@
 	<div id="container" class="right">
 		<div id="map_canvas" class="left"></div>
 		<div id="content" class="right">
-			<p>New Message</p>
-			Latitude: <input id='lat' type='text' size='20' name='lat' value='' style="background-color: #eee" /> <br/>
-		    Longitude: <input id='lng' type='text' size='20' name='lng' value='' style="background-color: #eee" /> <br/>
-		    Name: <input id='name' type='text' size='20' name='name' value='' style="background-color: #eee" /> 
-
+			<table align="center">
+				<tr>
+					<td colspan=2 align="center">New Message</td>
+				</tr>
+				<tr>
+					<td colspan=2 align="center" height="10px"></td>
+				</tr>
+				<tr>
+					<td>Latitude</td>
+					<td><input id='lat' type='text' size='20' name='lat' value='' /></td>
+				</tr>
+				<tr>
+					<td>Longitude</td>
+					<td><input id='lng' type='text' size='20' name='lng' value='' /></td>
+				</tr>
+				<tr>
+					<td>Name</td>
+					<td><input id='name' type='text' size='20' name='name' value='' /> </td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td colspan=2 align="center" height="10px"></td>
+				</tr>
+			</table>
 		</div>
 	</div>
 
