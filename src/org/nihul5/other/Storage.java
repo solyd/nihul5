@@ -21,5 +21,16 @@ public interface Storage {
 	
 	StorageResponse removeUser(String username);
 	
-	List<User> getUsers(Predicate<User> userFilter);
+	List<User> getUsers();
+	
+	User getUser(String username);
+	
+	/**
+	 * Returns a list of users that is at most 'limit' and starts with
+	 * offset of 'offset' from the start of the users table. 
+	 * @param offset 
+	 * @param limit
+	 * @return
+	 */
+	List<String> getUserNames(int offset, int limit);
 }

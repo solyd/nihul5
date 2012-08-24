@@ -58,13 +58,6 @@ body {
 	height: 700px;
 }
 
-#content {
-	width: 40%;
-	height: 100%;
-	margin: 0px;
-	padding: 0px;	
-}
-
 #map_canvas {
 	width: 60%;
 	height: 100%;
@@ -72,10 +65,17 @@ body {
 	padding: 0px;
 }
 
+#content {
+	width: 40%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;	
+}
+
 #menu {
 	width: 10%;
 	height: 700px;
-	background: #e1ddd9;
+	background-color:#eee;
 }
 
 #center_box {
@@ -88,6 +88,20 @@ body {
 
 #loader {
 	margin: auto;
+}
+
+#user_list  {
+	width: 60%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+
+#user_info {
+	width: 40%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
 }
 
 .left {

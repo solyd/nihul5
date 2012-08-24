@@ -7,6 +7,8 @@ public class CONST {
 	
 	public static final String MSGBOX_TXT = "msgboxtxt"; 	
 	
+	public static final String MSGBOX_USER_INFO_TXT = "msgboxttxuserproifile";
+	
 	public static final String REGX_ALPHANUMERIC = "^[a-zA-Z0-9_]*$";
 	
 	public static final String GOOGLE_APIKEY = "AIzaSyD-kwodEjxoCiStq_x9XGMP8ieOfxJwAiY";
@@ -14,6 +16,7 @@ public class CONST {
 	public static final String DB_USER   = "306932039";
 	public static final String DB_PASSWD = "306932039"; 
 
+	public static final String DEFAULT_ROLE = "user";
 	public static final String STORAGE  	 = "Storage";
 	public static final int MAX_USERNAME_LEN = 150;
 	public static final int MAX_ROLENAME_LEN = 150;
@@ -26,5 +29,10 @@ public class CONST {
 	public static final String LAST_NAME  = "last_name";
 	public static final String EMAIL	  = "email";	
 	
-	public static final String DEFAULT_ROLE = "user";
+	public static final int USERS_PER_PAGE = 20;
+	
+	public static final int EVENTS_PER_PAGE = 20;
+	
+	public static final String USERS_LIST = "userslist";
+	public static final String USER = "user";
 }

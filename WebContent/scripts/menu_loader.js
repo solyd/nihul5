@@ -23,12 +23,9 @@ function onMenuHomeClicked() {
 }
 
 function onMenuUsersClicked() {
-
-	var t=0;
-
-	var x =5 ;
-	var y = 'grisha';
-
+	$('#container').empty();
+	history.pushState({}, 'Users', WEBAPP_NAME.concat('/users'));
+	$('#container').load("jsp/users_list.jsp");
 }
 
 function onMenuEventsClicked() {
