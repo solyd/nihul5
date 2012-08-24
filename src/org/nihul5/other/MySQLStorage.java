@@ -72,14 +72,6 @@ public class MySQLStorage implements Storage {
 		sb.append(") ENGINE = InnoDB;");
 		initStatements.add(sb.toString());
 		
-		// TODO remove
-//		if (CONST.DEBUG_MODE) {
-//			sb = new StringBuilder();
-//			sb.append("INSERT IGNORE INTO users (username, password, first_name, last_name, email) ");
-//			sb.append("VALUES ('sol', 'sol', null, null, null);");
-//			initStatements.add(sb.toString());
-//		}
-		
 		// user_roles TABLE
 		// ++++++++++++++++++++++++++++++++++++++++
 		sb = new StringBuilder();
@@ -93,13 +85,6 @@ public class MySQLStorage implements Storage {
 		sb.append("PRIMARY KEY (username, role)");
 		sb.append(") ENGINE = InnoDB;");
 		initStatements.add(sb.toString());
-		
-		// TODO remove
-//		if (CONST.DEBUG_MODE) {
-//			sb = new StringBuilder();
-//			sb.append("INSERT IGNORE INTO user_roles (username, role) VALUES ('sol', 'user');");
-//			initStatements.add(sb.toString());
-//		}
 		
 		// execute all init statements
 		// ++++++++++++++++++++++++++++++++++++++++
@@ -153,7 +138,7 @@ public class MySQLStorage implements Storage {
 			conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
 			
 			sql = "SELECT * FROM users WHERE username = ?;";
-			s1 = (PreparedStatement) conn.prepareStatement(sql);
+			s1 = conn.prepareStatement(sql);
 			s1.setString(1, user.username);
 			
 			ResultSet rs = s1.executeQuery();
@@ -222,9 +207,87 @@ public class MySQLStorage implements Storage {
 	}
 
 	@Override
-	public List<User> getUsers(Predicate<User> userFilter) {
+	public List<User> getUsers() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public User getUser(String username) {
+		Connection conn = null;
+		PreparedStatement s = null;
 
+		try {
+			conn = _dbcPool.getConnection();
+			conn.setAutoCommit(false);
+
+			conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+			String sql = "SELECT * FROM users WHERE username = ?";
+			s = conn.prepareStatement(sql);
+			s.setString(1, username);
+
+			ResultSet rs = s.executeQuery();
+			rs.next();
+			User res = new User(username, 
+			                    "", 
+			                    rs.getString("first_name"), 
+			                    rs.getString("last_name"), 
+			                    rs.getString("email"));
+
+			return res;
+		} 
+		catch (SQLException e) {
+			logger.error("Exception during getUser", e);
+			if (conn != null)
+				try { conn.rollback(); } catch (SQLException e1) { logger.error("Can't roll back", e1); }
+		}
+		finally {
+			if (s != null)
+				try { s.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (conn != null)
+				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
+		}
+
+		return null;
+	}
+
+	@Override
+	public List<String> getUserNames(int offset, int limit) {
+		Connection conn = null;
+		PreparedStatement s = null;
+		
+		try {
+			conn = _dbcPool.getConnection();
+			conn.setAutoCommit(false);
+			
+			conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+			
+			String sql = "SELECT * FROM users LIMIT ? OFFSET ?;";
+			s = conn.prepareStatement(sql);
+			s.setInt(1, limit);
+			s.setInt(2, offset);
+			
+			ResultSet rs = s.executeQuery();
+			
+			List<String> res = new ArrayList<String>();
+			while (rs.next())
+				res.add(rs.getString("username"));
+			
+			return res;
+		} 
+		catch (SQLException e) {
+			logger.error("Exception during getUserName", e);
+			if (conn != null)
+				try { conn.rollback(); } catch (SQLException e1) { logger.error("Can't roll back", e1); }
+		}
+		finally {
+			if (s != null)
+				try { s.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (conn != null)
+				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
+		}
+		
+		return null;
+	}
 }

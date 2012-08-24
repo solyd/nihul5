@@ -15,7 +15,7 @@
 	<%@ include file="/jsp/status_bar.jsp" %>
 	<%@ include file="/jsp/menu.jsp"%>
 	<div id="container">
-		<div class="center_box">
+		<div id="center_box">
 
 			<form method="post" action="j_security_check">
 				<table align="center">

@@ -29,7 +29,6 @@ function onMenuHomeClicked() {
 
 function onMenuUsersClicked() {
 
-
 }
 
 function onAddMessageClicked() {

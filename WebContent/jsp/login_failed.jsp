@@ -33,7 +33,7 @@
 	<%@ include file="/jsp/menu.jsp"%>
 	
 	<div id="container">
-		<div class="center_box">
+		<div id="center_box">
 			Login Failed
 		</div>
 	</div>

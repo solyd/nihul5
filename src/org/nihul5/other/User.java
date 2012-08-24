@@ -3,7 +3,6 @@ package org.nihul5.other;
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.log4j.Logger;
-import org.nihul5.other.Storage.StorageResponse;
 
 public class User {
 	private static final Logger logger = Logger.getLogger(User.class);
