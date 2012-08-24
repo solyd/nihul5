@@ -2,8 +2,8 @@
 
 <div id="menu" class="left">
 	<ul>
-		<li>Home</li>
-		<li>Users</li>
-		<li>Events</li>
+		<li><a href="/<%=CONST.WEBAPP_NAME%>/">Home</a></li>
+		<li><a href="/<%=CONST.WEBAPP_NAME%>/jsp/users.jsp">Users</a></li>
+		<li><a href="/<%=CONST.WEBAPP_NAME%>/jsp/message.jsp">Add Message</a></li>
 	</ul>
 </div>
