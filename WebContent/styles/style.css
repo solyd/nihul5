@@ -20,6 +20,7 @@ body {
 }
 
 #login_info>a:link {
+	text-decoration: none;
     -moz-text-blink: none;
     -moz-text-decoration-color: -moz-use-text-color;
     -moz-text-decoration-line: none;
@@ -28,15 +29,18 @@ body {
 }
 
 #login_info>a:visited {
+	text-decoration: none;
     color: #89C4F9;
 }
 
 #login_info>a:hover {
+	text-decoration: none;
     -moz-text-blink: none;
     -moz-text-decoration-color: -moz-use-text-color;
     -moz-text-decoration-line: none;
     -moz-text-decoration-style: solid;
     font-weight: bold;
+    background-color: #990000;
 }
 
 #login_info>a:active {
@@ -75,7 +79,45 @@ body {
 #menu {
 	width: 10%;
 	height: 700px;
+	background: #e1ddd9;
 	background-color:#eee;
+	font-family: 'Trebuchet MS', 'Lucida Grande',
+	  Verdana, Lucida, Geneva, Helvetica, 
+	  Arial, sans-serif;
+}
+
+#menu ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+		
+#menu li {
+	border-bottom: 1px solid #90bade;
+	margin: 0;
+}
+
+#menu li a {
+	display: block;
+	padding: 20% 20% 20% 0.5em;
+	border-left: 10px solid #00688B;
+	border-right: 10px solid #00B2EE;
+	background-color: #009ACD;
+	color: #fff;
+	text-decoration: none;
+	width: 100%;
+}
+
+html>body #menu li a {
+	width: auto;
+}
+
+#menu li a:hover {
+	border-left: 10px solid #FF3030;
+	border-right: 10px solid #CD2626;
+	background-color: #EE2C2C;
+	color: #fff;
 }
 
 #center_box {
@@ -111,5 +153,3 @@ body {
 .right {
 	float: right;
 }
-
-

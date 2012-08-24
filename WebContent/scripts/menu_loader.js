@@ -63,9 +63,11 @@ function addMessage(){
 }
 
 function deployPosition(lat, lng){
-	if (inRange(minLat, lat, maxLat) && (inRange(minLng, lng, maxLng))){
-		var newPosition = new google.maps.LatLng(lat, lng);
-		placeMarker(newPosition);
+	if ((lat.length > 0) && (lng.length > 0)){
+		if (inRange(minLat, lat, maxLat) && (inRange(minLng, lng, maxLng))){
+			var newPosition = new google.maps.LatLng(lat, lng);
+			placeMarker(newPosition);
+		}
 	}
 }
 
