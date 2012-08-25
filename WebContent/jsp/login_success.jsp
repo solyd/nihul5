@@ -21,6 +21,7 @@
 			<br/>
 			<br/>
 			You will be redirected to the homepage in 5 seconds...
+
 		</div>
 	</div>
 	

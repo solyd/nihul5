@@ -11,5 +11,6 @@
 		<li><a href="/<%=CONST.WEBAPP_NAME %>/events/create">Create Event</a></li>
 		
 		<li><a href="/<%=CONST.WEBAPP_NAME %>/users">Users</a></li>
+
 	</ul>
 </div>

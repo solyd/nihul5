@@ -36,6 +36,7 @@ public class Logout extends HttpServlet {
 
 		/*
 		request.setAttribute(CONST.MSGBOX_TXT, "Logout successful");
+		request.setAttribute(CONST.REDIRECT_URL, ""); //go to home page
 		// When we logout the status bar thinks we're still logged in before refreshing
 		// this is a hack around that
 		request.setAttribute("logout", "true");	

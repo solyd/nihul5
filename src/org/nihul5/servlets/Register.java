@@ -73,12 +73,15 @@ public class Register extends HttpServlet {
 		case ADDUSER_OK:
 			logger.info("User " + user.toString() + " was successfully added to DB");
 			msg = "Registration successful";
+			request.setAttribute(CONST.REDIRECT_URL, "login.jsp");
 			break;
 		case ADDUSER_EXISTS:
 			msg = "A user with the same username already exists. Please pick another one.";
+			request.setAttribute(CONST.REDIRECT_URL, "jsp/register.jsp");
 			break;
 		case ADDUSER_FAILED:
 			msg = "Registration has failed. Please try again.";
+			request.setAttribute(CONST.REDIRECT_URL, "jsp/register.jsp");
 			break;
 		}
 		request.setAttribute(CONST.MSGBOX_TXT, msg);

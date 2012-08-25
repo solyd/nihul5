@@ -5,7 +5,8 @@ public class CONST {
 	public static final boolean DEBUG_MODE = true;
 	public static final boolean RESET_DB = false;
 	
-	public static final String MSGBOX_TXT = "msgboxtxt"; 	
+	public static final String MSGBOX_TXT = "msgboxtxt";
+	public static final String REDIRECT_URL = "";
 	
 	public static final String MSGBOX_USER_INFO_TXT = "msgboxttxuserproifile";
 	
