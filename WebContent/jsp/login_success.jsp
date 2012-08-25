@@ -6,7 +6,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="refresh" content="1.5;url=/<%=CONST.WEBAPP_NAME%>/jsp/index.jsp; charset=UTF-8" />
+<meta http-equiv="refresh" content="5; URL=/<%=CONST.WEBAPP_NAME%>/" />
 <link rel="stylesheet" type="text/css" rel="stylesheet/index" href="/<%=CONST.WEBAPP_NAME %>/styles/style.css" />
 
 <title>Login</title>
@@ -16,8 +16,11 @@
 	<%@ include file="/jsp/menu.jsp"%>
 	
 	<div id="container">
-		<div class="center_box">
+		<div id="center_box">
 			Login Successful!
+			<br/>
+			<br/>
+			You will be redirected to the homepage in 5 seconds...
 		</div>
 	</div>
 	

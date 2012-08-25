@@ -35,4 +35,8 @@ public class CONST {
 	
 	public static final String USERS_LIST = "userslist";
 	public static final String USER = "user";
+	
+	public static final String MSG_LATITUDE = "latitude";
+	public static final String MSG_LONGITUDE = "longitude";
+	public static final String MSG_TITLE = "MSG_TITLE";
 }

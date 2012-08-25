@@ -6,16 +6,10 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="refresh" content="5; URL=/<%=CONST.WEBAPP_NAME%>/" />
 <link rel="stylesheet" type="text/css" rel="stylesheet/index" href="/<%=CONST.WEBAPP_NAME %>/styles/style.css" />
-<script type="text/javascript"
-	src="http://maps.googleapis.com/maps/api/js?key=<%=CONST.GOOGLE_APIKEY%>&sensor=false"></script>
-<script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/jquery.js"></script>
-<script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/menu_loader.js"></script>
-<script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/map_loader.js"></script>
 
-<title>Login</title>
-
+<title>Logout</title>
 </head>
 <body>
 	<%@ include file="/jsp/status_bar.jsp" %>
@@ -23,10 +17,13 @@
 	
 	<div id="container">
 		<div id="center_box">
-			Login Failed
+			Logout Successful!
+			<br/>
+			<br/>
+			You will be redirected to the homepage in 5 seconds...
 		</div>
 	</div>
-
+	
 	<%@ include file="/jsp/footer.jsp" %>
 </body>
 </html>

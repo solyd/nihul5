@@ -26,19 +26,19 @@
 				<td colspan=2 align="center" height="10px"></td>
 			</tr>
 			<tr>
-				<td>Username</td>
+				<td>Username: </td>
 				<td><%=user.username%></td>
 			</tr>
 			<tr>
-				<td>First Name</td>
+				<td>First Name: </td>
 				<td><%=user.firstName%></td>
 			</tr>
 			<tr>
-				<td>Last Name</td>
+				<td>Last Name: </td>
 				<td><%=user.lastName%></td>
 			</tr>
 			<tr>
-				<td>Email</td>
+				<td>Email: </td>
 				<td><%=user.email%></td>
 			</tr>
 			<tr>

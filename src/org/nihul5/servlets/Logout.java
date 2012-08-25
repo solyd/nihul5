@@ -28,15 +28,19 @@ public class Logout extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		if (session != null)
 			session.invalidate();
 
+		/*
 		request.setAttribute(CONST.MSGBOX_TXT, "Logout successful");
 		// When we logout the status bar thinks we're still logged in before refreshing
 		// this is a hack around that
 		request.setAttribute("logout", "true");	
 		getServletContext().getRequestDispatcher("/jsp/notification_box.jsp").forward(request, response);
+		*/
+		getServletContext().getRequestDispatcher("/jsp/logout.jsp").forward(request, response);
 	}
 }

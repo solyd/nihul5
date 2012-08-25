@@ -9,34 +9,9 @@
 <link rel="stylesheet" type="text/css" rel="stylesheet/index" href="/<%=CONST.WEBAPP_NAME %>/styles/style.css" />
 <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=<%=CONST.GOOGLE_APIKEY%>&sensor=false"></script>
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/jquery.js"></script>
-<script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/map_loader.js"></script>
+<script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/map.js"></script>
 
-<script type="text/javascript">
-	var WEBAPP_NAME = '/nihul5';
-	
-	
-	google.maps.event.addDomListener(window, 'load', function() {
-	$('#options').ajaxify({
-		link : 'jsp/users_list.jsp',
-		target : '#container',
-		loading_img : 'images/loading.gif',
-		title : 'Setting up options', // change page title. Since v2.0
-		method : 'POST'
-	});	
-	});
-	
-
-	function onLoadButtonClick() {
-		$("#content").load("/<%=CONST.WEBAPP_NAME%>/jsp/register.jsp #center_box");
-	}
-
-	function onUsersOnlyClick() {
-
-	}
-
-</script>
-
-<title>Welcome</title>
+<title>Home</title>
 </head>
 
 <body>
@@ -46,12 +21,7 @@
 	<div id="container" class="right">
 		<div id="map_canvas" class="left"></div>
 		<div id="content" class="right">
-		
-			<a id="options" href="/nihul5/">Setting up options</a>
-
-			<p>some content blabla</p>
-			<button onclick="onLoadButtonClick()">Load other content</button>
-			<button onclick="onUsersOnlyClick()">Users only</button>
+			This is the regular browsing window. Here should be included the event_info jsp
 		</div>
 	</div>
 

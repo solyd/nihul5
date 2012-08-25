@@ -5,7 +5,7 @@
 	<div class="left">
 		<%=new java.util.Date()%>
 	</div>
-	
+
 	<div id="login_info" class="right">
 		<%
 			Principal p = request.getUserPrincipal();
