@@ -47,10 +47,12 @@ public class Login extends HttpServlet {
 		
 		if (!Utility.verifyAlphaNumeric(username, CONST.MAX_USERNAME_LEN) ||
 				!Utility.verifyAlphaNumeric(password, CONST.MAX_PASSWORD_LEN)) {
-			response.sendRedirect("/jsp/login_failed.jsp");
+			request.setAttribute(CONST.MSGBOX_TXT, "Login Failed !");
+			request.setAttribute(CONST.REDIRECT_URL, "jsp/login.jsp");
+			getServletContext().getRequestDispatcher("/jsp/notification_box.jsp").forward(request, response);
+			//response.sendRedirect("/jsp/login_failed.jsp");
 			return;
 		}
-			
 		request.login(username, password);
 	}
 

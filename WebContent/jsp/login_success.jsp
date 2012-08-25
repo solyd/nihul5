@@ -16,8 +16,8 @@
 	<%@ include file="/jsp/menu.jsp"%>
 	
 	<div id="container">
-		<div class="center_box">
-			Login Successful!
+		<div id="center_box">
+			Login Successful !
 		</div>
 	</div>
 	
