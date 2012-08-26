@@ -281,7 +281,6 @@ public class MySQLStorage implements Storage {
 			if (!rs.next())
 				return null;
 			
-			rs.next();
 			User res = new User(username, 
 			                    "", 
 			                    rs.getString("first_name"), 
