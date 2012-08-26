@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.Principal;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -96,6 +97,6 @@ public class CreateEvent extends HttpServlet {
 		int min = Integer.valueOf(strdate.substring(10, 12));
 		int sec = Integer.valueOf(strdate.substring(12, 14));
 		
-		return new Date(year, month, day, hour, min, sec);
+		return new GregorianCalendar(year, month, day, hour, min, sec).getTime();
 	}
 }
