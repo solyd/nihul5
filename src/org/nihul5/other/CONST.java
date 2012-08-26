@@ -39,5 +39,10 @@ public class CONST {
 	
 	public static final String MSG_LATITUDE = "latitude";
 	public static final String MSG_LONGITUDE = "longitude";
-	public static final String MSG_TITLE = "MSG_TITLE";
+	public static final String MSG_TITLE = "title";
+	public static final String MSG_CONTENT = "content";
+	public static final String MSG_CREATION_TIME = "creation_time";
+	public static final int MSG_MAX_CONTENT_LEN = 1024;	// bytes
+	public static final int MSG_MAX_TITLE_LEN = 128; //bytes
+	public static final String MSG_RESULT = "MessageResult";
 }

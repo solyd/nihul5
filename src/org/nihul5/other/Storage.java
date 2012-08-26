@@ -8,6 +8,9 @@ public interface Storage {
 		ADDUSER_OK,
 		ADDUSER_EXISTS,
 		ADDUSER_FAILED,
+		
+		ADDMSG_OK,
+		ADDMSG_FAILED
 	}
 	
 	void init();
@@ -33,4 +36,6 @@ public interface Storage {
 	 * @return
 	 */
 	List<String> getUserNames(int offset, int limit);
+	
+	StorageResponse addMessage(Message msg);
 }

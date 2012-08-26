@@ -41,8 +41,6 @@ public class UserProfile extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		logger.debug("/users/profile/* doGet: " + request.getRequestURI());
-		
 		String uri = request.getRequestURI();
 		String[] uriparts = uri.split("/");
 		String username = uriparts[uriparts.length - 1];
@@ -60,8 +58,6 @@ public class UserProfile extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		logger.debug("/users/profile/* doPost: " + request.getRequestURI());
-		
 		String username = request.getParameter("username");
 		if (username == null)
 			return;

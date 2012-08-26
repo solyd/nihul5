@@ -9,7 +9,7 @@
 	src="http://maps.googleapis.com/maps/api/js?key=<%=CONST.GOOGLE_APIKEY%>&sensor=false"></script>
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/jquery.js"></script>
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/menu_loader.js"></script>
-<script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/map_loader.js"></script>
+<script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/map.js"></script>
 <script>
 	window.onload = addMessage; 
 </script>
@@ -21,6 +21,7 @@
 
 	<div id="container" class="right">
 		<div id="map_canvas" class="left"></div>
+		
 		<div id="content" class="right">
 			<table align="center">
 				<tr>

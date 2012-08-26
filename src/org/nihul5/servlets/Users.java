@@ -41,8 +41,6 @@ public class Users extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		logger.debug("/users doGet");
-		
 		request.setAttribute(CONST.MSGBOX_USER_INFO_TXT, "Click on a user to see his/her profile");
 		getServletContext().getRequestDispatcher("/jsp/users/users.jsp").forward(request, response);
 	}
@@ -51,8 +49,6 @@ public class Users extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		logger.debug("/users doPost");
-		
 		int pageNumber;
 		try {
 			pageNumber = Integer.valueOf(request.getParameter("page"));

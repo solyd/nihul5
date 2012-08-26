@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class MySQLStorage implements Storage {
 			initStatements.add("DROP TABLE IF EXISTS user_roles;");
 			initStatements.add("DROP TABLE IF EXISTS users;");
 			initStatements.add("DROP TABLE IF EXISTS roles;");
+			initStatements.add("DROP TABLE IF EXISTS messages;");
 		}
 		
 		// Create the basic tables - users, roles and user_roles. 
@@ -83,6 +85,22 @@ public class MySQLStorage implements Storage {
 		sb.append("FOREIGN KEY (role) REFERENCES roles(role) ");
 		sb.append("ON UPDATE CASCADE ON DELETE CASCADE,");
 		sb.append("PRIMARY KEY (username, role)");
+		sb.append(") ENGINE = InnoDB;");
+		initStatements.add(sb.toString());
+		
+		// messages TABLE
+		// ++++++++++++++++++++++++++++++++++++++++
+		sb = new StringBuilder();
+		sb.append("CREATE TABLE IF NOT EXISTS messages (");
+		sb.append("msgid BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, ");
+		sb.append(String.format("username VARCHAR(%d) NOT NULL, ", CONST.MAX_USERNAME_LEN));
+		sb.append("lat DOUBLE NOT NULL, ");
+		sb.append("lng DOUBLE NOT NULL, ");
+		sb.append("creation_date DATETIME NOT NULL, ");
+		sb.append(String.format("title VARCHAR(%d) NOT NULL, ", CONST.MSG_MAX_TITLE_LEN));
+		sb.append(String.format("content VARCHAR(%d), ", CONST.MSG_MAX_CONTENT_LEN));
+		sb.append("FOREIGN KEY (username) REFERENCES users(username) ");
+		sb.append("ON UPDATE CASCADE ON DELETE CASCADE");
 		sb.append(") ENGINE = InnoDB;");
 		initStatements.add(sb.toString());
 		
@@ -289,5 +307,51 @@ public class MySQLStorage implements Storage {
 		}
 		
 		return null;
+	}
+
+	@Override
+	public StorageResponse addMessage(Message msg) {
+		Connection conn = null;
+		PreparedStatement s = null;
+
+		try {
+			conn = _dbcPool.getConnection();
+			conn.setAutoCommit(false);
+
+			conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+			StringBuilder sqlsb = new StringBuilder();
+			sqlsb.append("INSERT INTO messages (username, lat, lng, creation_date, title, content) ");
+			sqlsb.append("VALUES (?, ?, ?, ?, ?, ?);");
+			
+			s = conn.prepareStatement(sqlsb.toString());
+			s.setString(1, msg.owner);
+			s.setDouble(2, msg.latitude);
+			s.setDouble(3, msg.longitude);
+			s.setString(4, msg.creationDate());
+			s.setString(5, msg.title);
+			s.setString(6, msg.content);
+
+			if (s.executeUpdate() == 0) {
+				logger.error("Error inserting new msg");
+				return StorageResponse.ADDMSG_FAILED;
+			}
+				
+			conn.commit();
+		} 
+		catch (SQLException e) {
+			logger.error("Exception during addMessage", e);
+			if (conn != null)
+				try { conn.rollback(); } catch (SQLException e1) { logger.error("Can't roll back", e1); }
+			return StorageResponse.ADDMSG_FAILED;
+		}
+		finally {
+			if (s != null)
+				try { s.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (conn != null)
+				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
+		}
+
+		return StorageResponse.ADDMSG_OK;
 	}
 }
