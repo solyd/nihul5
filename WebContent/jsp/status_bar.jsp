@@ -14,7 +14,7 @@
 				name = p.getName();
 		%>
 		Logged in as
-		<%=name%>, <a href="/<%=CONST.WEBAPP_NAME%>/logout">logout</a>
+		<a href="/<%=CONST.WEBAPP_NAME%>/users/profile/<%=name%>"><%=name%></a>, <a href="/<%=CONST.WEBAPP_NAME%>/logout">logout</a>
 		<%
 			} else {
 		%>
