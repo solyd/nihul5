@@ -83,9 +83,6 @@ public class CreateEvent extends HttpServlet {
 			out.print("{ " + CONST.MSG_RESULT + " : 'failure' }");
 			break;
 		}
-		
-		out.flush();
-		out.close();
 	}
 
 	//"2012 08 26 03 49 18"

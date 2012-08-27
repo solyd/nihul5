@@ -51,7 +51,7 @@ public class UserProfile extends HttpServlet {
 		else 
 			request.setAttribute(CONST.USER, user);
 		
-		getServletContext().getRequestDispatcher("/jsp/users/users.jsp").forward(request, response);
+		getServletContext().getRequestDispatcher("/jsp/users/profile.jsp").forward(request, response);
 	}
 
 	/**
@@ -69,5 +69,4 @@ public class UserProfile extends HttpServlet {
 		request.setAttribute(CONST.USER, user);
 		getServletContext().getRequestDispatcher("/jsp/users/user_info.jsp").forward(request, response);
 	}
-
 }

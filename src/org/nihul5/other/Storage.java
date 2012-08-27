@@ -9,6 +9,9 @@ public interface Storage {
 		ADDUSER_EXISTS,
 		ADDUSER_FAILED,
 		
+		REMOVEUSER_OK,
+		REMOVEUSER_FAILED,
+		
 		ADDMSG_OK,
 		ADDMSG_FAILED
 	}

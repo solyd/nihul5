@@ -220,8 +220,40 @@ public class MySQLStorage implements Storage {
 
 	@Override
 	public StorageResponse removeUser(String username) {
-		// TODO Auto-generated method stub
-		return null;
+		Connection conn = null;
+		PreparedStatement s = null;
+
+		try {
+			conn = _dbcPool.getConnection();
+			conn.setAutoCommit(false);
+
+			conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+			String sql = "DELETE FROM users WHERE username = ?;";
+			s = conn.prepareStatement(sql);
+			s.setString(1, username);
+
+			if (s.executeUpdate() == 0) {
+				logger.error("Error removing user: " + username);
+				return StorageResponse.REMOVEUSER_FAILED;
+			}
+				
+			conn.commit();
+		} 
+		catch (SQLException e) {
+			logger.error("Exception during removeUser", e);
+			if (conn != null)
+				try { conn.rollback(); } catch (SQLException e1) { logger.error("Can't roll back", e1); }
+			return StorageResponse.REMOVEUSER_FAILED;
+		}
+		finally {
+			if (s != null)
+				try { s.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (conn != null)
+				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
+		}
+
+		return StorageResponse.REMOVEUSER_OK;
 	}
 
 	@Override
@@ -246,15 +278,16 @@ public class MySQLStorage implements Storage {
 			s.setString(1, username);
 
 			ResultSet rs = s.executeQuery();
-			if (rs.next()){
-				User res = new User(username, 
-				                    "", 
-				                    rs.getString("first_name"), 
-				                    rs.getString("last_name"), 
-				                    rs.getString("email"));
+			if (!rs.next())
+				return null;
+			
+			User res = new User(username, 
+			                    "", 
+			                    rs.getString("first_name"), 
+			                    rs.getString("last_name"), 
+			                    rs.getString("email"));
 
-				return res;
-			}
+			return res;
 		} 
 		catch (SQLException e) {
 			logger.error("Exception during getUser", e);
@@ -267,6 +300,7 @@ public class MySQLStorage implements Storage {
 			if (conn != null)
 				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
 		}
+
 		return null;
 	}
 
