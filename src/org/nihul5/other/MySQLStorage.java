@@ -246,14 +246,15 @@ public class MySQLStorage implements Storage {
 			s.setString(1, username);
 
 			ResultSet rs = s.executeQuery();
-			rs.next();
-			User res = new User(username, 
-			                    "", 
-			                    rs.getString("first_name"), 
-			                    rs.getString("last_name"), 
-			                    rs.getString("email"));
+			if (rs.next()){
+				User res = new User(username, 
+				                    "", 
+				                    rs.getString("first_name"), 
+				                    rs.getString("last_name"), 
+				                    rs.getString("email"));
 
-			return res;
+				return res;
+			}
 		} 
 		catch (SQLException e) {
 			logger.error("Exception during getUser", e);
@@ -266,7 +267,6 @@ public class MySQLStorage implements Storage {
 			if (conn != null)
 				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
 		}
-
 		return null;
 	}
 
