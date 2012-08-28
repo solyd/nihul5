@@ -46,7 +46,7 @@ public class CONST {
 	public static final int MSG_MAX_TITLE_LEN = 128; //bytes
 	public static final String MSG_RESULT = "MessageResult";
 	
-	public static final String ALPHANUMERIC_REGEX = "[^A-Za-z0-9\\.\\@_\\-~#]+";
+	public static final String ALPHANUMERIC_REGEX = "/^[a-z0-9]+$/i";
 	public static final String EMAIL_REGEX = "[^A-Za-z0-9\\.\\@_\\-~#]+";
 	public static final int MIN_LENGTH = 3;
 }
