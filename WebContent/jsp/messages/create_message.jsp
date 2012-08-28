@@ -109,7 +109,7 @@
 	<div id="container" class="right">
 		<div id="map_canvas" class="left"></div>
 		<div id="content" class="right">
-			<%@ include file="/jsp/events/create_msg_form.jsp"%>
+			<%@ include file="/jsp/messages/create_msg_form.jsp"%>
 		</div>
 	</div>
 	<%@ include file="/jsp/footer.jsp"%>

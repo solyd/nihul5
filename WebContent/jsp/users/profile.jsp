@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="org.nihul5.other.CONST"%>
 <%@ page import="org.nihul5.other.User"%>
-<%@page import="java.security.Principal"%>
+<%@ page import="java.security.Principal"%>
 
 <%
 	User requestedUser = (User) request.getAttribute(CONST.USER);

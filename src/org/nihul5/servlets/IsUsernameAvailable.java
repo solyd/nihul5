@@ -23,7 +23,7 @@ import org.nihul5.other.Utility;
 public class IsUsernameAvailable extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private static final Logger logger = Logger.getLogger(Register.class);
+	private static final Logger logger = Logger.getLogger(CreateUser.class);
 	Storage _storage;
 	
     /**

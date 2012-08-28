@@ -17,9 +17,9 @@ import org.nihul5.other.Storage;
  * Servlet implementation class UserEvents
  */
 @WebServlet("/events/user/*")
-public class UserEvents extends HttpServlet {
+public class UserMessages extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = Logger.getLogger(UserEvents.class);
+	private static final Logger logger = Logger.getLogger(UserMessages.class);
 		
 	private Storage _storage;
 
@@ -27,7 +27,7 @@ public class UserEvents extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public UserEvents() {
+    public UserMessages() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -41,6 +41,11 @@ public class UserEvents extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// Input: 
+		// + username
+		// + page num. of messages
+		// shouldn't support doPost
+		
 		String username = getUsername(request.getRequestURI());
 	
 	}

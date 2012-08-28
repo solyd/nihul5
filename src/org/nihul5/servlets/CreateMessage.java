@@ -21,17 +21,17 @@ import org.nihul5.other.Storage;
 /**
  * Servlet implementation class CreateEvent
  */
-@WebServlet("/events/create")
-public class CreateEvent extends HttpServlet {
+@WebServlet("/messages/create")
+public class CreateMessage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = Logger.getLogger(CreateEvent.class);
+	private static final Logger logger = Logger.getLogger(CreateMessage.class);
 	
 	private Storage _storage;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CreateEvent() {
+    public CreateMessage() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -45,13 +45,17 @@ public class CreateEvent extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		getServletContext().getRequestDispatcher("/jsp/events/create_event.jsp").forward(request, response);
+		// Forward to the jsp page
+		
+		getServletContext().getRequestDispatcher("/jsp/messages/create_message.jsp").forward(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// Input: message type + creation info
+		
 		// TODO check if principal is null return error if so
 		String owner = request.getUserPrincipal().getName();
 		Principal s;

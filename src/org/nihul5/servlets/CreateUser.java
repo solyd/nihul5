@@ -19,16 +19,16 @@ import org.nihul5.other.User;
  * Servlet implementation class Register
  */
 @WebServlet(description = "Handles user registration to the webapp", urlPatterns = { "/register" })
-public class Register extends HttpServlet {
+public class CreateUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = Logger.getLogger(Register.class);
+	private static final Logger logger = Logger.getLogger(CreateUser.class);
 	
 	private Storage _storage;
 			
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Register() {
+    public CreateUser() {
         super();
         // TODO Auto-generated constructor stub
     }

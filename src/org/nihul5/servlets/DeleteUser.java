@@ -18,17 +18,17 @@ import org.nihul5.other.Storage;
 /**
  * Servlet implementation class UserDelete
  */
-@WebServlet("/users/delete")
-public class UserDelete extends HttpServlet {
+@WebServlet("/DeleteUser")
+public class DeleteUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = Logger.getLogger(UserDelete.class);
+	private static final Logger logger = Logger.getLogger(DeleteUser.class);
 	
 	private Storage _storage;
 	
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public UserDelete() {
+    public DeleteUser() {
         super();
         // TODO Auto-generated constructor stub
     }
