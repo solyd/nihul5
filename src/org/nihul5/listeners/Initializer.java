@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.nihul5.other.CONST;
 import org.nihul5.other.MySQLStorage;
+import org.nihul5.other.MySQLStorageTest;
 import org.nihul5.other.Storage;
 
 /**

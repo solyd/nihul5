@@ -1,8 +1,6 @@
 package org.nihul5.servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Enumeration;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -16,7 +14,6 @@ import org.apache.log4j.Logger;
 import org.nihul5.other.CONST;
 import org.nihul5.other.Storage;
 import org.nihul5.other.User;
-import org.nihul5.other.Utility;
 
 /**
  * Servlet implementation class Register
@@ -26,7 +23,7 @@ public class Register extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(Register.class);
 	
-	Storage _storage;
+	private Storage _storage;
 			
     /**
      * @see HttpServlet#HttpServlet()
@@ -69,21 +66,16 @@ public class Register extends HttpServlet {
 		
 		User user = new User(username, password, firstName, lastName, email);
 		String msg = null;
-		switch (_storage.addUser(user)) {
-		case ADDUSER_OK:
+		if (_storage.saveUser(user)) {
 			logger.info("User " + user.toString() + " was successfully added to DB");
 			msg = "Registration successful";
 			request.setAttribute(CONST.REDIRECT_URL, "login.jsp");
-			break;
-		case ADDUSER_EXISTS:
-			msg = "A user with the same username already exists. Please pick another one.";
-			request.setAttribute(CONST.REDIRECT_URL, "jsp/register.jsp");
-			break;
-		case ADDUSER_FAILED:
+		}
+		else {
 			msg = "Registration has failed. Please try again.";
 			request.setAttribute(CONST.REDIRECT_URL, "jsp/register.jsp");
-			break;
 		}
+		
 		request.setAttribute(CONST.MSGBOX_TXT, msg);
 		getServletContext().getRequestDispatcher("/jsp/notification_box.jsp").forward(request, response);
 	}

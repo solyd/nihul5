@@ -69,15 +69,13 @@ public class UserDelete extends HttpServlet {
 			return;
 		}
 		
-		switch(_storage.removeUser(userToDelete)) {
-		case REMOVEUSER_FAILED:
-			logger.error("User deletion failed: " + userToDelete);
-			out.print("{ deletionStatus : 'failed'");
-			return;
-		case REMOVEUSER_OK:
+		if (_storage.deleteUser(userToDelete)) {
 			logger.error("User deletion successful: " + userToDelete);
 			out.print("{ deletionStatus : 'success'");
-			return;
+		}
+		else {
+			logger.error("User deletion failed: " + userToDelete);
+			out.print("{ deletionStatus : 'failed'");	
 		}
 	}
 }

@@ -62,27 +62,6 @@ public class CreateEvent extends HttpServlet {
 		String content = request.getParameter(CONST.MSG_CONTENT);
 		String creationDate = request.getParameter(CONST.MSG_CREATION_TIME);
 		
-		// TODO handle errors and stuff
-		Message newmsg = new Message(owner, 
-		                             Double.valueOf(lat), 
-		                             Double.valueOf(lng), 
-		                             extractDate(creationDate), 
-		                             title,
-		                             content);
-
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter out = response.getWriter();
-		switch (_storage.addMessage(newmsg)) {
-		case ADDMSG_OK:
-			logger.info("Following message was successfully added: " + newmsg.toString());
-			out.print("{ " + CONST.MSG_RESULT + " : 'success' }");
-			break;
-		case ADDMSG_FAILED:
-			logger.info("Failed to add message: " + newmsg.toString());
-			out.print("{ " + CONST.MSG_RESULT + " : 'failure' }");
-			break;
-		}
 	}
 
 	//"2012 08 26 03 49 18"

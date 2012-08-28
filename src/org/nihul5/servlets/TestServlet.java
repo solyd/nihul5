@@ -2,23 +2,19 @@ package org.nihul5.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Enumeration;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 import org.nihul5.other.CONST;
+import org.nihul5.other.MySQLStorage;
+import org.nihul5.other.MySQLStorageTest;
+import org.nihul5.other.Storage;
 
 
 /**
@@ -38,6 +34,18 @@ public class TestServlet extends HttpServlet {
     }
 
 
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    																		throws ServletException,
+    																		IOException {
+    	// TODO Auto-generated method stub
+    	super.doGet(req, resp);
+
+    	// TODO remove
+    	Storage storage = (Storage) getServletContext().getAttribute(CONST.STORAGE);
+    	MySQLStorageTest dbtest = new MySQLStorageTest((MySQLStorage) storage);
+    	dbtest.run();
+    }
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

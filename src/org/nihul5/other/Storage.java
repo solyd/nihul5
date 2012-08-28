@@ -1,44 +1,29 @@
 package org.nihul5.other;
 
 import java.util.List;
+import java.util.Map;
 
 public interface Storage {
-	
-	public enum StorageResponse {
-		ADDUSER_OK,
-		ADDUSER_EXISTS,
-		ADDUSER_FAILED,
-		
-		REMOVEUSER_OK,
-		REMOVEUSER_FAILED,
-		
-		ADDMSG_OK,
-		ADDMSG_FAILED
-	}
-	
 	void init();
 	
-	/**
-	 * Stores the user detail in the DB
-	 * @param user User details
-	 * @return true on success
-	 */
-	StorageResponse addUser(User user);
+	// User operations
+	// ++++++++++++++++++++++++++++++++++++++++
+	boolean 		saveUser(User user);
+	boolean 		deleteUser(String username);
+	List<User> 		getUsers();
+	List<String>	getUserNames();
+	User 			getUser(String username);
 	
-	StorageResponse removeUser(String username);
 	
-	List<User> getUsers();
+	boolean savePost(Post post);
+	boolean saveEvent(Event event);
+	boolean deleteMessage(int msgid);
+		
+	boolean saveEventRegistration(int eventid, String username);
+	boolean deleteEventRegistration(int eventid, String username);
 	
-	User getUser(String username);
+	List<Consensus> getEventConsensusReqs(int eventid);
+	boolean voteOnConsensusReq(String username, int eventid, int reqid, boolean accept);
 	
-	/**
-	 * Returns a list of users that is at most 'limit' and starts with
-	 * offset of 'offset' from the start of the users table. 
-	 * @param offset 
-	 * @param limit
-	 * @return
-	 */
-	List<String> getUserNames(int offset, int limit);
-	
-	StorageResponse addMessage(Message msg);
+	List<Message> getUserMessages(String username);
 }

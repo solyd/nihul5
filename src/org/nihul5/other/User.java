@@ -20,10 +20,18 @@ public class User {
 		this.lastName = lastName;
 		this.email = email;
 	}
+
+	public User(String username, String firstName, String lastName, String email) {
+		this.username = username;
+		this.password = "";
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+	}
 	
 	@Override
 	public String toString() {
-		return String.format("(%s, %s, %s, %s)", username, password, firstName, lastName);
+		return String.format("(%s, %s, %s, %s, %s)", username, password, firstName, lastName, email);
 	}
 	
 	public String md5password() {
