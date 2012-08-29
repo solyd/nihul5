@@ -5,9 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -565,10 +563,10 @@ public class MySQLStorage implements Storage {
 			eventrs = prepEventCheck.executeQuery();
 			if (eventrs.next()) {
 				logger.info("Attempting to delete an EVENT " + msgid);
-				Timestamp eventDate = eventrs.getTimestamp("event_date");
-				Timestamp currDate = new Timestamp(new Date().getTime());
+				long eventDate = eventrs.getLong("event_date");
+				long currDate = Utility.getCurrentTime();
 				
-				if (eventDate.before(currDate)) {
+				if (eventDate < currDate) {
 					logger.error("Can't delete past event " + msgid);
 					return false;
 				}	
@@ -633,8 +631,8 @@ public class MySQLStorage implements Storage {
 				return false;
 			}
 			
-			Timestamp eventDate = rsMsg.getTimestamp("event_date");
-			Timestamp currDate = new Timestamp(new Date().getTime());
+			long eventDate = rsMsg.getLong("event_date");
+			long currDate = Utility.getCurrentTime();
 			int capacity = rsMsg.getInt("capacity");
 			int registeredCount = getRegisteredCount(conn, eventid);
 			
@@ -643,11 +641,10 @@ public class MySQLStorage implements Storage {
 				return false;
 			}
 			
-			if (eventDate.before(currDate)) {
+			if (eventDate < currDate) {
 				logger.error("Can't register to event " + eventid + " - deadline has passed");
 				return false;
 			}
-
 
 			sql = "INSERT INTO event_reg (msgid, username) VALUES (?, ?);";
 			prep_s = conn.prepareStatement(sql);
@@ -708,10 +705,10 @@ public class MySQLStorage implements Storage {
 				return false;
 			}
 
-			Timestamp eventDate = eventrs.getTimestamp("event_date");
-			Timestamp currDate = new Timestamp(new Date().getTime());
+			long eventDate = eventrs.getLong("event_date");
+			long currDate = Utility.getCurrentTime();
 
-			if (eventDate.after(currDate)) {
+			if (eventDate < currDate) {
 				logger.error("Can't delete registeration to eventid " + eventid + " - deadline has passed");
 				return false;
 			}

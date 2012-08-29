@@ -23,6 +23,16 @@ public class UserMessages extends HttpServlet {
 		
 	private Storage _storage;
 
+	
+	/*
+	 * 
+	 * 
+	 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	 * NOTE THIS IS OUTDATED DON'T USE/COMPLETE THIS SERVLET
+	 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	 * 
+	 * 
+	 */
        
     /**
      * @see HttpServlet#HttpServlet()

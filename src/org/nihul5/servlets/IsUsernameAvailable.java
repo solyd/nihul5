@@ -46,8 +46,7 @@ public class IsUsernameAvailable extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    String userName = request.getParameter("userNameParam");
-	    
+	    String userName = request.getParameter(CONST.USERNAME);
 	    
 		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
 		response.setHeader("Pragma","no-cache"); //HTTP 1.0

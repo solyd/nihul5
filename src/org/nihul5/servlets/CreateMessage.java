@@ -1,7 +1,6 @@
 package org.nihul5.servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.security.Principal;
 import java.sql.Date;
 import java.util.Calendar;
@@ -21,8 +20,6 @@ import org.nihul5.other.Message;
 import org.nihul5.other.Message.MessageType;
 import org.nihul5.other.Storage;
 import org.nihul5.other.Utility;
-
-import com.mysql.jdbc.Util;
 
 /**
  * Servlet implementation class CreateEvent
@@ -62,29 +59,11 @@ public class CreateMessage extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
 		logger.debug("Current time: \t\t" + new Date(c.getTimeInMillis()).toLocaleString());
-
-
-		
-		String[] outerArray = request.getParameterValues(CONST.EVENT_CONSENSUSES);
-		String[] innerArray=outerArray[0].split(",");
-
-/*		for(int i=0; i<innerArray.length;i++){
-			logger.debug("element " + i + " " + innerArray[i]);
-		}*/
-		
-		
-		String title = request.getParameter(CONST.MSG_TITLE);
-		String lat = request.getParameter(CONST.MSG_LATITUDE);
-		String lng = request.getParameter(CONST.MSG_LONGITUDE);
-		String content = request.getParameter(CONST.MSG_CONTENT);
-		String creationDate = request.getParameter(CONST.MSG_CREATION_TIME);
-
 		
 		// Input: message type + creation info
 		Principal princ = request.getUserPrincipal();
 		if (princ == null)
 			return;
-
 
 		Message msg = new Message();
 		msg.username = princ.getName();
@@ -135,7 +114,10 @@ public class CreateMessage extends HttpServlet {
 				return;
 			}
 			
-			// TODO consensus list 
+			String[] outerArray = request.getParameterValues(CONST.EVENT_CONSENSUSES);
+			String[] innerArray = outerArray[0].split(",");
+			for (String cons : innerArray)
+				msg.consensusDescList.add(cons);
 		}
 		
 		if (_storage.saveMessage(msg)) {
