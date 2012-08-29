@@ -3,10 +3,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="org.nihul5.other.CONST"%>
 <%@ page import="org.nihul5.other.User"%>
+<%@ page import="org.nihul5.other.Message"%>
 <%@ page import="java.security.Principal"%>
+<%@ page import="java.util.List"%>
 
 <%
-	User requestedUser = (User) request.getAttribute(CONST.USER);
+	User user = (User) request.getAttribute(CONST.USER);
 	Principal princ = request.getUserPrincipal();
 %>
 
@@ -16,23 +18,34 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" type="text/css" rel="stylesheet/index" href="/<%=CONST.WEBAPP_NAME%>/styles/style.css" />
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/jquery.js"></script>
+<script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/jquery.pajinate.js"></script>
 <script type="text/javascript">
-	// Wer'e resusing the info box, but don't want the floating right thing
-	$(document).ready(function() {
-		$('div#user_info').removeAttr('class');
+	$(document).ready(function(){
+		$('#page_container').pajinate({
+					items_per_page : 5,
+					item_container_id : '.alt_content',
+					nav_panel_id : '.alt_page_navigation'
+		});
+		$('li:odd, .content > *:odd').css('background-color','#FFD9BF');
 	});
 	
 	function deleteProfile(username) {
-		<% if (requestedUser != null) { %>
-		
-		$.post('/<%=CONST.WEBAPP_NAME%>/users/delete', { username : '<%=requestedUser.username%>'},
-				function(response) {
-			
-		});
-		
+		<%if (user != null) {%>
+			$.post('/<%=CONST.WEBAPP_NAME%>/DeleteUser', { username: "<%=user.username%>"} , function(data) {
+				if (data.result == 'success') {
+					$('#delete_button').hide('slow', function() {
+						$(this).replaceWith('<p>Profile was successfuly deleted, redirecting in 2 seconds</p>');
+						$(this.show('slow'));
+					});
+					
+					setTimeout(function() {
+						window.location.href = "/<%=CONST.WEBAPP_NAME%>/";
+					}, 3000);
+
+				}
+			}, "json");
 		<%}%>
 	}
-	
 </script>
 
 <title>User Profile</title>
@@ -43,14 +56,103 @@
 	<%@ include file="/jsp/menu.jsp"%>
 
 	<div id="container" class="right">
-		<%@ include file="/jsp/users/user_info.jsp"%>
+		<%
+			if (user != null) {
+		%>
+		<div id="user_info" class="left">
+			
+			<h1><%=user.username%>'s Profile</h1>
+			
+			<div id="center_box">
+				<table align="center">
+					<tr>
+						<td colspan=2 align="center">Details</td>
+					</tr>
+					<tr>
+						<td colspan=2 align="center" height="10px"></td>
+					</tr>
+					<tr>
+						<td>Username:</td>
+						<td><%=user.username%></td>
+					</tr>
+					<tr>
+						<td>First Name:</td>
+						<td><%=user.firstName%></td>
+					</tr>
+					<tr>
+						<td>Last Name:</td>
+						<td><%=user.lastName%></td>
+					</tr>
+					<tr>
+						<td>Email:</td>
+						<td><%=user.email%></td>
+					</tr>
+					<tr>
+						<td colspan=2 align="center" height="10px"></td>
+					</tr>
+				</table>
+
+				<%
+					if (user != null && princ != null
+								&& user.username.equals(princ.getName())) {
+				%>
+				<button id="delete_button" type="button" onClick="deleteProfile('<%=user.username%>')">Delete Profile</button>
+				<%
+					}
+				%>
+
+			</div>
+		</div>
+		
+		<div id="content" class="right">
+			<h3>Created Messages</h3>
+			<%
+				List<Message> profile_usermsgs = (List<Message>) request.getAttribute(CONST.USER_CREATED_MSGS);
+				if (profile_usermsgs != null && profile_usermsgs.size() > 0) {
+			%>
+			<div id="page_container">
+				<div class="page_navigation"></div>
+				<ul class="content">
+				<% for (Message msg : profile_usermsgs) { %>
+					<li><p><%=msg.title %></p></li>
+				<% } %> 
+				</ul>
+				
+			</div>
+			
+			<%} else { %>
+			<div id="center_box">
+				No created messages for this user
+			</div>
+			<%} %>
+			
+			<h3>Registered Events</h3>
+			<%
+				List<Message> profile_usrevents = (List<Message>) request.getAttribute(CONST.USER_REG_EVENTS);
+				if (profile_usrevents != null && profile_usrevents.size() > 0) {
+			%>
+			<div id="page_container">
+				<div class="page_navigation"></div>
+				<ul class="content">
+				<% for (Message msg : profile_usrevents) { %>
+					<li><p><%=msg.title %></p></li>
+				<% } %> 
+				</ul>
+				
+			</div>
+			
+			<%} else { %>
+			<div id="center_box">
+				This user hasn't registered to any events yet.
+			</div>
+			<%} %>			
+			
+		</div>
 
 		<%
-			if (requestedUser != null && princ != null
-				&& requestedUser.username.equals(princ.getName())) {
+			} else {
 		%>
-		<button type="button" onClick="deleteProfile('<%=user.username%>')">Delete
-			Profile</button>
+		<div id="center_box">User does not exist</div>
 		<%
 			}
 		%>

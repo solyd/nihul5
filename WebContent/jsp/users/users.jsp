@@ -19,7 +19,7 @@
 
 	<div id="container" class="right">
 		<%@ include file="/jsp/users/user_list.jsp"%>
-		<%@ include file="/jsp/users/user_info.jsp"%>
+		
 	</div>
 
 	<%@ include file="/jsp/footer.jsp"%>

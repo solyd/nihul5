@@ -57,7 +57,7 @@ public class DeleteUser extends HttpServlet {
 		Principal princ = request.getUserPrincipal();
 		if (princ == null) {
 			logger.error("Coulnd't get user principal for user deletion");
-			out.print("{ deletionStatus : 'failed'");
+			out.println("{\"result\":\"failed\"");
 			return;
 		}
 		String loggedInUser = request.getUserPrincipal().getName();
@@ -65,17 +65,22 @@ public class DeleteUser extends HttpServlet {
 		
 		if (userToDelete == null || !loggedInUser.equals(userToDelete)) {
 			logger.error("User to delete: " + userToDelete + ", Logged in user: " + loggedInUser);
-			out.print("{ deletionStatus : 'failed'");
+			out.println("{\"result\":\"failed\"");
 			return;
 		}
 		
+		request.getSession().invalidate();
+		
 		if (_storage.deleteUser(userToDelete)) {
 			logger.error("User deletion successful: " + userToDelete);
-			out.print("{ deletionStatus : 'success'");
+			out.println("{\"result\":\"success\"");
 		}
 		else {
 			logger.error("User deletion failed: " + userToDelete);
-			out.print("{ deletionStatus : 'failed'");	
+			out.println("{\"result\":\"failed\"");
 		}
+		
+		out.flush();
+		out.close();
 	}
 }
