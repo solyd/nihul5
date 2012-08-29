@@ -41,6 +41,8 @@
 			value: getEventDate() });
 		data.push({ name: '<%=CONST.EVENT_CAPACITY%>', 
 			value: getEventCapacity() });
+		data.push({ name: '<%=CONST.EVENT_CAPACITY%>', 
+			value: getConsensuses() });
 		$.post('/<%=CONST.WEBAPP_NAME%>/messages/create',
 				data, function(response) {
 			alert(response.<%=CONST.MSG_RESULT%>);
@@ -96,6 +98,17 @@
 					<tr id="event_capacity" style="display: none">
 						<td>Capacity:</td>
 						<td><input id="capacity" type="text" size="10" value="0" /></td>
+					</tr>
+					<tr id="consensus1" style="display: none">
+						<td>Consensus:</td>
+						<td><textarea id="consensus_text" rows="10" cols="10"></textarea></td>
+					</tr>
+					<tr id="consensus2" style="display: none">
+						<td><input id="add_row" type="button" value="Add Consensus" /></td>
+    					<td></td>
+					</tr>
+					<tr id="consensus3" style="display: none">
+						<td id="myDiv" colspan="2" width="70%"></td>
 					</tr>
 					<tr>
 						<td colspan=2 align="center" height="10px"></td>

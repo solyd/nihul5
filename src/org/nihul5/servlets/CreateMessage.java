@@ -60,6 +60,12 @@ public class CreateMessage extends HttpServlet {
 		String owner = request.getUserPrincipal().getName();
 		Principal s;
 
+		
+		String[] outerArray = request.getParameterValues(CONST.EVENT_CONSENSUSES);
+		String[] innerArray=outerArray[0].split(",");
+
+		
+		
 		String title = request.getParameter(CONST.MSG_TITLE);
 		String lat = request.getParameter(CONST.MSG_LATITUDE);
 		String lng = request.getParameter(CONST.MSG_LONGITUDE);

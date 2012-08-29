@@ -53,6 +53,7 @@ public class CONST {
 	public static final String MSG_TYPE = "MessageType";
 	public static final String EVENT_DATE = "EventDate";
 	public static final String EVENT_CAPACITY = "EventCapacity";
+	public static final String EVENT_CONSENSUSES = "EventConsensuses";
 	
 	public static final String ALPHANUMERIC_REGEX = "/^[a-z0-9]+$/i";
 	public static final String EMAIL_REGEX = "[^A-Za-z0-9\\.\\@_\\-~#]+";

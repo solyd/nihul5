@@ -6,6 +6,9 @@ function tagsAction(action){
 	$("#date_title").animate({ height: action, opacity: action }, 'slow');
 	$("#date_data").animate({ height: action, opacity: action }, 'slow');
 	$("#event_capacity").animate({ height: action, opacity: action }, 'slow');
+	$("#consensus1").animate({ height: action, opacity: action }, 'slow');
+	$("#consensus2").animate({ height: action, opacity: action }, 'slow');
+	$("#consensus3").animate({ height: action, opacity: action }, 'slow');
 }
 //Add Event or Message
 function addMessage(){
@@ -36,6 +39,7 @@ function addMessage(){
 		placeMarker(event.latLng);
 		document.getElementById('lat').value = event.latLng.lat();
 		document.getElementById('lng').value = event.latLng.lng();
+		getConsensuses();
 	});
 	
 	dateObject = new JsDatePick({
@@ -51,6 +55,8 @@ function addMessage(){
 		  show24Hours: true,
 		  step: 15});
 	document.getElementById('eventTime').value = getTime();
+	
+	$('#add_row').click(addEvent);
 }
 
 function placeMarker(position) {
@@ -127,4 +133,39 @@ function getTime(){
 	var timeStr = padStr(temp.getHours()) + ':' +
 					padStr(1 + temp.getMinutes());
 	return timeStr;
+}
+
+var consensusNum = 0;
+var consensuses = [];
+
+function addEvent() {
+	var text = $('#consensus_text').val();
+	if (text){
+		var appendToText = document.getElementById('myDiv');
+		consensusNum++;
+		var divIdName = "my" + consensusNum + "Div";
+		var newDiv = document.createElement('tr');
+		newDiv.setAttribute("id", divIdName);
+		//newDiv.innerHTML = text + " <a href=\"javascript:;\" onclick=\"removeElement(\'"+divIdName+"\')\">Remove</a>";
+		newDiv.innerHTML = text + " <button onclick=\"removeElement(\'"+divIdName+"','" +text+"\')\">Remove</button>";
+		appendToText.appendChild(newDiv);
+		consensuses.push(text);
+	}
+}
+
+function removeElement(divNum,text) {
+	var index = consensuses.indexOf(text);
+	consensuses.splice(index, 1);
+	var d = document.getElementById('myDiv');
+	var oldDiv = document.getElementById(divNum);
+	d.removeChild(oldDiv);
+	consensusNum--;
+}
+
+function getConsensuses(){
+/*	for (var i = 0; i < consensusNum; i++ ) {
+		var text = consensuses[i];
+		alert(text);
+	}	*/
+	return consensuses;
 }
