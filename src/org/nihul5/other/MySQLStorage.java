@@ -620,7 +620,7 @@ public class MySQLStorage implements Storage {
 				return false;
 			}
 			
-			if (eventDate.after(currDate)) {
+			if (eventDate.before(currDate)) {
 				logger.error("Can't register to event " + eventid + " - deadline has passed");
 				return false;
 			}
@@ -662,7 +662,9 @@ public class MySQLStorage implements Storage {
 		PreparedStatement prepEventReg = null;
 		PreparedStatement prepConsVotes = null;
 		PreparedStatement prepCons = null;
+		PreparedStatement prepEventCheck = null;
 		ResultSet rs = null;
+		ResultSet eventrs = null;
 
 		logger.info("deleting event registration by " + username + "to event " + eventid);
 
@@ -671,10 +673,30 @@ public class MySQLStorage implements Storage {
 			conn.setAutoCommit(false);
 			
 			conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+			
+			// Check that the event exists and hasn't occured yet
+			String sql = "SELECT * FROM events WHERE msgid = ?;";
+			prepEventCheck = conn.prepareStatement(sql);
+			prepEventCheck.setInt(1, eventid);
+
+			eventrs = prepEventCheck.executeQuery();
+			if (!eventrs.next()) {
+				logger.error("Can't delete registeration to eventid " + eventid + " - event doesn't exist");
+				return false;
+			}
+
+			Timestamp eventDate = eventrs.getTimestamp("event_date");
+			Timestamp currDate = new Timestamp(new Date().getTime());
+
+			if (eventDate.after(currDate)) {
+				logger.error("Can't delete registeration to eventid " + eventid + " - deadline has passed");
+				return false;
+			}
+
 
 			// delete from registration table
 			// ++++++++++++++++++++++++++++++++++++++++
-			String sql = "DELETE FROM event_reg WHERE msgid = ? AND username = ?;";
+			sql = "DELETE FROM event_reg WHERE msgid = ? AND username = ?;";
 			prepEventReg = conn.prepareStatement(sql);
 			prepEventReg.setInt(1, eventid);
 			prepEventReg.setString(2, username);
@@ -720,6 +742,10 @@ public class MySQLStorage implements Storage {
 				try { prepConsVotes.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
 			if (rs != null)
 				try { rs.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (eventrs != null)
+				try { rs.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (prepEventCheck != null)
+				try { prepEventCheck.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
 			if (conn != null)
 				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
 		}
