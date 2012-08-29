@@ -17,7 +17,6 @@
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/menu_loader.js"></script>
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/map.js"></script>
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/create_message.js"></script>
-<script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/date.format.js"></script>
 
 <script type="text/javascript">
 	var messageResult = <%=CONST.MSG_RESULT%>;
