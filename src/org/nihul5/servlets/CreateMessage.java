@@ -62,11 +62,15 @@ public class CreateMessage extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
 		logger.debug("Current time: \t\t" + new Date(c.getTimeInMillis()).toLocaleString());
+
+		String[] outerArray = request.getParameterValues(CONST.EVENT_CONSENSUSES);
+		String[] innerArray=outerArray[0].split(",");
 		
 		// Input: message type + creation info
 		Principal princ = request.getUserPrincipal();
 		if (princ == null)
 			return;
+
 
 		Message msg = new Message();
 		msg.username = princ.getName();
@@ -81,7 +85,7 @@ public class CreateMessage extends HttpServlet {
 			Utility.writeResponse(response, false, "Invalid lat/lng");
 			return;
 		}
-		
+
 		msg.content = request.getParameter(CONST.MSG_CONTENT);
 		msg.creationTime = Long.valueOf(request.getParameter(CONST.MSG_CREATION_TIME));
 		
