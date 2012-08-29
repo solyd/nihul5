@@ -1,10 +1,10 @@
 package org.nihul5.other;
 
-import java.util.ArrayList;
+import java.sql.Timestamp;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.nihul5.other.Message.MessageType;
 
 public class MySQLStorageTest {
 	private static final Logger logger = Logger.getLogger(MySQLStorageTest.class);
@@ -15,99 +15,43 @@ public class MySQLStorageTest {
 		_db = db;
 	}
 	
-	
 	public void run() {
-		logger.info("DB test is running");
+		_db.saveUser(new User("sol", "sol", "sad", "sja", "email"));
+		_db.saveUser(new User("blabla", "blabla", "sad", "sja", "email"));
 		
-		List<User> userlist = new ArrayList<User>();
-		List<Post> postlist = new ArrayList<Post>();
-		List<Event> eventlist = new ArrayList<Event>();
+		_db.saveMessage(new Message( "sol", 2, 2, new Timestamp(219), "some title", "content" ));
+		_db.saveMessage(new Message( "blabla", 2, 2, new Timestamp(2921219), "some titlofiewe", "contenot" ));
 		
-		// ++++++++++++++++++++++++++++++++++++++++
-		userlist.add(new User("sol", "sol", "alex", "y", "sol@alex.com"));
-		userlist.add(new User("wat", "wat", "iii", "feww", "soiewol@alex.com"));
-		userlist.add(new User("lewl", "lewl", "is", "this", "is@alex.com"));
+		Message blaevent = new Message();
+		blaevent.username = "blabla";
+		blaevent.capacity = 3;
+		blaevent.consensusDescList.add("bla cons 1");
+		blaevent.consensusDescList.add("bla cons 2");
+		blaevent.content = "blaeevent desc";
+		blaevent.creationTime = new Timestamp(213192);
+		blaevent.eventTime = new Timestamp(21581201);
+		blaevent.lat = 2;
+		blaevent.lng = 3;
+		blaevent.title = "blaevent title";
+		blaevent.type = MessageType.EVENT;
 		
+		Message blaevent2 = new Message();
+		blaevent2.username = "blabla";
+		blaevent2.capacity = 3;
+		blaevent2.consensusDescList.add("bla conIIIIs 1");
+		blaevent2.consensusDescList.add("bla IIIcons 2");
+		blaevent2.content = "blaifewnofiewII____eevent desc";
+		blaevent2.creationTime = new Timestamp(213192);
+		blaevent2.eventTime = new Timestamp(21581201);
+		blaevent2.lat = 2;
+		blaevent2.lng = 3;
+		blaevent2.title = "blaeveiIIIIIIIIIIIInt title";
+		blaevent2.type = MessageType.EVENT;
 		
+		_db.saveMessage(blaevent);
+		_db.saveMessage(blaevent2);
 		
-		// ++++++++++++++++++++++++++++++++++++++++
-		postlist.add(new Post("sol", 2, 2, 
-		                      new GregorianCalendar().getTime(), 
-		                      "title", 
-		                      "content"));
-		postlist.add(new Post("non exist", 2, 2, 
-		                      new GregorianCalendar().getTime(), 
-		                      "title", 
-		                      "content"));
-		postlist.add(new Post("sol", 2, 2, 
-		                      new GregorianCalendar().getTime(), 
-		                      "title2", 
-		                      "content2"));
-		postlist.add(new Post("lewl", 2, 2, 
-		                      new GregorianCalendar().getTime(), 
-		                      "lewl_title2", 
-		                      "lewl_content2"));
-		
-		// ++++++++++++++++++++++++++++++++++++++++
-		Event event = new Event("sol", 2, 2, 
-		                        new GregorianCalendar().getTime(),
-		                        "eventtitle", 
-		                        "eventcontent", 
-		                        new GregorianCalendar().getTime(), 
-		                        23);
-		event.consensusDescList.add("consensus 1");
-		event.consensusDescList.add("consensus 2");
-		event.consensusDescList.add("consensus 3");
-		eventlist.add(event);
-		
-		event = new Event("non exist", 2, 2, 
-		                  new GregorianCalendar().getTime(),
-		                  "eventtitle", 
-		                  "eventcontent", 
-		                  new GregorianCalendar().getTime(), 
-		                  23);
-		eventlist.add(event);
-		
-
-		event = new Event("wat", 2, 2, 
-		                  new GregorianCalendar().getTime(),
-		                  "eventtitleeeee", 
-		                  "eventcontentwwaattt", 
-		                  new GregorianCalendar().getTime(), 
-		                  23);
-		event.consensusDescList.add("watreq 2");
-		event.consensusDescList.add("watreq 1");
-		eventlist.add(event);
-		
-		for (User u : userlist)
-			_db.saveUser(u);
-		
-		for (Event e : eventlist)
-			_db.saveEvent(e);
-		
-		for (Post p : postlist)
-			_db.savePost(p);
-		
-		_db.saveEventRegistration(1, "sol");
-		_db.saveEventRegistration(1, "lewl");
-		
-		_db.deleteEventRegistration(1, "lewl");
-		_db.deleteEventRegistration(1, "sol");
-		
-		_db.saveEventRegistration(1, "sol");
-		_db.saveEventRegistration(1, "lewl");
-		
-		_db.voteOnConsensusReq("sol", 1, 2, true);
-		_db.voteOnConsensusReq("sol", 1, 2, true);
-		_db.voteOnConsensusReq("lewl", 1, 2, true);
-		
-		_db.deleteEventRegistration(1, "lewl");
-		_db.deleteEventRegistration(1, "sol");
-		
-		_db.saveEventRegistration(1, "sol");
-		_db.saveEventRegistration(1, "lewl");
-		
-		_db.voteOnConsensusReq("sol", 1, 2, true);
-		_db.deleteEventRegistration(1, "lewl");
+		_db.saveEventRegistration(3, "sol");
+		_db.saveEventRegistration(4, "sol");
 	}
 }

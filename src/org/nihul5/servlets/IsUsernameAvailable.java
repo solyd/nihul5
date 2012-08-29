@@ -56,7 +56,11 @@ public class IsUsernameAvailable extends HttpServlet {
 		response.setContentType("application/json; charset=UTF-8");
 		PrintWriter out = response.getWriter();
         
-	    if (_storage.getUser(userName) != null){
+    	if (userName == null) {
+    		logger.info("User is null");
+    		out.print("{\"result\":\"false\"}");
+    	}
+		else if (_storage.getUser(userName) != null){
 	    	logger.info("User " + userName.toString() + " already taken");
 	    	out.println("{\"result\":\"false\"}");
 	    }

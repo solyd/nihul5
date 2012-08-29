@@ -41,7 +41,7 @@ public class Users extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setAttribute(CONST.MSGBOX_USER_INFO_TXT, "Click on a user to see his/her profile");
+		request.setAttribute(CONST.USERS_LIST, _storage.getUserNames());
 		getServletContext().getRequestDispatcher("/jsp/users/users.jsp").forward(request, response);
 	}
 

@@ -38,6 +38,10 @@ public class CONST {
 	public static final String USERS_LIST = "userslist";
 	public static final String USER = "user";
 	
+	public static final String USER_MSGS = "Usermessages";
+	public static final String USER_CREATED_MSGS = "UserCreatedMsgs";
+	public static final String USER_REG_EVENTS = "userregisteredevenets";
+	
 	public static final String MSG_LATITUDE = "latitude";
 	public static final String MSG_LONGITUDE = "longitude";
 	public static final String MSG_TITLE = "title";

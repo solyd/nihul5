@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -241,10 +243,7 @@ public class MySQLStorage implements Storage {
 			prep_s.setString(4, user.lastName);
 			prep_s.setString(5, user.email);
 
-			if (prep_s.executeUpdate() == 0) {
-				logger.error("Error inserting new user to users table. user: " + user.toString());
-				throw new SQLException();
-			}
+			prep_s.executeUpdate();
 
 			// ++++++++++++++++++++++++++++++++++++++++
 
@@ -290,14 +289,23 @@ public class MySQLStorage implements Storage {
 			conn.setAutoCommit(false);
 
 			conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+			
+			// Before we can delete the user we need to get all of the events he 
+			// is registered to, and then for each event all of the consensus
+			// requirements - to check if they can be toggled because of users
+			// deletion.
+			List<Message> userEvents = getUserRegisteredEvents(conn, username);			
 
 			String sql = "DELETE FROM users WHERE username = ?;";
 			prep_s = conn.prepareStatement(sql);
 			prep_s.setString(1, username);
 
-			if (prep_s.executeUpdate() == 0) {
-				logger.error("Error removing user: " + username);
-				throw new SQLException();
+			prep_s.executeUpdate();
+			
+			for (Message event : userEvents) {
+				for (Integer consid : getEventConsensusIds(conn, event.id)) {
+					toggleConsensusReqIfNeeded(conn, consid);
+				}
 			}
 
 			conn.commit();
@@ -319,13 +327,6 @@ public class MySQLStorage implements Storage {
 	}
 
 	@Override
-	public List<User> getUsers() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
 	public List<String> getUserNames() {
 		Connection conn = null;
 		PreparedStatement prep_s = null;
@@ -337,7 +338,7 @@ public class MySQLStorage implements Storage {
 
 			conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
-			String sql = "SELECT * FROM users;";
+			String sql = "SELECT username FROM users;";
 			prep_s = conn.prepareStatement(sql);
 
 			rs = prep_s.executeQuery();
@@ -406,9 +407,20 @@ public class MySQLStorage implements Storage {
 
 		return null;
 	}
-
+	
 	@Override
-	public boolean savePost(Post post) {
+	public boolean saveMessage(Message msg) {
+		switch (msg.type) {
+		case EVENT:
+			return saveEvent(msg);
+		case POST:
+			return savePost(msg);
+		}
+		
+		return false;
+	}
+
+	private boolean savePost(Message post) {
 		Connection conn = null;
 		PreparedStatement prep_s = null;
 		
@@ -429,16 +441,10 @@ public class MySQLStorage implements Storage {
 			prep_s.setString(5, post.title);
 			prep_s.setString(6, post.content);
 
-			if (prep_s.executeUpdate() == 0) {
-				logger.error("Error saving post: " + post.toString());
-				throw new SQLException();
-			}
+			prep_s.executeUpdate();
 		} 
 		catch (SQLException e) {
 			logger.error("Exception during getUser", e);
-//			if (conn != null)
-//				try { conn.rollback(); } catch (SQLException e1) { logger.error("Can't roll back", e1); }
-			
 			return false;
 		}
 		finally {
@@ -451,8 +457,7 @@ public class MySQLStorage implements Storage {
 		return true;
 	}
 
-	@Override
-	public boolean saveEvent(Event event) {
+	private boolean saveEvent(Message event) {
 		Connection conn = null;
 		PreparedStatement prepMsg = null;
 		PreparedStatement prepEvent = null;
@@ -480,10 +485,7 @@ public class MySQLStorage implements Storage {
 			prepMsg.setString(5, event.title);
 			prepMsg.setString(6, event.content);
 
-			if (prepMsg.executeUpdate() == 0) {
-				logger.error("Error saving (inesrting into messages): " + event.toString());
-				throw new SQLException();
-			}
+			prepMsg.executeUpdate();
 			
 			// the id of the new message
 			int last_insert_id = getLastInsertId(conn);
@@ -501,10 +503,7 @@ public class MySQLStorage implements Storage {
 			prepEvent.setString(2, event.eventDateStr());
 			prepEvent.setInt(3, event.capacity);
 			
-			if (prepEvent.executeUpdate() == 0) {
-				logger.error("Error saving (inserting into events): " + event.toString());
-				throw new SQLException();
-			}
+			prepEvent.executeUpdate();
 			
 			// insert consensus requirements to consensus table
 			// ++++++++++++++++++++++++++++++++++++++++
@@ -518,14 +517,7 @@ public class MySQLStorage implements Storage {
 				prepCons.setString(2, desc);
 				prepCons.addBatch();
 			}
-			
-			int[] res = prepCons.executeBatch();
-			for (int i = 0, len = res.length; i < len; ++i) {
-				if (res[i] == 0){
-					logger.error("Error saving (consensus req): " + event.toString());
-					throw new SQLException();
-				}
-			}
+			prepCons.executeBatch();
 			
 			conn.commit();
 		} 
@@ -567,10 +559,7 @@ public class MySQLStorage implements Storage {
 			prep_s = conn.prepareStatement(sql);
 			prep_s.setInt(1, msgid);
 
-			if (prep_s.executeUpdate() == 0) {
-				logger.error("Error removing message with id: " + msgid);
-				throw new SQLException();
-			}
+			prep_s.executeUpdate();
 
 			conn.commit();
 		} 
@@ -589,37 +578,77 @@ public class MySQLStorage implements Storage {
 
 		return true;
 	}
+	
+	@Override
+	public boolean getMessage(int msgid) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 	@Override
 	public boolean saveEventRegistration(int eventid, String username) {
 		Connection conn = null;
 		PreparedStatement prep_s = null;
+		PreparedStatement prepMsgCheck = null;
+		ResultSet rsMsg = null;
 		
 		logger.info("Saving event registration for event " + eventid + " by " + username);
 
 		try {
 			conn = _dbcPool.getConnection();
+			conn.setAutoCommit(false);
+			
+			conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+			
+			String sql = "SELECT * FROM events WHERE msgid = ?;";
+			prepMsgCheck = conn.prepareStatement(sql);
+			prepMsgCheck.setInt(1, eventid);
 
-			String sql = "INSERT INTO event_reg (msgid, username) VALUES (?, ?);";
+			rsMsg = prepMsgCheck.executeQuery();
+			if (!rsMsg.next()) {
+				logger.error("Can't register to eventid " + eventid + " - event doesn't exist");
+				return false;
+			}
+			
+			Timestamp eventDate = rsMsg.getTimestamp("event_date");
+			Timestamp currDate = new Timestamp(new Date().getTime());
+			int capacity = rsMsg.getInt("capacity");
+			int registeredCount = getRegisteredCount(conn, eventid);
+			
+			if (registeredCount == capacity) {
+				logger.error("Can't register to event " + eventid + " - there is no room left");
+				return false;
+			}
+			
+			if (eventDate.after(currDate)) {
+				logger.error("Can't register to event " + eventid + " - deadline has passed");
+				return false;
+			}
+
+
+			sql = "INSERT INTO event_reg (msgid, username) VALUES (?, ?);";
 			prep_s = conn.prepareStatement(sql);
 			prep_s.setInt(1, eventid);
 			prep_s.setString(2, username);
 
-			if (prep_s.executeUpdate() == 0) {
-				logger.error(String.format("Error saving registration for event : %d by %s", eventid, username));
-				throw new SQLException();
-			}
+			prep_s.executeUpdate();
+			
+			conn.commit();
 		} 
 		catch (SQLException e) {
 			logger.error(String.format("Exception when saving registration for event : %d by %s", eventid, username));
-//			if (conn != null)
-//				try { conn.rollback(); } catch (SQLException e1) { logger.error("Can't roll back", e1); }
+			if (conn != null)
+				try { conn.rollback(); } catch (SQLException e1) { logger.error("Can't roll back", e1); }
 			
 			return false;
 		}
 		finally {
 			if (prep_s != null)
 				try { prep_s.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (prepMsgCheck != null)
+				try { prepMsgCheck.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (rsMsg != null)
+				try { rsMsg.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
 			if (conn != null)
 				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
 		}
@@ -651,10 +680,6 @@ public class MySQLStorage implements Storage {
 			prepEventReg.setString(2, username);
 
 			prepEventReg.executeUpdate();
-//			if (prepEventReg.executeUpdate() == 0) {
-//				logger.error(String.format("Error canceling registration for event : %d by %s", eventid, username));
-//				throw new SQLException();
-//			}
 			
 			// delete all casted votes for this event by the user
 			// ++++++++++++++++++++++++++++++++++++++++
@@ -664,10 +689,6 @@ public class MySQLStorage implements Storage {
 			prepConsVotes.setString(2, username);
 			
 			prepConsVotes.executeUpdate();
-//			if (prepConsVotes.executeUpdate() == 0) {
-//				logger.error(String.format("Error canceling registration for event : %d by %s", eventid, username));
-//				throw new SQLException();
-//			}
 			
 			// now check if the status should be toggled for any of the consensus reqs of the event
 			// ++++++++++++++++++++++++++++++++++++++++
@@ -678,18 +699,7 @@ public class MySQLStorage implements Storage {
 			rs = prepCons.executeQuery();
 			while (rs.next()) {
 				int consid = rs.getInt("consid");
-				int votesCount = getVoteCount(conn, consid, eventid);
-				int nregistered = getRegisteredCount(conn, eventid);
-				
-				// TODO  
-				if (votesCount < 0 || nregistered < 0) {
-					continue;
-				}
-				
-				if (votesCount == nregistered && nregistered > 0) {
-					toggleStatus(conn, consid);
-					deleteCurrentVotes(conn, consid);
-				}
+				toggleConsensusReqIfNeeded(conn, consid);
 			}
 			
 			conn.commit();
@@ -784,22 +794,10 @@ public class MySQLStorage implements Storage {
 			prep_s.setInt(2, eventid);
 			prep_s.setString(3, username);
 			
-			if (prep_s.executeUpdate() == 0)
-				throw new SQLException();
+			prep_s.executeUpdate();
 
-			int votesCount = getVoteCount(conn, reqid, eventid);
-			int nregistered = getRegisteredCount(conn, eventid);
+			toggleConsensusReqIfNeeded(conn, reqid);
 
-			// TODO  
-			if (votesCount < 0 || nregistered < 0) {
-				throw new SQLException();
-			}
-
-			if (votesCount == nregistered && nregistered > 0) {
-				toggleStatus(conn, reqid);
-				deleteCurrentVotes(conn, reqid);
-			}
-			
 			conn.commit();
 		} 
 		catch (SQLException e) {
@@ -820,22 +818,79 @@ public class MySQLStorage implements Storage {
 	}
 
 	@Override
-	public List<Message> getUserMessages(String username) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Message> getUserCreatedMessages(String username) {
+		Connection conn = null;
+		PreparedStatement prep_s = null;
+		ResultSet rs = null;
+		List<Message> res = new ArrayList<Message>();
+
+		try {
+			conn = _dbcPool.getConnection();
+
+			String sql = "SELECT msgid, type, title FROM messages WHERE username = ?;";
+			
+			prep_s = conn.prepareStatement(sql);
+			prep_s.setString(1, username);
+			
+			rs = prep_s.executeQuery();
+			while (rs.next()) {
+				int msgid = rs.getInt("msgid");
+				String type = rs.getString("type");
+				String title = rs.getString("title");
+				
+				res.add(new Message(msgid, title, type));
+			}
+
+			return res;
+		} 
+		catch (SQLException e) {
+			logger.error("", e);
+			if (conn != null)
+				try { conn.rollback(); } catch (SQLException e1) { logger.error("Can't roll back", e1); }
+			
+			return null;
+		}
+		finally {
+			if (prep_s != null)
+				try { prep_s.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (conn != null)
+				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
+		}
+	}
+	
+	public List<Message> getUserRegisteredEvents(String username) {
+		Connection conn = null;
+		PreparedStatement prep_s = null;
+
+		try {
+			conn = _dbcPool.getConnection();
+			return getUserRegisteredEvents(conn, username);
+		} 
+		catch (SQLException e) {
+			logger.error("", e);
+//			if (conn != null)
+//				try { conn.rollback(); } catch (SQLException e1) { logger.error("Can't roll back", e1); }
+
+			return null;
+		}
+		finally {
+			if (prep_s != null)
+				try { prep_s.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (conn != null)
+				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
+		}
 	}
 	
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-	private int getVoteCount(Connection conn, int consid, int eventid) {
+	private int getVoteCount(Connection conn, int consid) {
 		PreparedStatement s = null;
 		ResultSet rs = null;
 		
 		try {
-			String sql = "SELECT COUNT(*) FROM consensus_votes WHERE msgid = ? AND consid = ?;"; 
+			String sql = "SELECT COUNT(*) FROM consensus_votes WHERE consid = ?;"; 
 			s = conn.prepareStatement(sql);
-			s.setInt(1, eventid);
-			s.setInt(2, consid);
+			s.setInt(1, consid);
 			
 			rs = s.executeQuery();
 
@@ -1088,5 +1143,94 @@ public class MySQLStorage implements Storage {
 		}
 		
 		return false;
+	}
+	
+	private boolean toggleConsensusReqIfNeeded(Connection conn, int consid) throws SQLException {
+		int votesCount = getVoteCount(conn, consid);
+		int nregistered = getRegisteredCount(conn, consid);
+
+		if (votesCount < 0 || nregistered < 0) {
+			throw new SQLException();
+		}
+
+		if (votesCount == nregistered && nregistered > 0) {
+			toggleStatus(conn, consid);
+			deleteCurrentVotes(conn, consid);
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private List<Message> getUserRegisteredEvents(Connection conn, String username) {
+		PreparedStatement s = null;
+		ResultSet rs = null;
+		List<Message> res = new ArrayList<Message>();
+
+		try {
+			
+			StringBuilder sqlsb = new StringBuilder();
+			sqlsb.append("SELECT messages.msgid, messages.title FROM event_reg JOIN messages ON ");
+			sqlsb.append("event_reg.msgid = messages.msgid ");
+			sqlsb.append("WHERE event_reg.username = ?;");
+			
+			s = conn.prepareStatement(sqlsb.toString());
+			s.setString(1, username);
+
+			rs = s.executeQuery();
+			while (rs.next()) {
+				int msgid = rs.getInt("msgid");
+				String title = rs.getString("title");
+								
+				res.add(new Message(msgid, title, "EVENT"));
+			}
+			
+			return res;
+		}
+		catch (SQLException e) {
+			logger.error("", e);
+			return null;
+		}
+		finally {
+			if (s != null) {
+				try { s.close(); } catch (SQLException e) { logger.error("", e); }
+			}
+
+			if (rs != null) {
+				try { rs.close(); } catch (SQLException e) { logger.error("", e); }
+			}
+		}
+	}
+	
+	private List<Integer> getEventConsensusIds(Connection conn, int eventid) {
+		PreparedStatement s = null;
+		ResultSet rs = null;
+		List<Integer> res = new ArrayList<Integer>();
+
+		try {
+			String sql = "SELECT consid FROM consensus WHERE msgid = ?;";
+			s = conn.prepareStatement(sql);
+			s.setInt(1, eventid);
+
+			rs = s.executeQuery();
+			while (rs.next()) {
+				res.add(rs.getInt(1));
+			}
+			
+			return res;
+		}
+		catch (SQLException e) {
+			logger.error("", e);
+			return null;
+		}
+		finally {
+			if (s != null) {
+				try { s.close(); } catch (SQLException e) { logger.error("", e); }
+			}
+
+			if (rs != null) {
+				try { rs.close(); } catch (SQLException e) { logger.error("", e); }
+			}
+		}		
 	}
 }

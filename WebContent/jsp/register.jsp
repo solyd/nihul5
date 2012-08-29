@@ -97,13 +97,14 @@
 	window.onload = initRegister;
 	
 	function checkBeforeSubmit(){
-		$.ajax({async:false});
-		checkUserName();
-		$.ajax({async:true});
-		if (userNameBool && checkPassword() && checkEmail()){
-			return true;
-		}
-		return false;
+// 		$.ajax({async:false});
+// 		checkUserName();
+// 		$.ajax({async:true});
+// 		if (userNameBool && checkPassword() && checkEmail()){
+// 			return true;
+// 		}
+// 		return false;
+		return true;
 	}
 	
 </script>

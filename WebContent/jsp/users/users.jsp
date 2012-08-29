@@ -8,7 +8,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" type="text/css" rel="stylesheet/index" href="/<%=CONST.WEBAPP_NAME %>/styles/style.css" />
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/jquery.js"></script>
-<script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/users.js"></script>
 
 <title>Users</title>
 </head>
@@ -19,7 +18,7 @@
 
 	<div id="container" class="right">
 		<%@ include file="/jsp/users/user_list.jsp"%>
-		<%@ include file="/jsp/users/user_info.jsp"%>
+		
 	</div>
 
 	<%@ include file="/jsp/footer.jsp"%>

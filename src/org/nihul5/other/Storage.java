@@ -5,18 +5,14 @@ import java.util.Map;
 
 public interface Storage {
 	void init();
-	
-	// User operations
-	// ++++++++++++++++++++++++++++++++++++++++
+
 	boolean 		saveUser(User user);
 	boolean 		deleteUser(String username);
-	List<User> 		getUsers();
 	List<String>	getUserNames();
 	User 			getUser(String username);
-	
-	
-	boolean savePost(Post post);
-	boolean saveEvent(Event event);
+
+	boolean saveMessage(Message msg);
+	boolean getMessage(int msgid);
 	boolean deleteMessage(int msgid);
 		
 	boolean saveEventRegistration(int eventid, String username);
@@ -25,5 +21,6 @@ public interface Storage {
 	List<Consensus> getEventConsensusReqs(int eventid);
 	boolean voteOnConsensusReq(String username, int eventid, int reqid, boolean accept);
 	
-	List<Message> getUserMessages(String username);
+	List<Message> getUserCreatedMessages(String username);
+	List<Message> getUserRegisteredEvents(String username);
 }
