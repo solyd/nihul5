@@ -14,7 +14,7 @@
     <web-resource-collection>
       <web-resource-name>BLA?</web-resource-name>
       <url-pattern>/login.jsp</url-pattern>
-      <url-pattern>/events/create</url-pattern>
+      <url-pattern>/messages/create_message.jsp</url-pattern>
     </web-resource-collection>
     <auth-constraint>
       <role-name>user</role-name>

@@ -5,15 +5,15 @@ var messageType;
 function tagsAction(action){
 	$("#date_title").animate({ height: action, opacity: action }, 'slow');
 	$("#date_data").animate({ height: action, opacity: action }, 'slow');
-	$("#capacity").animate({ height: action, opacity: action }, 'slow');
+	$("#event_capacity").animate({ height: action, opacity: action }, 'slow');
 }
 //Add Event or Message
 function addMessage(){
-	messageType = "Message";
+	messageType = "Post";
 	$('#messageType').click(function() {
 		document.getElementById('title').innerHTML = "New Message";
 		tagsAction("hide");
-		messageType = "Message";
+		messageType = "Post";
 	});
 	$('#eventType').click(function() {
 		document.getElementById('title').innerHTML = "New Event";
@@ -87,7 +87,7 @@ function inRange(min, number, max){
 	}
 }
 
-function takeEventDate(){
+function getEventDate(){
 	var splitDay = ($('#eventDay').val()).split("/");
 	var day = splitDay[0];
 	var month = splitDay[1];
@@ -104,6 +104,10 @@ function takeEventDate(){
 		var date = year + month + day + hours + minutes;
 		return date;
 	//}
+}
+
+function getEventCapacity(){
+	return ($('#capacity').val());
 }
 
 function padStr(i) {

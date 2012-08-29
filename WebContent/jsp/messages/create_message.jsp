@@ -35,10 +35,12 @@
 		var data = $('#msg_form').serializeArray();
 		data.push({ name: '<%=CONST.MSG_CREATION_TIME%>', 
 			value: getDateString() });
-		data.push({ name: '<%=CONST.EVENT_DATE%>', 
-			value: takeEventDate() });
 		data.push({ name: '<%=CONST.MSG_TYPE%>', 
 			value: messageType });
+		data.push({ name: '<%=CONST.EVENT_DATE%>', 
+			value: getEventDate() });
+		data.push({ name: '<%=CONST.EVENT_CAPACITY%>', 
+			value: getEventCapacity() });
 		$.post('/<%=CONST.WEBAPP_NAME%>/messages/create',
 				data, function(response) {
 			alert(response.<%=CONST.MSG_RESULT%>);
@@ -91,7 +93,7 @@
 						<td><input id="eventDay" type="text" size="10" /></td>
 						<td><input id="eventTime" type="text" size="10" /></td>
 					</tr>
-					<tr id="capacity" style="display: none">
+					<tr id="event_capacity" style="display: none">
 						<td>Capacity:</td>
 						<td><input id="capacity" type="text" size="10" value="0" /></td>
 					</tr>
