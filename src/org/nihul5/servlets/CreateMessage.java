@@ -68,6 +68,9 @@ public class CreateMessage extends HttpServlet {
 		String[] outerArray = request.getParameterValues(CONST.EVENT_CONSENSUSES);
 		String[] innerArray=outerArray[0].split(",");
 
+/*		for(int i=0; i<innerArray.length;i++){
+			logger.debug("element " + i + " " + innerArray[i]);
+		}*/
 		
 		
 		String title = request.getParameter(CONST.MSG_TITLE);

@@ -150,6 +150,7 @@ function addEvent() {
 		newDiv.innerHTML = text + " <button onclick=\"removeElement(\'"+divIdName+"','" +text+"\')\">Remove</button>";
 		appendToText.appendChild(newDiv);
 		consensuses.push(text);
+		document.getElementById('consensus_text').value = "";
 	}
 }
 
