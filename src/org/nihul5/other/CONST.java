@@ -3,7 +3,7 @@ package org.nihul5.other;
 public class CONST {
 	public static final String WEBAPP_NAME = "nihul5";
 	public static final boolean DEBUG_MODE = true;
-	public static final boolean RESET_DB = true;
+	public static final boolean RESET_DB = false;
 	
 	public static final String MSGBOX_TXT = "msgboxtxt";
 	public static final String REDIRECT_URL = "";
@@ -46,7 +46,8 @@ public class CONST {
 	public static final int MSG_MAX_CONTENT_LEN = 1024;	// bytes
 	public static final int MSG_MAX_TITLE_LEN = 128; //bytes
 	public static final String MSG_RESULT = "MessageResult";
-	public static final String MSG_TYPE = "MessageType";	
+	public static final String MSG_TYPE = "MessageType";
+	public static final String EVENT_DATE = "event_date";
 	
 	public static final String ALPHANUMERIC_REGEX = "/^[a-z0-9]+$/i";
 	public static final String EMAIL_REGEX = "[^A-Za-z0-9\\.\\@_\\-~#]+";

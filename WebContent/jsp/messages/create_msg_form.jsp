@@ -1,5 +1,9 @@
 <%@ page import="org.nihul5.other.CONST"%>
 
+<link rel="stylesheet" type="text/css" media="all" href="jsDatePick_ltr.min.css" />
+<script type="text/javascript" src="jquery.1.4.2.js"></script>
+<script type="text/javascript" src="jsDatePick.jquery.min.1.3.js"></script>
+
 <script type="text/javascript">
 	function getDateString() {
 	    var temp = new Date();
@@ -44,17 +48,19 @@
 			</tr>
 			<tr>
 				<td>Latitude:</td>
-				<td><input id="lat" type="text" name="<%=CONST.MSG_LATITUDE%>"
-					value=""></td>
+				<td><input id="lat" type="text" name="<%=CONST.MSG_LATITUDE%>" value=""></td>
 			</tr>
 			<tr>
 				<td>Longitude:</td>
-				<td><input id="lng" type="text" name="<%=CONST.MSG_LONGITUDE%>"
-					value=""></td>
+				<td><input id="lng" type="text" name="<%=CONST.MSG_LONGITUDE%>" value=""></td>
 			</tr>
 
 			<tr>
 				<td>Content:</td>
+				<td><textarea name="<%=CONST.MSG_CONTENT%>" rows="10" cols="10"></textarea></td>
+			</tr>
+			<tr>
+				<td>Event Day:</td>
 				<td><textarea name="<%=CONST.MSG_CONTENT%>" rows="10" cols="10"></textarea></td>
 			</tr>
 

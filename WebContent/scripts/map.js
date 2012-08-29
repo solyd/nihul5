@@ -1,4 +1,5 @@
-google.maps.event.addDomListener(window, 'load', initialize);
+//google.maps.event.addDomListener(window, 'load', initialize);
+$(document).ready(initialize);
 
 var minLat = -90;
 var maxLat = 90;
@@ -6,7 +7,6 @@ var minLng = -180;
 var maxLng = 180;
 
 var map;
-var markers = new Array();
 
 function initialize() {
 	var mapOptions = {
@@ -16,15 +16,15 @@ function initialize() {
 	};
 	
 	map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-	
-	google.maps.event.addListener(map, 'click', function(event) {
+
+/*	google.maps.event.addListener(map, 'click', function(event) {
 		placeMarker(event.latLng);
 		$('#latitude').value = event.latLng.lat();
 		$('#longitude').value = event.latLng.lat();
-	});
+	});*/
 }
 
-function placeMarker(position) {
+/*function placeMarker(position) {
 	var marker = new google.maps.Marker({
 		position: position,
 		map: map
@@ -77,4 +77,4 @@ function inRange(min, number, max){
 	else {
 		return false;
 	}
-}
+}*/
