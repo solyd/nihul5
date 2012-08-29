@@ -6,16 +6,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 public class Message {
+	private static final Logger logger = Logger.getLogger(Message.class);
+	
 	public int id;
 	public String username;
 	public double lat;
 	public double lng;
-	public Timestamp creationTime;	
+	public long creationTime;	
 	public String title;
 	public String content;
 	
-	public Timestamp eventTime;
+	public long eventTime;
 	public int capacity;
 	public List<String> consensusDescList = new ArrayList<String>();
 	
@@ -52,7 +56,7 @@ public class Message {
 	public Message(String username, 
 	               double lat, 
 	               double lng,
-	               Timestamp creationTime, 
+	               long creationTime, 
 	               String title, 
 	               String content) {
 		this.username = username;
@@ -69,7 +73,7 @@ public class Message {
 	               String username, 
 	               double lat, 
 	               double lng,
-	               Timestamp creationTime, 
+	               long creationTime, 
 	               String title, 
 	               String content) {
 		this.id = id;
@@ -80,14 +84,7 @@ public class Message {
 		this.title = title;
 		this.content = content;
 	}
-	
-	public String creationDateStr() {
-		return sdf.format(this.creationTime);
-	}
-	
-	public String eventDateStr() {
-		return sdf.format(eventTime);
-	}
+		
 	
 	@Override
 	public String toString() {
@@ -97,10 +94,10 @@ public class Message {
 			sb.append("\n\t[Event]\n\towner: " + username);
 			sb.append("\n\tlat: " + lat);
 			sb.append("\n\tlng: " + lng);
-			sb.append("\n\tcreated on: " + creationDateStr());
+			sb.append("\n\tcreated on: " + Utility.millitimeToStr(creationTime));
 			sb.append("\n\ttitle: " + title);
 			sb.append("\n\tcontent: " + content);
-			sb.append("\n\tevent date: " + eventDateStr());
+			sb.append("\n\tevent date: " + Utility.millitimeToStr(eventTime));
 			sb.append("\n\tcapacity: " + capacity);
 			sb.append("\n\t# of consensus req: " + consensusDescList.size());
 			break;
@@ -108,7 +105,7 @@ public class Message {
 			sb.append("\n\t[Post]\n\towner: " + username);
 			sb.append("\n\tlat: " + lat);
 			sb.append("\n\tlng: " + lng);
-			sb.append("\n\tcreated on: " + creationDateStr());
+			sb.append("\n\tcreated on: " + Utility.millitimeToStr(creationTime));
 			sb.append("\n\ttitle: " + title);
 			sb.append("\n\tcontent: " + content);
 			break;

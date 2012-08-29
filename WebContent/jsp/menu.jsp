@@ -17,7 +17,8 @@
 		
 		<li><a href="/<%=CONST.WEBAPP_NAME %>/users/profile/<%=menu_username%>">My Profile</a></li>
 		
-		<li><a href="/<%=CONST.WEBAPP_NAME %>/CreateMessage">Create Message</a></li>
+		<li><a href="/<%=CONST.WEBAPP_NAME %>/messages/create">Create Message</a></li>
+		
 		
 		<%} %>
 		
@@ -26,7 +27,7 @@
 		<!-- TODO -->
 		<li><a href="/<%=CONST.WEBAPP_NAME %>/">Search Messages</a></li>
 		
-		<li><a href="/<%=CONST.WEBAPP_NAME %>/messages/create">Create Message</a></li>
+		
 
 		<li><a href="/<%=CONST.WEBAPP_NAME %>/users">Users</a></li>
 

@@ -17,10 +17,13 @@
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/menu_loader.js"></script>
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/map.js"></script>
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/create_message.js"></script>
-<script>
+
+<script type="text/javascript">
 	var messageResult = <%=CONST.MSG_RESULT%>;
 	
 	function getDateString() {
+		return new Date().getTime();
+		
 	    var temp = new Date();
 	    var dateStr = padStr(temp.getFullYear()) +
 	                  padStr(1 + temp.getMonth()) +
@@ -33,19 +36,25 @@
 	
 	function submitMsg() {
 		var data = $('#msg_form').serializeArray();
+		
 		data.push({ name: '<%=CONST.MSG_CREATION_TIME%>', 
 			value: getDateString() });
+		
 		data.push({ name: '<%=CONST.MSG_TYPE%>', 
 			value: messageType });
+		
 		data.push({ name: '<%=CONST.EVENT_DATE%>', 
 			value: getEventDate() });
+		
 		data.push({ name: '<%=CONST.EVENT_CAPACITY%>', 
 			value: getEventCapacity() });
-		data.push({ name: '<%=CONST.EVENT_CAPACITY%>', 
+
+		data.push({ name: '<%=CONST.EVENT_CONSENSUSES%>', 
 			value: getConsensuses() });
+
 		$.post('/<%=CONST.WEBAPP_NAME%>/messages/create',
 				data, function(response) {
-			alert(response.<%=CONST.MSG_RESULT%>);
+			alert(response.result + ': ' + response.reason);
 		});
 	}
 	
@@ -63,14 +72,15 @@
 			<form id="msg_form" name="msg_creation_form" action="javascript:submitMsg()">
 				<table id="mainTable" align="center">
 					<tr>
-						<td id="title" colspan=2 align="center">New Message</td>
+						<td id="title" colspan=2 align="center">
+							<h2 id="create_head">New Post</h2>
+							<button id="messageType" type="button">Post</button>
+							<button id="eventType" type="button">Event</button>
+						</td>
+						
 					</tr>
 					<tr>
 						<td colspan=2 align="center" height="10px"></td>
-					</tr>
-					<tr>
-						<td><button id="messageType" type="button">Message</button> </td>
-						<td><button id="eventType" type="button">Event</button> </td>
 					</tr>
 					<tr>
 						<td>Title:</td>

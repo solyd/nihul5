@@ -1,4 +1,5 @@
 $(document).ready(addMessage);
+
 var markersArray = new Array();
 var messageType;
 
@@ -11,17 +12,17 @@ function tagsAction(action){
 	$("#consensus3").animate({ height: action, opacity: action }, 'slow');
 }
 //Add Event or Message
-function addMessage(){
+function addMessage() {
 	messageType = "Post";
 	$('#messageType').click(function() {
-		document.getElementById('title').innerHTML = "New Message";
+		$('#create_head').text('New Post');
 		tagsAction("hide");
-		messageType = "Post";
+		messageType = "POST";
 	});
 	$('#eventType').click(function() {
-		document.getElementById('title').innerHTML = "New Event";
+		$('#create_head').text('New Event');
 		tagsAction("show");
-		messageType = "Event";
+		messageType = "EVENT";
 	});
 	
 	$('#lat').blur(function() {
@@ -94,22 +95,21 @@ function inRange(min, number, max){
 }
 
 function getEventDate(){
+
 	var splitDay = ($('#eventDay').val()).split("/");
-	var day = splitDay[0];
-	var month = splitDay[1];
-	var year = splitDay[2];
+	var day = padStr(splitDay[0]);
+	var month = padStr(splitDay[1]);
+	var year = padStr(splitDay[2]);
 	
 	var splitTime = ($('#eventTime').val()).split(":");
-	var hours = splitTime[0];
-	var minutes = splitTime[1];
+	var hours = padStr(splitTime[0]);
+	var minutes = padStr(splitTime[1]);
+	var sec = padStr('0');
 	
-	//if (isNaN(day) || isNaN(month) ||isNaN(year) ||isNaN(hours) ||isNaN(minutes)) {  // d.valueOf() could also work
-	   	//if date is invalid
-	//}
-	//else{
-		var date = year + month + day + hours + minutes;
-		return date;
-	//}
+	var date = new Date(year, month-1, day, hours, minutes, sec, '0');
+	var utc = new Date(date.toUTCString());
+	
+	return utc.getTime();
 }
 
 function getEventCapacity(){

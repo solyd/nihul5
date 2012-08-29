@@ -112,7 +112,7 @@ public class MySQLStorage implements Storage {
 		sb.append(String.format("username VARCHAR(%d) NOT NULL, ", CONST.MAX_USERNAME_LEN));
 		sb.append("lat DOUBLE NOT NULL, ");
 		sb.append("lng DOUBLE NOT NULL, ");
-		sb.append("creation_date DATETIME NOT NULL, ");
+		sb.append("creation_date BIGINT NOT NULL, ");
 		sb.append(String.format("title VARCHAR(%d) NOT NULL, ", CONST.MSG_MAX_TITLE_LEN));
 		sb.append(String.format("content VARCHAR(%d), ", CONST.MSG_MAX_CONTENT_LEN));
 		sb.append("type VARCHAR(20) NOT NULL, ");
@@ -128,7 +128,7 @@ public class MySQLStorage implements Storage {
 		sb = new StringBuilder();
 		sb.append("CREATE TABLE IF NOT EXISTS events (");
 		sb.append("msgid BIGINT NOT NULL PRIMARY KEY, ");
-		sb.append("event_date DATETIME NOT NULL, ");
+		sb.append("event_date BIGINT NOT NULL, ");
 		sb.append("capacity INT NOT NULL, ");
 		sb.append("FOREIGN KEY (msgid) REFERENCES messages(msgid) ");
 		sb.append("ON UPDATE CASCADE ON DELETE CASCADE");
@@ -437,7 +437,7 @@ public class MySQLStorage implements Storage {
 			prep_s.setString(1, post.username);
 			prep_s.setDouble(2, post.lat);
 			prep_s.setDouble(3, post.lng);
-			prep_s.setString(4, post.creationDateStr());
+			prep_s.setLong(4, post.creationTime);
 			prep_s.setString(5, post.title);
 			prep_s.setString(6, post.content);
 
@@ -481,7 +481,7 @@ public class MySQLStorage implements Storage {
 			prepMsg.setString(1, event.username);
 			prepMsg.setDouble(2, event.lat);
 			prepMsg.setDouble(3, event.lng);
-			prepMsg.setString(4, event.creationDateStr());
+			prepMsg.setLong(4, event.creationTime);
 			prepMsg.setString(5, event.title);
 			prepMsg.setString(6, event.content);
 
@@ -500,7 +500,7 @@ public class MySQLStorage implements Storage {
 			
 			prepEvent = conn.prepareStatement(sqlsb.toString());
 			prepEvent.setInt(1, last_insert_id);
-			prepEvent.setString(2, event.eventDateStr());
+			prepEvent.setLong(2, event.eventTime);
 			prepEvent.setInt(3, event.capacity);
 			
 			prepEvent.executeUpdate();
@@ -546,6 +546,8 @@ public class MySQLStorage implements Storage {
 	public boolean deleteMessage(int msgid) {
 		Connection conn = null;
 		PreparedStatement prep_s = null;
+		PreparedStatement prepEventCheck = null;
+		ResultSet eventrs = null;
 		
 		logger.info("Deleting msg: " + msgid);
 
@@ -555,7 +557,24 @@ public class MySQLStorage implements Storage {
 
 			conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
-			String sql = "DELETE FROM messages WHERE msgid = ?;";
+			// Check if this is an event - if so, don't allow deletion of past events
+			String sql = "SELECT * FROM events WHERE msgid = ?;";
+			prepEventCheck = conn.prepareStatement(sql);
+			prepEventCheck.setInt(1, msgid);
+
+			eventrs = prepEventCheck.executeQuery();
+			if (eventrs.next()) {
+				logger.info("Attempting to delete an EVENT " + msgid);
+				Timestamp eventDate = eventrs.getTimestamp("event_date");
+				Timestamp currDate = new Timestamp(new Date().getTime());
+				
+				if (eventDate.before(currDate)) {
+					logger.error("Can't delete past event " + msgid);
+					return false;
+				}	
+			}
+			
+			sql = "DELETE FROM messages WHERE msgid = ?;";
 			prep_s = conn.prepareStatement(sql);
 			prep_s.setInt(1, msgid);
 
@@ -572,6 +591,10 @@ public class MySQLStorage implements Storage {
 		finally {
 			if (prep_s != null)
 				try { prep_s.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (prepEventCheck != null)
+				try { prepEventCheck.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (eventrs != null)
+				try { eventrs.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
 			if (conn != null)
 				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
 		}
@@ -620,7 +643,7 @@ public class MySQLStorage implements Storage {
 				return false;
 			}
 			
-			if (eventDate.after(currDate)) {
+			if (eventDate.before(currDate)) {
 				logger.error("Can't register to event " + eventid + " - deadline has passed");
 				return false;
 			}
@@ -662,7 +685,9 @@ public class MySQLStorage implements Storage {
 		PreparedStatement prepEventReg = null;
 		PreparedStatement prepConsVotes = null;
 		PreparedStatement prepCons = null;
+		PreparedStatement prepEventCheck = null;
 		ResultSet rs = null;
+		ResultSet eventrs = null;
 
 		logger.info("deleting event registration by " + username + "to event " + eventid);
 
@@ -671,10 +696,30 @@ public class MySQLStorage implements Storage {
 			conn.setAutoCommit(false);
 			
 			conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+			
+			// Check that the event exists and hasn't occured yet
+			String sql = "SELECT * FROM events WHERE msgid = ?;";
+			prepEventCheck = conn.prepareStatement(sql);
+			prepEventCheck.setInt(1, eventid);
+
+			eventrs = prepEventCheck.executeQuery();
+			if (!eventrs.next()) {
+				logger.error("Can't delete registeration to eventid " + eventid + " - event doesn't exist");
+				return false;
+			}
+
+			Timestamp eventDate = eventrs.getTimestamp("event_date");
+			Timestamp currDate = new Timestamp(new Date().getTime());
+
+			if (eventDate.after(currDate)) {
+				logger.error("Can't delete registeration to eventid " + eventid + " - deadline has passed");
+				return false;
+			}
+
 
 			// delete from registration table
 			// ++++++++++++++++++++++++++++++++++++++++
-			String sql = "DELETE FROM event_reg WHERE msgid = ? AND username = ?;";
+			sql = "DELETE FROM event_reg WHERE msgid = ? AND username = ?;";
 			prepEventReg = conn.prepareStatement(sql);
 			prepEventReg.setInt(1, eventid);
 			prepEventReg.setString(2, username);
@@ -720,6 +765,10 @@ public class MySQLStorage implements Storage {
 				try { prepConsVotes.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
 			if (rs != null)
 				try { rs.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (eventrs != null)
+				try { rs.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (prepEventCheck != null)
+				try { prepEventCheck.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
 			if (conn != null)
 				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
 		}
