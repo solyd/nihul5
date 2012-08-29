@@ -19,14 +19,19 @@
 <link rel="stylesheet" type="text/css" rel="stylesheet/index" href="/<%=CONST.WEBAPP_NAME%>/styles/style.css" />
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/jquery.js"></script>
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/jquery.pajinate.js"></script>
+
 <script type="text/javascript">
 	$(document).ready(function(){
-		$('#page_container').pajinate({
+		$('#msg_container').pajinate({
 					items_per_page : 5,
-					item_container_id : '.alt_content',
-					nav_panel_id : '.alt_page_navigation'
+					item_container_id : '.list_content',
+					nav_panel_id : '.page_navigation'
 		});
-		$('li:odd, .content > *:odd').css('background-color','#FFD9BF');
+		$('#event_container').pajinate({
+					items_per_page : 5,
+					item_container_id : '.list_content',
+					nav_panel_id : '.page_navigation'
+		});
 	});
 	
 	function deleteProfile(username) {
@@ -35,13 +40,12 @@
 				if (data.result == 'success') {
 					$('#delete_button').hide('slow', function() {
 						$(this).replaceWith('<p>Profile was successfuly deleted, redirecting in 2 seconds</p>');
-						$(this.show('slow'));
+						$(this).show('slow', function() {
+							setTimeout(function() {
+								window.location.href = "/<%=CONST.WEBAPP_NAME%>/";
+							}, 2000);		
+						});
 					});
-					
-					setTimeout(function() {
-						window.location.href = "/<%=CONST.WEBAPP_NAME%>/";
-					}, 3000);
-
 				}
 			}, "json");
 		<%}%>
@@ -110,14 +114,16 @@
 				List<Message> profile_usermsgs = (List<Message>) request.getAttribute(CONST.USER_CREATED_MSGS);
 				if (profile_usermsgs != null && profile_usermsgs.size() > 0) {
 			%>
-			<div id="page_container">
+			<div id="center_box">
+			<div id="msg_container">
 				<div class="page_navigation"></div>
-				<ul class="content">
+				<ul class="list_content">
 				<% for (Message msg : profile_usermsgs) { %>
 					<li><p><%=msg.title %></p></li>
 				<% } %> 
 				</ul>
 				
+			</div>
 			</div>
 			
 			<%} else { %>
@@ -127,18 +133,21 @@
 			<%} %>
 			
 			<h3>Registered Events</h3>
+			
 			<%
 				List<Message> profile_usrevents = (List<Message>) request.getAttribute(CONST.USER_REG_EVENTS);
 				if (profile_usrevents != null && profile_usrevents.size() > 0) {
 			%>
-			<div id="page_container">
+			<div id="center_box">
+			<div id="event_container">
 				<div class="page_navigation"></div>
-				<ul class="content">
+				<ul class="list_content">
 				<% for (Message msg : profile_usrevents) { %>
 					<li><p><%=msg.title %></p></li>
 				<% } %> 
 				</ul>
 				
+			</div>
 			</div>
 			
 			<%} else { %>

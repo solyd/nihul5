@@ -43,21 +43,24 @@ public class DeleteUser extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		// TODO
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
+		response.setContentType("application/json; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		
+		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+		response.setHeader("Pragma","no-cache"); //HTTP 1.0
+		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
+
 		Principal princ = request.getUserPrincipal();
 		if (princ == null) {
 			logger.error("Coulnd't get user principal for user deletion");
-			out.println("{\"result\":\"failed\"");
+			out.print("{\"result\":\"failed\"}");
 			return;
 		}
 		String loggedInUser = request.getUserPrincipal().getName();
@@ -65,7 +68,7 @@ public class DeleteUser extends HttpServlet {
 		
 		if (userToDelete == null || !loggedInUser.equals(userToDelete)) {
 			logger.error("User to delete: " + userToDelete + ", Logged in user: " + loggedInUser);
-			out.println("{\"result\":\"failed\"");
+			out.print("{\"result\":\"failed\"}");
 			return;
 		}
 		
@@ -73,14 +76,11 @@ public class DeleteUser extends HttpServlet {
 		
 		if (_storage.deleteUser(userToDelete)) {
 			logger.error("User deletion successful: " + userToDelete);
-			out.println("{\"result\":\"success\"");
+			out.print("{\"result\":\"success\"}");
 		}
 		else {
 			logger.error("User deletion failed: " + userToDelete);
-			out.println("{\"result\":\"failed\"");
+			out.print("{\"result\":\"failed\"}");
 		}
-		
-		out.flush();
-		out.close();
 	}
 }

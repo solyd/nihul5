@@ -53,7 +53,10 @@ public class IsUsernameAvailable extends HttpServlet {
 		response.setHeader("Pragma","no-cache"); //HTTP 1.0
 		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 		
-	    if (_storage.getUser(userName) != null){
+		if (userName == null) {
+			out.print("false");
+		}
+		else if (_storage.getUser(userName) != null){
 	    	logger.info("User " + userName.toString() + " already taken");
 	    	out.print("false");
 	    }
