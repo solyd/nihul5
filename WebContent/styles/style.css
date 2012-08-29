@@ -162,7 +162,6 @@ html>body #menu li a {
 	float: right;
 }
 
-<<<<<<< HEAD
 div.time-picker {
   position: absolute;
   height: 191px;
@@ -191,6 +190,7 @@ div.time-picker li {
 div.time-picker li.selected {
   background: #0063CE;
   color: #fff;
+}
 
 .page_navigation , .alt_page_navigation{
 	padding-bottom: 10px;

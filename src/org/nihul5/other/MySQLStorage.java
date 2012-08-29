@@ -112,7 +112,7 @@ public class MySQLStorage implements Storage {
 		sb.append(String.format("username VARCHAR(%d) NOT NULL, ", CONST.MAX_USERNAME_LEN));
 		sb.append("lat DOUBLE NOT NULL, ");
 		sb.append("lng DOUBLE NOT NULL, ");
-		sb.append("creation_date DATETIME NOT NULL, ");
+		sb.append("creation_date BIGINT NOT NULL, ");
 		sb.append(String.format("title VARCHAR(%d) NOT NULL, ", CONST.MSG_MAX_TITLE_LEN));
 		sb.append(String.format("content VARCHAR(%d), ", CONST.MSG_MAX_CONTENT_LEN));
 		sb.append("type VARCHAR(20) NOT NULL, ");
@@ -128,7 +128,7 @@ public class MySQLStorage implements Storage {
 		sb = new StringBuilder();
 		sb.append("CREATE TABLE IF NOT EXISTS events (");
 		sb.append("msgid BIGINT NOT NULL PRIMARY KEY, ");
-		sb.append("event_date DATETIME NOT NULL, ");
+		sb.append("event_date BIGINT NOT NULL, ");
 		sb.append("capacity INT NOT NULL, ");
 		sb.append("FOREIGN KEY (msgid) REFERENCES messages(msgid) ");
 		sb.append("ON UPDATE CASCADE ON DELETE CASCADE");
@@ -437,7 +437,7 @@ public class MySQLStorage implements Storage {
 			prep_s.setString(1, post.username);
 			prep_s.setDouble(2, post.lat);
 			prep_s.setDouble(3, post.lng);
-			prep_s.setString(4, post.creationDateStr());
+			prep_s.setLong(4, post.creationTime);
 			prep_s.setString(5, post.title);
 			prep_s.setString(6, post.content);
 
@@ -481,7 +481,7 @@ public class MySQLStorage implements Storage {
 			prepMsg.setString(1, event.username);
 			prepMsg.setDouble(2, event.lat);
 			prepMsg.setDouble(3, event.lng);
-			prepMsg.setString(4, event.creationDateStr());
+			prepMsg.setLong(4, event.creationTime);
 			prepMsg.setString(5, event.title);
 			prepMsg.setString(6, event.content);
 
@@ -500,7 +500,7 @@ public class MySQLStorage implements Storage {
 			
 			prepEvent = conn.prepareStatement(sqlsb.toString());
 			prepEvent.setInt(1, last_insert_id);
-			prepEvent.setString(2, event.eventDateStr());
+			prepEvent.setLong(2, event.eventTime);
 			prepEvent.setInt(3, event.capacity);
 			
 			prepEvent.executeUpdate();
