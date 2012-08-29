@@ -33,7 +33,7 @@ function onMenuUsersClicked() {
 
 function onAddMessageClicked() {
 //	Add Event or Message
-	function addMessage(){
+/*	function addMessage(){
 		//clearMap();
 		$('#lat').blur(function() {
 			var lat = $(this).val();
@@ -90,5 +90,5 @@ function onAddMessageClicked() {
 			}
 		}
 
-	}
+	}*/
 }

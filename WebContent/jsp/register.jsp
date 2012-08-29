@@ -33,7 +33,7 @@
 		else if (pattern.test(userName)){
 			$.get('/<%=CONST.WEBAPP_NAME%>/IsUsernameAvailable',
 					{ userNameParam: userName }, function(response) {
- 						if (response == 'true'){
+ 						if (response.result == 'true'){
 							tagShow("username_check", 'Username is available...');
 							userNameBool = true;
 						}

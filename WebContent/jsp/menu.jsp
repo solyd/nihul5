@@ -26,10 +26,8 @@
 		<!-- TODO -->
 		<li><a href="/<%=CONST.WEBAPP_NAME %>/">Search Messages</a></li>
 		
+		<li><a href="/<%=CONST.WEBAPP_NAME %>/messages/create">Create Message</a></li>
 
-		
-		
-		
 		<li><a href="/<%=CONST.WEBAPP_NAME %>/users">Users</a></li>
 
 	</ul>

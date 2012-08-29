@@ -47,22 +47,26 @@ public class IsUsernameAvailable extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    String userName = request.getParameter("userNameParam");
-	    PrintWriter out = response.getWriter();
+	    
 	    
 		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
 		response.setHeader("Pragma","no-cache"); //HTTP 1.0
 		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 		
-		if (userName == null) {
-			out.print("false");
-		}
+		response.setContentType("application/json; charset=UTF-8");
+		PrintWriter out = response.getWriter();
+        
+    	if (userName == null) {
+    		logger.info("User is null");
+    		out.print("{\"result\":\"false\"}");
+    	}
 		else if (_storage.getUser(userName) != null){
 	    	logger.info("User " + userName.toString() + " already taken");
-	    	out.print("false");
+	    	out.println("{\"result\":\"false\"}");
 	    }
 	    else{
 	    	logger.info("User " + userName.toString() + " is available");
-	    	out.print("true");
+	    	out.println("{\"result\":\"true\"}");
 	    }
 	}
 
