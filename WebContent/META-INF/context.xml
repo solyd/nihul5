@@ -41,6 +41,7 @@
         removeAbandoned="true"
         removeAbandonedTimeout="120"
         logAbandoned="true"
+        rollbackOnReturn="true"
         username="306932039" 
         password="306932039" 
         driverClassName="com.mysql.jdbc.Driver"

@@ -546,6 +546,8 @@ public class MySQLStorage implements Storage {
 	public boolean deleteMessage(int msgid) {
 		Connection conn = null;
 		PreparedStatement prep_s = null;
+		PreparedStatement prepEventCheck = null;
+		ResultSet eventrs = null;
 		
 		logger.info("Deleting msg: " + msgid);
 
@@ -555,7 +557,24 @@ public class MySQLStorage implements Storage {
 
 			conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
-			String sql = "DELETE FROM messages WHERE msgid = ?;";
+			// Check if this is an event - if so, don't allow deletion of past events
+			String sql = "SELECT * FROM events WHERE msgid = ?;";
+			prepEventCheck = conn.prepareStatement(sql);
+			prepEventCheck.setInt(1, msgid);
+
+			eventrs = prepEventCheck.executeQuery();
+			if (eventrs.next()) {
+				logger.info("Attempting to delete an EVENT " + msgid);
+				Timestamp eventDate = eventrs.getTimestamp("event_date");
+				Timestamp currDate = new Timestamp(new Date().getTime());
+				
+				if (eventDate.before(currDate)) {
+					logger.error("Can't delete past event " + msgid);
+					return false;
+				}	
+			}
+			
+			sql = "DELETE FROM messages WHERE msgid = ?;";
 			prep_s = conn.prepareStatement(sql);
 			prep_s.setInt(1, msgid);
 
@@ -572,6 +591,10 @@ public class MySQLStorage implements Storage {
 		finally {
 			if (prep_s != null)
 				try { prep_s.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (prepEventCheck != null)
+				try { prepEventCheck.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (eventrs != null)
+				try { eventrs.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
 			if (conn != null)
 				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
 		}
