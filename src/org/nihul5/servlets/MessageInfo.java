@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.nihul5.other.CONST;
+import org.nihul5.other.Message;
 import org.nihul5.other.Storage;
 
 /**
@@ -21,8 +22,9 @@ import org.nihul5.other.Storage;
 public class MessageInfo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(UserProfile.class);
-	
+
 	private Storage _storage;
+    
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -30,7 +32,7 @@ public class MessageInfo extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-
+    
     public void init(ServletConfig config) throws ServletException {
     	super.init(config);
     	_storage = (Storage) getServletContext().getAttribute(CONST.STORAGE);
@@ -40,14 +42,20 @@ public class MessageInfo extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String uri = request.getRequestURI();
-		String[] uriparts = uri.split("/");
-		String msgId = uriparts[uriparts.length - 1];
+		String[] parts = request.getRequestURI().split("/");
+		int msgid = -1;
+		Message msg = null;
+
+		try {
+			msgid = Integer.valueOf(parts[parts.length - 1]);
+		}
+		catch (Exception e) {
+			// TODO 
+		}
 		
-		logger.debug("user id: " + msgId);
-		_storage.getMessage(msgId);
+		msg = _storage.getMessage(msgid);
+		request.setAttribute(CONST.MSG, msg);
 		getServletContext().getRequestDispatcher("/jsp/messages/message_info.jsp").forward(request, response);
-		// Input: msgid in the url
 	}
 
 	/**

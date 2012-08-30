@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.nihul5.other.CONST;
 import org.nihul5.other.Storage;
+import org.nihul5.other.Utility;
 
 /**
  * Servlet implementation class UserDelete
@@ -50,9 +51,6 @@ public class DeleteUser extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("application/json; charset=UTF-8");
-		PrintWriter out = response.getWriter();
-		
 		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
 		response.setHeader("Pragma","no-cache"); //HTTP 1.0
 		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
@@ -60,15 +58,16 @@ public class DeleteUser extends HttpServlet {
 		Principal princ = request.getUserPrincipal();
 		if (princ == null) {
 			logger.error("Coulnd't get user principal for user deletion");
-			out.print("{\"result\":\"failed\"}");
+			Utility.writeResponse(response, false, "No permission");
 			return;
 		}
+		
 		String loggedInUser = request.getUserPrincipal().getName();
 		String userToDelete = request.getParameter("username");
 		
 		if (userToDelete == null || !loggedInUser.equals(userToDelete)) {
 			logger.error("User to delete: " + userToDelete + ", Logged in user: " + loggedInUser);
-			out.print("{\"result\":\"failed\"}");
+			Utility.writeResponse(response, false, "No permission");
 			return;
 		}
 		
@@ -76,11 +75,11 @@ public class DeleteUser extends HttpServlet {
 		
 		if (_storage.deleteUser(userToDelete)) {
 			logger.error("User deletion successful: " + userToDelete);
-			out.print("{\"result\":\"success\"}");
+			Utility.writeResponse(response, true, userToDelete + " deleted successfuly");
 		}
 		else {
 			logger.error("User deletion failed: " + userToDelete);
-			out.print("{\"result\":\"failed\"}");
+			Utility.writeResponse(response, false, "Deletion failed");
 		}
 	}
 }

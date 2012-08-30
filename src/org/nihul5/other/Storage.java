@@ -12,7 +12,7 @@ public interface Storage {
 	User 			getUser(String username);
 
 	boolean saveMessage(Message msg);
-	boolean getMessage(int msgid);
+	Message getMessage(int msgid);
 	boolean deleteMessage(int msgid);
 		
 	boolean saveEventRegistration(int eventid, String username);

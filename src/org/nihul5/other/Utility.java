@@ -6,7 +6,10 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -40,6 +43,11 @@ public class Utility {
 	public static String millitimeToStr(long mili) {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return formatter.format(new Date(mili));
+	}
+	
+	public static long getCurrentTime() {
+		Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
+		return c.getTimeInMillis();
 	}
 	
 	public static void writeResponse(HttpServletResponse response, boolean success, String reason) throws IOException {

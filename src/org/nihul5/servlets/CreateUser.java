@@ -56,7 +56,7 @@ public class CreateUser extends HttpServlet {
 		String password = request.getParameter(CONST.PASSWD);
 		String firstName = request.getParameter(CONST.FIRST_NAME);
 		String lastName = request.getParameter(CONST.LAST_NAME);
-		String email = request.getParameter(CONST.EMAIL); 
+		String email = request.getParameter(CONST.EMAIL);
 		
 		// TODO using ajax, send user feedback on wrong input type for the fields
 //		if (username == null || !username.matches(CONST.REGX_ALPHANUMERIC) ||
