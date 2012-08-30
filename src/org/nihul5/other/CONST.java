@@ -3,7 +3,7 @@ package org.nihul5.other;
 public class CONST {
 	public static final String WEBAPP_NAME = "nihul5";
 	public static final boolean DEBUG_MODE = true;
-	public static final boolean RESET_DB = true;
+	public static final boolean RESET_DB = false;
 	
 	public static final String MSGBOX_TXT = "msgboxtxt";
 	public static final String REDIRECT_URL = "";

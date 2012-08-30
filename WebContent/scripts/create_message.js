@@ -131,7 +131,7 @@ function getDay(){
 function getTime(){
 	var temp = new Date();
 	var timeStr = padStr(temp.getHours()) + ':' +
-					padStr(1 + temp.getMinutes());
+					padStr(temp.getMinutes());
 	return timeStr;
 }
 
@@ -169,4 +169,17 @@ function getConsensuses(){
 		alert(text);
 	}	*/
 	return consensuses;
+}
+
+function getDateString() {
+	return new Date().getTime();
+	
+    var temp = new Date();
+    var dateStr = padStr(temp.getFullYear()) +
+                  padStr(1 + temp.getMonth()) +
+                  padStr(temp.getDate()) +
+                  padStr(temp.getHours()) +
+                  padStr(temp.getMinutes()) +
+                  padStr(temp.getSeconds());
+    return dateStr;
 }
