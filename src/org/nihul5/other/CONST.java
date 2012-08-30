@@ -52,6 +52,7 @@ public class CONST {
 	public static final String MSG_RESULT   	   = "MessageResult";
 	public static final String MSG_TYPE 		   = "MessageType";
 	public static final String MSG_ID   		   = "MessageId";
+	public static final String MSG  			   = "msggggg";
 	
 	public static final String EVENT_DATE   	 = "EventDate";
 	public static final String EVENT_CAPACITY    = "EventCapacity";

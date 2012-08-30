@@ -1,23 +1,15 @@
 package org.nihul5.other;
 
 public class Consensus {
-	public final String desc;
-	public final Status status;
-	public final int id;
+	public int eventid;
+	public String desc;
+	public Status status;
+	public int id;
+	public int nvotesForChange;
 	
 	public static enum Status {
-		ACCEPTED {
-			@Override
-			public String toString() {
-				return "ACCEPTED";
-			}
-		},
-		NOT_ACCEPTED {
-			@Override
-			public String toString() {
-				return "NOT_ACCPTED";
-			}
-		}
+		ACCEPTED,
+		NOT_ACCEPTED
 	}
 	
 	public static Status getConsensusStatus(String str) {
@@ -34,4 +26,6 @@ public class Consensus {
 		this.desc = desc;
 		this.status = status;
 	}
+	
+	public Consensus() {}
 }

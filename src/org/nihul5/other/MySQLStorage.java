@@ -11,6 +11,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
+import org.nihul5.other.Message.MessageType;
 
 
 public class MySQLStorage implements Storage {
@@ -601,9 +602,82 @@ public class MySQLStorage implements Storage {
 	}
 	
 	@Override
-	public boolean getMessage(int msgid) {
-		// TODO Auto-generated method stub
-		return false;
+	public Message getMessage(int msgid) {
+		Connection conn = null;
+		PreparedStatement prepMsg = null;
+		PreparedStatement prepEvent = null;
+		ResultSet rsMsg = null;
+		ResultSet rsEvent = null;
+		Message msg = new Message();
+		
+		logger.info("Retreiving msgid " + msgid);
+
+		try {
+			conn = _dbcPool.getConnection();
+			conn.setAutoCommit(false);
+			
+			conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+			
+			String sql = "SELECT * FROM messages WHERE msgid = ?;";
+			prepMsg = conn.prepareStatement(sql);
+			prepMsg.setInt(1, msgid);
+
+			rsMsg = prepMsg.executeQuery();
+			if (!rsMsg.next()) {
+				logger.error("There is no such msgid " + msgid);
+				return null;
+			}
+			
+			msg.id = msgid;
+			msg.username = rsMsg.getString("username");
+			msg.lat = rsMsg.getLong("lat");
+			msg.lng = rsMsg.getLong("lng");
+			msg.creationTime = rsMsg.getLong("creation_date");
+			msg.title = rsMsg.getString("title");
+			msg.content = rsMsg.getString("content");
+			msg.type = Message.stringToType(rsMsg.getString("type"));
+			
+			if (msg.type == MessageType.EVENT) {
+				sql = "SELECT * FROM events WHERE msgid = ?;";
+				prepEvent = conn.prepareStatement(sql);
+				prepEvent.setInt(1, msgid);
+
+				rsEvent = prepEvent.executeQuery();
+				if (!rsEvent.next()) {
+					logger.error("Though it was an event but couldn't find the record in events: " + msgid);
+					return null;
+				}
+
+				msg.eventTime = rsEvent.getLong("event_date");
+				msg.capacity = rsEvent.getInt("capacity");
+				
+				msg.consReqList = getEventConsensusList(conn, msgid); 
+			}
+			
+						
+			conn.commit();
+		} 
+		catch (SQLException e) {
+			logger.error("", e);
+			if (conn != null)
+				try { conn.rollback(); } catch (SQLException e1) { logger.error("Can't roll back", e1); }
+			
+			return null;
+		}
+		finally {
+			if (prepMsg != null)
+				try { prepMsg.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (prepEvent != null)
+				try { prepEvent.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (rsMsg != null)
+				try { rsMsg.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (rsEvent != null)
+				try { rsEvent.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (conn != null)
+				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
+		}
+		
+		return msg;
 	}
 
 	@Override
@@ -1276,6 +1350,62 @@ public class MySQLStorage implements Storage {
 
 			if (rs != null) {
 				try { rs.close(); } catch (SQLException e) { logger.error("", e); }
+			}
+		}		
+	}
+	
+	private List<Consensus> getEventConsensusList(Connection conn, int eventid) {
+		PreparedStatement prepCons = null;
+		PreparedStatement prepConsVotes = null;
+		ResultSet consRs = null;
+		ResultSet consVotesRs = null;
+		List<Consensus> res = new ArrayList<Consensus>();
+
+		try {
+			String sql = "SELECT * FROM consensus WHERE msgid = ?;";
+			prepCons = conn.prepareStatement(sql);
+			prepCons.setInt(1, eventid);
+
+			consRs = prepCons.executeQuery();
+			while (consRs.next()) {
+				Consensus cons = new Consensus();
+				cons.id = consRs.getInt("consid");
+				cons.eventid = eventid;
+				cons.desc = consRs.getString("description");
+				cons.status = Consensus.getConsensusStatus(consRs.getString("status"));
+				
+				sql = "SELECT COUNT(*) FROM consensus_votes WHERE consid = ? AND msgid = ?;";
+				prepConsVotes = conn.prepareStatement(sql);
+				prepConsVotes.setInt(1, cons.id);
+				prepConsVotes.setInt(2, eventid);
+				
+				consVotesRs = prepConsVotes.executeQuery();
+				if (!consVotesRs.next())
+					return null;
+				
+				cons.nvotesForChange = consVotesRs.getInt(1);
+				
+				res.add(cons);
+			}
+
+			return res;
+		}
+		catch (SQLException e) {
+			logger.error("", e);
+			return null;
+		}
+		finally {
+			if (prepCons != null) {
+				try { prepCons.close(); } catch (SQLException e) { logger.error("", e); }
+			}
+			if (prepConsVotes != null) {
+				try { prepCons.close(); } catch (SQLException e) { logger.error("", e); }
+			}
+			if (consRs != null) {
+				try { consRs.close(); } catch (SQLException e) { logger.error("", e); }
+			}
+			if (consVotesRs != null) {
+				try { consRs.close(); } catch (SQLException e) { logger.error("", e); }
 			}
 		}		
 	}
