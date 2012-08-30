@@ -630,8 +630,8 @@ public class MySQLStorage implements Storage {
 			
 			msg.id = msgid;
 			msg.username = rsMsg.getString("username");
-			msg.lat = rsMsg.getLong("lat");
-			msg.lng = rsMsg.getLong("lng");
+			msg.lat = rsMsg.getDouble("lat");
+			msg.lng = rsMsg.getDouble("lng");
 			msg.creationTime = rsMsg.getLong("creation_date");
 			msg.title = rsMsg.getString("title");
 			msg.content = rsMsg.getString("content");
