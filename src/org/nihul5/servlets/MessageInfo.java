@@ -54,6 +54,10 @@ public class MessageInfo extends HttpServlet {
 		}
 		
 		msg = _storage.getMessage(msgid);
+		if (msg == null){
+			getServletContext().getRequestDispatcher("/jsp/messages/message_error.jsp").forward(request, response);
+			return;
+		}
 		request.setAttribute(CONST.MSG, msg);
 		getServletContext().getRequestDispatcher("/jsp/messages/message_info.jsp").forward(request, response);
 		//logger.debug("lat: " + Double.valueOf(msg.lat));

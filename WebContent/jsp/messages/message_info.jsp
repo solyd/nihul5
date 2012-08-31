@@ -13,23 +13,7 @@
 	Message message = (Message) request.getAttribute(CONST.MSG);
 	Principal princ = request.getUserPrincipal();
 	boolean isPost = message.type.toString().equals("POST");
-	
-	//boolean isFull = (message.capacity == message.nSubs);
-
-	//Date date = new Date();
-	//date.setTime(message.creationTime);
-/* ;
-	//message.consensusDescList;
-	;
-	;
-	;
-	;
-	;
-	;
-	; */
-	%>
-
-
+%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -50,7 +34,7 @@
 		var messageCreateDate = <%=message.creationTime%>;
 		var eventDate = <%=message.eventTime%>;
 		var eventCapacity = <%=message.capacity%>;
-		var eventRegistered = 0; //message.nSubs%>;
+		var eventRegistered = <%=message.nSubs%>;
 		//var isCapacityFull = isFull;
 		
 		map.setZoom(11);
@@ -66,12 +50,12 @@
 			$.get('/<%=CONST.WEBAPP_NAME%>/IsUserRegisteredToEvent',
 					{<%=CONST.USERNAME%>: userName , <%=CONST.MSG_ID%>: msgId}, function(response) {
 						if (response.result == 'success'){
-							//$('#register').attr('disabled', 'disabled');
 							$('#unregister').removeAttr("disabled");
 						}
 						else{
-							//$('#unregister').attr('disabled', 'disabled');
-							$('#register').removeAttr("disabled");
+							if (eventCapacity > eventRegistered){
+								$('#register').removeAttr("disabled");
+							}
 						}
 			});
 		<%}%>
@@ -135,7 +119,21 @@
 			});
 		}); --%>
 		
-		
+		$('#delete_message').click(function(){
+			$.post('/<%=CONST.WEBAPP_NAME%>/DeleteMessage',
+					{ <%=CONST.MSG_ID%>: msgId }, function(response) {
+						if (response.result == 'success'){
+							$('#delete_message').hide('slow', function() {
+								$(this).replaceWith('<p>Message was successfuly deleted, redirecting in 2 seconds</p>');
+								$(this).show('slow', function() {
+									setTimeout(function() {
+										window.location.href = "/<%=CONST.WEBAPP_NAME%>/";
+									}, 2000);		
+								});
+							});
+						}
+			});
+		});
 	});
 </script>
 
@@ -202,7 +200,7 @@
 							<input id="unregister" type="button" value="Unregister" disabled="disabled" />
 						</td>
 					</tr>
-					<tr><td>Consensuses</td></tr>
+					<tr><td>Consensuses:</td></tr>
 					<tr>
 					<td colspan=2>
 						<ul>
@@ -223,6 +221,14 @@
 					<td>
 					</tr>
 					<% } %>
+
+					<%if (princ != null){
+						if (princ.getName().equals(message.username)){%>
+						<tr>
+							<td colspan=2 align="center"><input id="delete_message" type="button" value="Delete Message"/></td>
+						</tr>
+						<%}
+					}%>
 
 					<tr>
 						<td colspan=2 align="center" height="10px"></td>

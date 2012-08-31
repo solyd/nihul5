@@ -20,7 +20,7 @@
 
 	<div id="container" class="right">
 		<div id="map_canvas" class="left"></div>
-		<div id="content" class="right">
+		<div id="content" class="right" align="center">
 			This is the regular browsing window. Here should be included the event_info jsp
 		</div>
 	</div>
