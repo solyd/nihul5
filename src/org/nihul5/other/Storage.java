@@ -19,6 +19,7 @@ public interface Storage {
 	
 	boolean saveEventRegistration(int eventid, String username);
 	boolean deleteEventRegistration(int eventid, String username);
+	boolean isUserRegisteredToEvent(String username, int eventid);
 	
 	List<Consensus> getEventConsensusReqs(int eventid);
 	boolean voteOnConsensusReq(String username, int eventid, int reqid, boolean accept);

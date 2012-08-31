@@ -1022,6 +1022,12 @@ public class MySQLStorage implements Storage {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public boolean isUserRegisteredToEvent(String username, int eventid) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
