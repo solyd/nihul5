@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://hw5.cs236369" xmlns:intf="http://hw5.cs236369" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://hw5.cs236369">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+ <wsdl:types>
+  <schema xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://hw5.cs236369">
+   <element name="searchLocal">
+    <complexType>
+     <sequence>
+      <element name="locationX" type="xsd:double"/>
+      <element name="locationY" type="xsd:double"/>
+      <element name="d" type="xsd:double"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="searchLocalResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" name="searchLocalReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="searchKeywords">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" name="keywords" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="searchKeywordsResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" name="searchKeywordsReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="searchKeywordsRequest">
+
+      <wsdl:part element="impl:searchKeywords" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="searchLocalResponse">
+
+      <wsdl:part element="impl:searchLocalResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="searchKeywordsResponse">
+
+      <wsdl:part element="impl:searchKeywordsResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="searchLocalRequest">
+
+      <wsdl:part element="impl:searchLocal" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:portType name="SearchWS">
+
+      <wsdl:operation name="searchLocal">
+
+         <wsdl:input message="impl:searchLocalRequest" name="searchLocalRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:searchLocalResponse" name="searchLocalResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="searchKeywords">
+
+         <wsdl:input message="impl:searchKeywordsRequest" name="searchKeywordsRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:searchKeywordsResponse" name="searchKeywordsResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="SearchWSSoapBinding" type="impl:SearchWS">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="searchLocal">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="searchLocalRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="searchLocalResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="searchKeywords">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="searchKeywordsRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="searchKeywordsResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="SearchWSService">
+
+      <wsdl:port binding="impl:SearchWSSoapBinding" name="SearchWS">
+
+         <wsdlsoap:address location="http://localhost:8080/nihul5/services/SearchWS"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

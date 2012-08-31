@@ -14,7 +14,9 @@ public interface Storage {
 	boolean saveMessage(Message msg);
 	Message getMessage(int msgid);
 	boolean deleteMessage(int msgid);
-		
+	
+	List<Message> searchMessages(String[] keywords);
+	
 	boolean saveEventRegistration(int eventid, String username);
 	boolean deleteEventRegistration(int eventid, String username);
 	

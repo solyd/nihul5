@@ -1,0 +1,26 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from SearchWSService WSDL service -->
+
+  <service name="SearchWS" provider="java:RPC" style="wrapped" use="literal">
+      <parameter name="wsdlTargetNamespace" value="http://hw5.cs236369"/>
+      <parameter name="wsdlServiceElement" value="SearchWSService"/>
+      <parameter name="schemaQualified" value="http://hw5.cs236369"/>
+      <parameter name="wsdlServicePort" value="SearchWS"/>
+      <parameter name="className" value="cs236369.hw5.SearchWSSoapBindingSkeleton"/>
+      <parameter name="wsdlPortType" value="SearchWS"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <parameter name="allowedMethods" value="*"/>
+
+  </service>
+</deployment>

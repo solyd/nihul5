@@ -30,6 +30,8 @@
 		
 
 		<li><a href="/<%=CONST.WEBAPP_NAME %>/users">Users</a></li>
+		<li><a href="/<%=CONST.WEBAPP_NAME %>/yellow_pages">Yellow Pages</a></li>
+		
 
 	</ul>
 </div>

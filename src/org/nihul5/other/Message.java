@@ -21,6 +21,7 @@ public class Message {
 	
 	public long eventTime;
 	public int capacity;
+	public int nSubs;
 	public List<String> consensusDescList = new ArrayList<String>();
 	public List<Consensus> consReqList = new ArrayList<Consensus>();
 	

@@ -62,4 +62,6 @@ public class CONST {
 	public static final String ALPHANUMERIC_REGEX = "/^[a-z0-9]+$/i";
 	public static final String EMAIL_REGEX = "[^A-Za-z0-9\\.\\@_\\-~#]+";
 	public static final int MIN_LENGTH = 3;
+	
+	public static final String YELLOW_PAGES_ENDPOINTS = "yellowpagesendpoints"; 
 }

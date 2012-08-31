@@ -461,6 +461,7 @@ public class MySQLStorage implements Storage {
 		PreparedStatement prepMsg = null;
 		PreparedStatement prepEvent = null;
 		PreparedStatement prepCons = null;
+		PreparedStatement prepReg = null;
 		
 		logger.info("Saving " + event.toString());
 		
@@ -504,6 +505,18 @@ public class MySQLStorage implements Storage {
 			
 			prepEvent.executeUpdate();
 			
+			// register the creating user to the event
+			// ++++++++++++++++++++++++++++++++++++++++
+			sqlsb = new StringBuilder();
+			sqlsb.append("INSERT INTO event_reg (msgid, username) ");
+			sqlsb.append("VALUES (?, ?);");
+			
+			prepReg = conn.prepareStatement(sqlsb.toString());
+			prepReg.setInt(1, last_insert_id);
+			prepReg.setString(2, event.username);
+			
+			prepReg.executeUpdate();
+			
 			// insert consensus requirements to consensus table
 			// ++++++++++++++++++++++++++++++++++++++++
 			sqlsb = new StringBuilder();
@@ -534,6 +547,8 @@ public class MySQLStorage implements Storage {
 				try { prepCons.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
 			if (prepEvent != null)
 				try { prepEvent.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (prepReg != null)
+				try { prepReg.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
 			if (conn != null)
 				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
 		}
@@ -630,8 +645,7 @@ public class MySQLStorage implements Storage {
 			
 			msg.id = msgid;
 			msg.username = rsMsg.getString("username");
-			msg.lat = rsMsg.getDouble("lat");
-			msg.lng = rsMsg.getDouble("lng");
+		
 			msg.creationTime = rsMsg.getLong("creation_date");
 			msg.title = rsMsg.getString("title");
 			msg.content = rsMsg.getString("content");
@@ -651,7 +665,8 @@ public class MySQLStorage implements Storage {
 				msg.eventTime = rsEvent.getLong("event_date");
 				msg.capacity = rsEvent.getInt("capacity");
 				
-				msg.consReqList = getEventConsensusList(conn, msgid); 
+				msg.consReqList = getEventConsensusList(conn, msgid);
+				msg.nSubs = getRegisteredCount(conn, msgid);
 			}
 			
 						
@@ -999,6 +1014,12 @@ public class MySQLStorage implements Storage {
 			if (conn != null)
 				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
 		}
+	}
+	
+	@Override
+	public List<Message> searchMessages(String[] keywords) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

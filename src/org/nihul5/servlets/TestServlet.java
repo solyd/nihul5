@@ -11,10 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.nihul5.other.CONST;
-import org.nihul5.other.MySQLStorage;
-import org.nihul5.other.MySQLStorageTest;
-import org.nihul5.other.Storage;
+
+import cs236369.hw5.RegistrationServiceProxy;
+import cs236369.hw5.RegistrationServiceSoapBindingStub;
+import cs236369.hw5.SearchWSProxy;
 
 
 /**
@@ -42,9 +42,32 @@ public class TestServlet extends HttpServlet {
     	super.doGet(req, resp);
 
     	// TODO remove
+    	/*
     	Storage storage = (Storage) getServletContext().getAttribute(CONST.STORAGE);
     	MySQLStorageTest dbtest = new MySQLStorageTest((MySQLStorage) storage);
     	dbtest.run();
+    	*/
+    	
+    	try {
+    		RegistrationServiceProxy proxy = new RegistrationServiceProxy();
+    		SearchWSProxy searchproxy = new SearchWSProxy();
+    		
+    		// doesn't work without this
+    		searchproxy.setEndpoint("http://localhost:6367/nihul5/services/SearchWS");
+    		
+    		String[] blaaaa = searchproxy.searchLocal(1, 1, 1);
+    		
+    		String tmp = proxy.getEndpoint();
+    		String[] bla = proxy.getRegisteredEndpoints();
+    		int x = 2;
+    		
+    	}
+
+    	catch (Exception e) {      
+    		logger.error("", e);
+    	}
+
+
     }
 
 	@Override
