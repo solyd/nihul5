@@ -69,7 +69,6 @@ public class CreateMessage extends HttpServlet {
 		msg.username = princ.getName();
 		msg.title = request.getParameter(CONST.MSG_TITLE);
 		try {
-			
 			 msg.lat = Double.valueOf(request.getParameter(CONST.MSG_LATITUDE));
 			 msg.lng = Double.valueOf(request.getParameter(CONST.MSG_LONGITUDE));
 		}

@@ -1,6 +1,5 @@
 $(document).ready(addMessage);
 
-var markersArray = new Array();
 var messageType;
 
 function tagsAction(action){
@@ -40,7 +39,6 @@ function addMessage() {
 		placeMarker(event.latLng);
 		document.getElementById('lat').value = event.latLng.lat();
 		document.getElementById('lng').value = event.latLng.lng();
-		getConsensuses();
 	});
 	
 	dateObject = new JsDatePick({
@@ -58,40 +56,6 @@ function addMessage() {
 	document.getElementById('eventTime').value = getTime();
 	
 	$('#add_row').click(addEvent);
-}
-
-function placeMarker(position) {
-	clearMap();
-	var marker = new google.maps.Marker({
-		position: position,
-		map: map
-	});
-	markersArray.push(marker);
-	map.panTo(position);
-}
-
-function clearMap(){
-	if (markersArray) {
-		for (var i = 0; i < markersArray.length; i++ ) {
-			markersArray[i].setMap(null);
-		}
-	}
-}
-
-function deployPosition(lat, lng){
-	if (inRange(minLat, lat, maxLat) && (inRange(minLng, lng, maxLng))){
-		var newPosition = new google.maps.LatLng(lat, lng);
-		placeMarker(newPosition);
-	}
-}
-
-function inRange(min, number, max){
-	if ((!isNaN(number)) && (number >= min) && (number <= max)){
-		return true;
-	}
-	else {
-		return false;
-	}
 }
 
 function getEventDate(){
@@ -131,7 +95,7 @@ function getDay(){
 function getTime(){
 	var temp = new Date();
 	var timeStr = padStr(temp.getHours()) + ':' +
-					padStr(1 + temp.getMinutes());
+					padStr(temp.getMinutes());
 	return timeStr;
 }
 
@@ -169,4 +133,17 @@ function getConsensuses(){
 		alert(text);
 	}	*/
 	return consensuses;
+}
+
+function getDateString() {
+	return new Date().getTime();
+	
+    var temp = new Date();
+    var dateStr = padStr(temp.getFullYear()) +
+                  padStr(1 + temp.getMonth()) +
+                  padStr(temp.getDate()) +
+                  padStr(temp.getHours()) +
+                  padStr(temp.getMinutes()) +
+                  padStr(temp.getSeconds());
+    return dateStr;
 }

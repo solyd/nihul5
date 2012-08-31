@@ -19,20 +19,6 @@
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/create_message.js"></script>
 
 <script type="text/javascript">
-	var messageResult = <%=CONST.MSG_RESULT%>;
-	
-	function getDateString() {
-		return new Date().getTime();
-		
-	    var temp = new Date();
-	    var dateStr = padStr(temp.getFullYear()) +
-	                  padStr(1 + temp.getMonth()) +
-	                  padStr(temp.getDate()) +
-	                  padStr(temp.getHours()) +
-	                  padStr(temp.getMinutes()) +
-	                  padStr(temp.getSeconds());
-	    return dateStr;
-	}
 	
 	function submitMsg() {
 		var data = $('#msg_form').serializeArray();
@@ -77,7 +63,6 @@
 							<button id="messageType" type="button">Post</button>
 							<button id="eventType" type="button">Event</button>
 						</td>
-						
 					</tr>
 					<tr>
 						<td colspan=2 align="center" height="10px"></td>

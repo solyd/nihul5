@@ -1,6 +1,7 @@
 package org.nihul5.servlets;
 
 import java.io.IOException;
+import java.sql.Date;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -23,7 +24,7 @@ public class MessageInfo extends HttpServlet {
 	private static final Logger logger = Logger.getLogger(UserProfile.class);
 
 	private Storage _storage;
-       
+    
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -36,7 +37,7 @@ public class MessageInfo extends HttpServlet {
     	super.init(config);
     	_storage = (Storage) getServletContext().getAttribute(CONST.STORAGE);
     }
-
+    
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -44,7 +45,7 @@ public class MessageInfo extends HttpServlet {
 		String[] parts = request.getRequestURI().split("/");
 		int msgid = -1;
 		Message msg = null;
-		
+
 		try {
 			msgid = Integer.valueOf(parts[parts.length - 1]);
 		}
@@ -55,6 +56,7 @@ public class MessageInfo extends HttpServlet {
 		msg = _storage.getMessage(msgid);
 		request.setAttribute(CONST.MSG, msg);
 		getServletContext().getRequestDispatcher("/jsp/messages/message_info.jsp").forward(request, response);
+		//logger.debug("lat: " + Double.valueOf(msg.lat));
 	}
 
 	/**

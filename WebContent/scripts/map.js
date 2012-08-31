@@ -7,6 +7,7 @@ var minLng = -180;
 var maxLng = 180;
 
 var map;
+var markersArray = new Array();
 
 function initialize() {
 	var mapOptions = {
@@ -16,13 +17,49 @@ function initialize() {
 	};
 	
 	map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+}
+
+function placeMarker(position) {
+	clearMap();
+	var marker = new google.maps.Marker({
+		position: position,
+		map: map
+	});
+	markersArray.push(marker);
+	map.panTo(position);
+}
+
+function clearMap(){
+	if (markersArray) {
+		for (var i = 0; i < markersArray.length; i++ ) {
+			markersArray[i].setMap(null);
+		}
+	}
+}
+
+function deployPosition(lat, lng){
+	if (inRange(minLat, lat, maxLat) && (inRange(minLng, lng, maxLng))){
+		var newPosition = new google.maps.LatLng(lat, lng);
+		placeMarker(newPosition);
+	}
+}
+
+function inRange(min, number, max){
+	if ((!isNaN(number)) && (number >= min) && (number <= max)){
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+
 
 /*	google.maps.event.addListener(map, 'click', function(event) {
 		placeMarker(event.latLng);
 		$('#latitude').value = event.latLng.lat();
 		$('#longitude').value = event.latLng.lat();
 	});*/
-}
 
 /*function placeMarker(position) {
 	var marker = new google.maps.Marker({
