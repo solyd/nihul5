@@ -27,7 +27,7 @@ public interface Storage {
 	 *            a point east or west of the Prime (Greenwich) Meridian. Lines
 	 *            of longitude are often referred to as meridians.
 	 * @param distance
-	 * @return
+	 * @return all messages that are within distance from the given coordinates.
 	 */
 	List<Message> searchMessages(double lat, double lng, double distance);
 	

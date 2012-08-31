@@ -373,6 +373,7 @@ public class MySQLStorage implements Storage {
 
 		try {
 			conn = _dbcPool.getConnection();
+			conn.setAutoCommit(true);
 
 			String sql = "SELECT * FROM users WHERE username = ?";
 			prep_s = conn.prepareStatement(sql);
@@ -427,6 +428,7 @@ public class MySQLStorage implements Storage {
 		
 		try {
 			conn = _dbcPool.getConnection();
+			conn.setAutoCommit(true);
 
 			StringBuilder sqlsb = new StringBuilder();
 			sqlsb.append("INSERT INTO messages (username, lat, lng, creation_date, title, content, type) ");
@@ -962,6 +964,7 @@ public class MySQLStorage implements Storage {
 
 		try {
 			conn = _dbcPool.getConnection();
+			conn.setAutoCommit(true);
 
 			String sql = "SELECT msgid, type, title FROM messages WHERE username = ?;";
 			
@@ -1000,6 +1003,7 @@ public class MySQLStorage implements Storage {
 
 		try {
 			conn = _dbcPool.getConnection();
+			conn.setAutoCommit(true);
 			return getUserRegisteredEvents(conn, username);
 		} 
 		catch (SQLException e) {
@@ -1031,8 +1035,42 @@ public class MySQLStorage implements Storage {
 
 	@Override
 	public boolean isUserRegisteredToEvent(String username, int eventid) {
-		// TODO Auto-generated method stub
-		return false;
+		Connection conn = null;
+		PreparedStatement prep_s = null;
+		ResultSet rs = null;
+
+		try {
+			conn = _dbcPool.getConnection();
+			conn.setAutoCommit(true);
+			
+			String sql = "SELECT COUNT(*) FROM event_reg WHERE username = ? AND msgid = ?;";
+			
+			prep_s = conn.prepareStatement(sql);
+			prep_s.setString(1, username);
+			prep_s.setInt(2, eventid);
+
+			rs = prep_s.executeQuery();
+
+			if (!rs.next())
+				throw new SQLException();
+
+			return rs.getInt(1) > 0;
+		} 
+		catch (SQLException e) {
+			logger.error("", e);
+//			if (conn != null)
+//				try { conn.rollback(); } catch (SQLException e1) { logger.error("Can't roll back", e1); }
+
+			return false;
+		}
+		finally {
+			if (prep_s != null)
+				try { prep_s.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (rs != null)
+				try { rs.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (conn != null)
+				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
+		}
 	}
 	
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

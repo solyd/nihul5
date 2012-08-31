@@ -63,30 +63,22 @@ public class IsUserRegisteredToEvent extends HttpServlet {
     		//out.print("{\"result\":\"false\"}");
     		return;
     	}
-    	
-    	List<Message> registeredMessages = _storage.getUserRegisteredEvents(userName);
-    	for (Message message : registeredMessages){
-    		int toCheckMsgId = 0;
-    		logger.info("userName is " + userName + ", Message ID is: " + msgId);
-    		try { 
-    			toCheckMsgId = Integer.valueOf(msgId);
-    		} 
-    		catch (Exception e) { 
-    			logger.error("Can't parse string to int");
-    			Utility.writeResponse(response, false, "Can't parse string to int");
-    			//out.print("{\"result\":\"false\"}");
-    		}
-    		if (toCheckMsgId == message.id){
-    			logger.info("User " + userName.toString() + " is already registered to message" + msgId);
-    			Utility.writeResponse(response, true, "Can't parse string to int");
-    			return;
-    			//out.println("{\"result\":\"true\"}");
-    		}
+
+    	int eventid = -1;
+    	try { 
+    		eventid = Integer.valueOf(msgId);
+    	} 
+    	catch (Exception e) { 
+    		Utility.writeResponse(response, false, "Can't parse msgid to int");
+    		return;
     	}
-    	logger.info("User " + userName.toString() + " is not registered to message" + msgId);
-    	Utility.writeResponse(response, false, "User is not registered to message");
-    	//out.print("{\"result\":\"false\"}");
     	
+    	if (_storage.isUserRegisteredToEvent(userName, eventid)) {
+    		Utility.writeResponse(response, true, userName + " is registered to " + eventid);    		
+    	}
+    	else {
+    		Utility.writeResponse(response, false, userName + " is not registered to " + eventid);
+    	}
 	}
 
 	/**

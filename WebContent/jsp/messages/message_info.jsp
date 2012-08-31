@@ -1,3 +1,4 @@
+<%@page import="org.nihul5.other.Message.MessageType"%>
 <%@ page language="java" contentType="text/html; charset=windows-1255"
     pageEncoding="windows-1255"%>
 <%@ page import="org.nihul5.other.CONST"%>
@@ -12,7 +13,7 @@
 <%
 	Message message = (Message) request.getAttribute(CONST.MSG);
 	Principal princ = request.getUserPrincipal();
-	boolean isPost = message.type.toString().equals("POST");
+	boolean isPost = message.type == MessageType.POST;
 	
 	//boolean isFull = (message.capacity == message.nSubs);
 
