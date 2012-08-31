@@ -72,6 +72,7 @@ public class CreateMessage extends HttpServlet {
 			
 			 msg.lat = Double.valueOf(request.getParameter(CONST.MSG_LATITUDE));
 			 msg.lng = Double.valueOf(request.getParameter(CONST.MSG_LONGITUDE));
+			 logger.debug("lat: " + msg.lat + ", lng: " + msg.lng);
 		}
 		catch (Exception e) {
 			logger.error("couldn't parse double values for lat and lng on create msg");

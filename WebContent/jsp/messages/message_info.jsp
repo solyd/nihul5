@@ -1,13 +1,35 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=windows-1255"
+    pageEncoding="windows-1255"%>
+<%@ page import="org.nihul5.other.CONST"%>
 <%@ page import="org.nihul5.other.CONST"%>
 <%@ page import="org.nihul5.other.User"%>
 <%@ page import="org.nihul5.other.Message"%>
 <%@ page import="java.security.Principal"%>
+<%@ page import="org.nihul5.other.Consensus"%>
+<%@ page import="java.util.List"%>
+<%@ page import="java.util.Date"%>
 
 <%
-	User user = (User) request.getAttribute(CONST.USER);
+	Message message = (Message) request.getAttribute(CONST.MSG);
 	Principal princ = request.getUserPrincipal();
-%>
+	boolean isPost = message.type.toString().equals("POST");
+	
+	//boolean isFull = (message.capacity == message.nSubs);
+
+	//Date date = new Date();
+	//date.setTime(message.creationTime);
+/* ;
+	//message.consensusDescList;
+	;
+	;
+	;
+	;
+	;
+	;
+	; */
+	%>
+
+
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -19,32 +41,105 @@
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/jquery.js"></script>
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/menu_loader.js"></script>
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/map.js"></script>
+<script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/message.js"></script>
 
 <script>
-function submitMsg() {
-	var data = $('#msg_form').serializeArray();
-	
-	data.push({ name: '<%=CONST.MSG_CREATION_TIME%>', 
-		value: getDateString() });
-	
-	data.push({ name: '<%=CONST.MSG_TYPE%>', 
-		value: messageType });
-	
-	data.push({ name: '<%=CONST.EVENT_DATE%>', 
-		value: getEventDate() });
-	
-	data.push({ name: '<%=CONST.EVENT_CAPACITY%>', 
-		value: getEventCapacity() });
-
-	data.push({ name: '<%=CONST.EVENT_CONSENSUSES%>', 
-		value: getConsensuses() });
-
-	$.post('/<%=CONST.WEBAPP_NAME%>/messages/create',
-			data, function(response) {
-		alert(response.result + ': ' + response.reason);
+	$(document).ready(function() {
+		var latitude = <%=message.lat%>;
+		var longtitude = <%=message.lng%>;
+		var messageCreateDate = <%=message.creationTime%>;
+		var eventDate = <%=message.eventTime%>;
+		var eventCapacity = <%=message.capacity%>;
+		var eventRegistered = 0; //message.nSubs%>;
+		//var isCapacityFull = isFull;
+		
+		map.setZoom(11);
+		deployPosition(latitude, longtitude);
+		
+		showDateInFormat(messageCreateDate, 'craeted_date');
+		showDateInFormat(eventDate, 'event_date');
+		$('#capacity').text(eventRegistered + "/" + eventCapacity);
+		
+ 		var msgId = <%=message.id%>;
+ 		<%if (princ != null){%>
+			var userName = "<%=princ.getName()%>";
+			$.get('/<%=CONST.WEBAPP_NAME%>/IsUserRegisteredToEvent',
+					{<%=CONST.USERNAME%>: userName , <%=CONST.MSG_ID%>: msgId}, function(response) {
+						if (response.result == 'success'){
+							//$('#register').attr('disabled', 'disabled');
+							$('#unregister').removeAttr("disabled");
+						}
+						else{
+							//$('#unregister').attr('disabled', 'disabled');
+							$('#register').removeAttr("disabled");
+						}
+			});
+		<%}%>
+		
+		$('#register').click(function(){
+			$.post('/<%=CONST.WEBAPP_NAME%>/RegisterToEvent',
+					{ <%=CONST.EVENT_ID%>: msgId }, function(response) {
+						if (response.result == 'success'){
+							$('#register').attr('disabled', 'disabled');
+							$('#unregister').removeAttr("disabled");
+							eventRegistered++;
+							$('#capacity').text(eventRegistered + "/" + eventCapacity);
+						}
+						else{
+							alert(response.reason);
+						}
+			});
+		});
+		$('#unregister').click(function(){
+			$.post('/<%=CONST.WEBAPP_NAME%>/UnregisterFromEvent',
+					{ <%=CONST.EVENT_ID%>: msgId }, function(response) {
+						if (response.result == 'success'){
+							$('#unregister').attr('disabled', 'disabled');
+							$('#register').removeAttr("disabled");
+							eventRegistered--;
+							$('#capacity').text(eventRegistered + "/" + eventCapacity);
+						}
+						else{
+							alert(response.reason);
+						}
+			});
+		});
+		
+<%-- 		$('#vote').click(function(){
+			$.post('/<%=CONST.WEBAPP_NAME%>/VoteOnConsensusReq',
+					{ <%=CONST.EVENT_ID%>: msgId }, function(response) {
+						if (response.result == 'success'){
+							$('#unregister').attr('disabled', 'disabled');
+							$('#register').removeAttr("disabled");
+							eventRegistered--;
+							$('#capacity').text(eventRegistered + "/" + eventCapacity);
+						}
+						else{
+							alert(response.reason);
+						}
+			});
+		});
+		
+		$('#delete_vote').click(function(){
+			$.post('/<%=CONST.WEBAPP_NAME%>/DeleteVoteOnConsensusReq',
+					{ <%=CONST.EVENT_ID%>: msgId }, function(response) {
+						if (response.result == 'success'){
+							$('#unregister').attr('disabled', 'disabled');
+							$('#register').removeAttr("disabled");
+							eventRegistered--;
+							$('#capacity').text(eventRegistered + "/" + eventCapacity);
+						}
+						else{
+							alert(response.reason);
+						}
+			});
+		}); --%>
+		
+		
 	});
-}
 </script>
+
+
 
 <title>Message Info</title>
 </head>
@@ -57,50 +152,78 @@ function submitMsg() {
 			<table id="mainTable" align="center">
 					<tr>
 						<td id="title" colspan=2 align="center">
-							<h2 id="create_head">New Post</h2>
+						<% if (isPost) { %>
+							<h2 id="create_head">Post</h2> 
+						<%} else { %>
+							<h2 id="create_head">Event</h2>
+						<% } %>
 						</td>
 					</tr>
 					<tr>
 						<td colspan=2 align="center" height="10px"></td>
 					</tr>
 					<tr>
+						<td>Posted By:</td>
+						<td><%=message.username%></td>
+					</tr>
+					<tr>
 						<td>Title:</td>
-						<td><%=CONST.MSG_TITLE%></td>
+						<td><%=message.title%></td>
 					</tr>
 					<tr>
 						<td>Latitude:</td>
-						<td><%=CONST.MSG_LATITUDE%></td>
+						<td><%=message.lat%></td>
 					</tr>
 					<tr>
 						<td>Longitude:</td>
-						<td><%=CONST.MSG_LONGITUDE%></td>
+						<td><%=message.lng%></td>
 					</tr>
 					<tr>
 						<td>Content:</td>
-						<td><%=CONST.MSG_CONTENT%></td>
+						<td><%=message.content%></td>
 					</tr>
-					<tr id="date_title" style="display: none">
-						<td>Date:</td>
+					<tr>
+						<td>Created On:</td>
+						<td id="craeted_date" ></td>
 					</tr>
-					<tr id="date_data" style="display: none">
-						<td><input id="eventDay" type="text" size="10" /></td>
-						<td><input id="eventTime" type="text" size="10" /></td>
+					
+					<%if (!isPost) {%>
+					<tr>
+						<td>When?</td>
+						<td id="event_date" ></td>
 					</tr>
-					<tr id="event_capacity" style="display: none">
+					<tr>
 						<td>Capacity:</td>
-						<td><input id="capacity" type="text" size="10" value="0" /></td>
+						<td id="capacity"></td>
 					</tr>
-					<tr id="consensus1" style="display: none">
-						<td>Consensus:</td>
-						<td><textarea id="consensus_text" rows="10" cols="10"></textarea></td>
+					<tr>
+						<td colspan=2>
+							<input id="register" type="button" value="Register" disabled="disabled" />
+							<input id="unregister" type="button" value="Unregister" disabled="disabled" />
+						</td>
 					</tr>
-					<tr id="consensus2" style="display: none">
-						<td><input id="add_row" type="button" value="Add Consensus" /></td>
-    					<td></td>
+					<tr><td>Consensuses</td></tr>
+					<tr>
+					<td colspan=2>
+						<ul>
+							<%List<Consensus> consensusesList = (List<Consensus>) message.consReqList;
+							int i = 1;
+							for (Consensus consensus : consensusesList) { %>
+								<li><%=consensus.desc %> <br />
+								
+								<%if(consensus.status.toString().equals("NOT_ACCEPTED")){%>
+									<u>Status:</u> Not Accepted <span id="not_accepted">(<%=consensus.nvotesForChange %>/<%=message.capacity %>)</span>
+								<%}else{ %>
+									<u>Status:</u> Accepted <span id="accepted">(<%=consensus.nvotesForChange %>/<%=message.capacity %>)</span>
+									<%} %> <br/>
+								<input id="vote" type="button" value="Vote" disabled="disabled"/>
+								</li>
+							<% } %> 
+						</ul>					
+					<td>
 					</tr>
-					<tr id="consensus3" style="display: none">
-						<td id="myDiv" colspan="2" width="70%"></td>
-					</tr>
+					<% } %>
+
 					<tr>
 						<td colspan=2 align="center" height="10px"></td>
 					</tr>
