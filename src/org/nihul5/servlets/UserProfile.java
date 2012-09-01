@@ -47,15 +47,15 @@ public class UserProfile extends HttpServlet {
 		
 		User user = _storage.getUser(username);
 		if (user == null) {
-			request.setAttribute(CONST.MSGBOX_USER_INFO_TXT, "User does not exist");
+			request.setAttribute(CONST.MSGBOX_TXT, "User does not exist");
+			getServletContext().getRequestDispatcher("/jsp/notifcation_box.jsp").forward(request, response);
 		}
 		else {
 			request.setAttribute(CONST.USER, user);
 			request.setAttribute(CONST.USER_CREATED_MSGS, _storage.getUserCreatedMessages(username));
 			request.setAttribute(CONST.USER_REG_EVENTS, _storage.getUserRegisteredEvents(username));
+			getServletContext().getRequestDispatcher("/jsp/users/profile.jsp").forward(request, response);
 		}
-		
-		getServletContext().getRequestDispatcher("/jsp/users/profile.jsp").forward(request, response);
 	}
 
 	/**

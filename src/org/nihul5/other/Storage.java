@@ -11,7 +11,7 @@ public interface Storage {
 	List<String>	getUserNames();
 	User 			getUser(String username);
 
-	boolean saveMessage(Message msg);
+	int saveMessage(Message msg);
 	Message getMessage(int msgid);
 	boolean deleteMessage(int msgid);
 	
@@ -27,7 +27,7 @@ public interface Storage {
 	 *            a point east or west of the Prime (Greenwich) Meridian. Lines
 	 *            of longitude are often referred to as meridians.
 	 * @param distance
-	 * @return
+	 * @return all messages that are within distance from the given coordinates.
 	 */
 	List<Message> searchMessages(double lat, double lng, double distance);
 	
@@ -36,6 +36,7 @@ public interface Storage {
 	boolean isUserRegisteredToEvent(String username, int eventid);
 	
 	List<Consensus> getEventConsensusReqs(int eventid);
+	List<User> getEventRegisteredUsers(int eventid);
 	boolean voteOnConsensusReq(String username, int eventid, int reqid, boolean accept);
 	
 	List<Message> getUserCreatedMessages(String username);

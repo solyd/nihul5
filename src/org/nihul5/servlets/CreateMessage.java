@@ -68,6 +68,11 @@ public class CreateMessage extends HttpServlet {
 		Message msg = new Message();
 		msg.username = princ.getName();
 		msg.title = request.getParameter(CONST.MSG_TITLE);
+		if (msg.title == null || msg.title.length() == 0) {
+			Utility.writeResponse(response, false, "Title must not be empty");
+			return;	
+		}
+		
 		try {
 			 msg.lat = Double.valueOf(request.getParameter(CONST.MSG_LATITUDE));
 			 msg.lng = Double.valueOf(request.getParameter(CONST.MSG_LONGITUDE));
@@ -115,12 +120,16 @@ public class CreateMessage extends HttpServlet {
 			
 			String[] outerArray = request.getParameterValues(CONST.EVENT_CONSENSUSES);
 			String[] innerArray = outerArray[0].split(",");
-			for (String cons : innerArray)
-				msg.consensusDescList.add(cons);
+			for (String cons : innerArray) {
+				if (!(cons == null || cons.length() == 0))
+					msg.consensusDescList.add(cons);
+			}
 		}
 		
-		if (_storage.saveMessage(msg)) {
-			Utility.writeResponse(response, true, "Message created");
+		int newmsgid = _storage.saveMessage(msg); 
+		
+		if (newmsgid > 0) {
+			Utility.writeResponse(response, true, Integer.toString(newmsgid));
 		}
 		else {
 			Utility.writeResponse(response, false, "Error in message creation. Please try again");

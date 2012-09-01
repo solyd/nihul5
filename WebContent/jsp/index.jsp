@@ -40,7 +40,11 @@ $(document).ready(function(){
         size: new google.maps.Size(50,50)
       }); */
     var markerCluster = new MarkerClusterer(map, markersArray);
+      //markerCluster.clearMarkers(); //clear all markers
+      //markerCluster.resetViewport(); //regroup all markers
       
+      //bounds_changed //event of bounds change
+
 	google.maps.event.addListener(marker1, 'click', function() {
   		var msgId = marker1.getTitle();
 		$.get('/<%=CONST.WEBAPP_NAME%>/GetMessage',
@@ -62,13 +66,32 @@ $(document).ready(function(){
 					var $data=$(response);
 					var result = $data.find('#message_status').text();
 					if (result == 'Deleted'){
-						markerCluster.removeMarker(marker1);
+						markerCluster.removeMarker(marker2);
 					}
 		});
 	}); 
 
 
+/* 	var test = new Array();
+	test[marker1.getTitle()] = true;
+	test[marker2.getTitle()] = true;
+	
+	alert(test[marker3.getTitle()]); */
+	
+	alert(map.getCenter());
+    google.maps.event.addListenerOnce(map, 'idle', function(){
+    	var bounds = this.getBounds();
+        alert(bounds.getNorthEast());
+        var distance = google.maps.geometry.spherical.computeDistanceBetween(latlng, locationlatlng);
+        alert(distance);
+        //alert(google.maps.geometry.spherical.computeDistanceBetween(map.getCenter(),bounds.getNorthEast()));
+    });
 
+/* 	 google.maps.event.addListener(map, 'bounds_changed', function() {
+         alert(map.getBounds());
+     }); */
+
+	
 });
 
 

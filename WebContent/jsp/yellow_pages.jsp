@@ -45,15 +45,17 @@
 				
 				<div id="page_container">
 					<div class="page_navigation"></div>
+					<div class="navlist">
 					<ul class="list_content">
 						<%
 							for (String endpoint : regEndpoints) {
 						%>
-						<li><p><%=endpoint%></p></li>
+						<li><a href="#"><%=endpoint%></a></li>
 						<%
 						}
 						%>
 					</ul>
+					</div>
 					
 				<%} else { %>
 				There are currently no available web services registered.				

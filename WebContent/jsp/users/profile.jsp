@@ -114,17 +114,18 @@
 				List<Message> profile_usermsgs = (List<Message>) request.getAttribute(CONST.USER_CREATED_MSGS);
 				if (profile_usermsgs != null && profile_usermsgs.size() > 0) {
 			%>
-			<div id="center_box">
+
 			<div id="msg_container">
 				<div class="page_navigation"></div>
+				<div class="iphone_list">
 				<ul class="list_content">
 				<% for (Message msg : profile_usermsgs) { %>
-					<li><p><%=msg.title %></p></li>
+					<li><a href="/<%=CONST.WEBAPP_NAME%>/message/info/<%=msg.id%>"><%=msg.title %>   (<%=msg.type.toString() %>)</a></li>
 				<% } %> 
 				</ul>
-				
+				</div>
 			</div>
-			</div>
+
 			
 			<%} else { %>
 			<div id="center_box">
@@ -138,17 +139,18 @@
 				List<Message> profile_usrevents = (List<Message>) request.getAttribute(CONST.USER_REG_EVENTS);
 				if (profile_usrevents != null && profile_usrevents.size() > 0) {
 			%>
-			<div id="center_box">
+			
 			<div id="event_container">
 				<div class="page_navigation"></div>
+				<div class="iphone_list">
 				<ul class="list_content">
 				<% for (Message msg : profile_usrevents) { %>
-					<li><p><%=msg.title %></p></li>
+					<li><a href="/<%=CONST.WEBAPP_NAME%>/message/info/<%=msg.id%>"><%=msg.title %></a></li>
 				<% } %> 
 				</ul>
-				
+				</div>
 			</div>
-			</div>
+			
 			
 			<%} else { %>
 			<div id="center_box">
