@@ -855,7 +855,7 @@ public class MySQLStorage implements Storage {
 			if (rs != null)
 				try { rs.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
 			if (eventrs != null)
-				try { rs.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+				try { eventrs.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
 			if (prepEventCheck != null)
 				try { prepEventCheck.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
 			if (conn != null)

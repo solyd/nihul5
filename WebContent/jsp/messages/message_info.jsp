@@ -183,12 +183,18 @@
 					{ <%=CONST.MSG_ID%>: msgId }, function(response) {
 						if (response.result == 'success') {
 							$('#delete_message').hide('slow', function() {
-								$(this).replaceWith('<p>Message was successfuly deleted, redirecting in 2 seconds</p>');
+								$(this).replaceWith('Message was successfuly deleted, redirecting in 3 seconds');
 								$(this).show('slow', function() {
 									setTimeout(function() {
 										window.location.href = "/<%=CONST.WEBAPP_NAME%>/";
-									}, 2000);		
+									}, 3000);		
 								});
+							});
+						}
+						else {
+							$('#delete_message').hide('slow', function() {
+								$(this).replaceWith('This event deadline has passed - it cannot be deleted.');
+								$(this).show('slow');
 							});
 						}
 			});
