@@ -78,7 +78,7 @@ public class IsUserRegisteredToEvent extends HttpServlet {
     		}
     		if (toCheckMsgId == message.id){
     			logger.info("User " + userName.toString() + " is already registered to message" + msgId);
-    			Utility.writeResponse(response, true, "Can't parse string to int");
+    			Utility.writeResponse(response, true, "User is already registered to message");
     			return;
     			//out.println("{\"result\":\"true\"}");
     		}
