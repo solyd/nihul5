@@ -1,3 +1,4 @@
+<%@page import="sun.applet.resources.MsgAppletViewer"%>
 <%@page import="org.nihul5.other.Message.MessageType"%>
 <%@ page language="java" contentType="text/html; charset=windows-1255"
     pageEncoding="windows-1255"%>
@@ -57,6 +58,7 @@
 		var longtitude = <%=message.lng%>;
 		var messageCreateDate = <%=message.creationTime%>;
 		var eventDate = <%=message.eventTime%>;
+		var currDate = new Date().getTime();
 		var eventCapacity = <%=message.capacity%>;
 		var eventRegistered = <%=message.nSubs%>;
 		//var isCapacityFull = isFull;
@@ -125,6 +127,9 @@
 			}
 		});
 		
+		if (eventDate < currDate) {
+			$('#reg_button').replaceWith('<i>The event has occured</i>');
+		}
 
 		function deselect() {
     		$(".pop").slideFadeToggle(function() {
@@ -285,7 +290,6 @@
 						<td colspan=2>
 							<input id="reg_button" type="button" value="Register" />
 							<input id="show_reg_button" type="button" value="Who's registered >>" />
-
 						<div id="reg_users" style="display: none;">
 						</div>
 						

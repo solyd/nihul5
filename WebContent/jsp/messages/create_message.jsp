@@ -40,7 +40,16 @@
 
 		$.post('/<%=CONST.WEBAPP_NAME%>/messages/create',
 				data, function(response) {
-			alert(response.result + ': ' + response.reason);
+			if (response.result == 'success') {
+				var msgid = response.reason;
+				var link = '<a href="/<%=CONST.WEBAPP_NAME%>/message/info/' + msgid + '">Goto new message info page</a>';
+				$('#try_again').hide();
+				$('#submit_button').replaceWith(link);
+				
+			}
+			else {
+				$('#try_again').html(response.reason);
+			}
 		});
 	}
 	
@@ -111,7 +120,10 @@
 		
 					<tr>
 						<td></td>
-						<td><input type="submit" name="Submit" value="Create" /></td>
+						<td>
+							<input id="submit_button" type="submit" name="Submit" value="Create" />
+							<div id="try_again"></div>
+						</td>
 					</tr>
 				</table>
 			</form>

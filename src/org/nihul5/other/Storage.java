@@ -11,7 +11,7 @@ public interface Storage {
 	List<String>	getUserNames();
 	User 			getUser(String username);
 
-	boolean saveMessage(Message msg);
+	int saveMessage(Message msg);
 	Message getMessage(int msgid);
 	boolean deleteMessage(int msgid);
 	
