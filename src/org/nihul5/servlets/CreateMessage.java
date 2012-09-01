@@ -115,8 +115,10 @@ public class CreateMessage extends HttpServlet {
 			
 			String[] outerArray = request.getParameterValues(CONST.EVENT_CONSENSUSES);
 			String[] innerArray = outerArray[0].split(",");
-			for (String cons : innerArray)
-				msg.consensusDescList.add(cons);
+			for (String cons : innerArray) {
+				if (!(cons == null || cons.length() == 0))
+					msg.consensusDescList.add(cons);
+			}
 		}
 		
 		if (_storage.saveMessage(msg)) {

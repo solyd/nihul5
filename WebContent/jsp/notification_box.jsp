@@ -6,7 +6,9 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<!--
 <meta http-equiv="refresh" content="1.5;url=/<%=CONST.WEBAPP_NAME%>/<%=request.getAttribute(CONST.REDIRECT_URL)%>; charset=UTF-8" />
+  -->
 <link rel="stylesheet" type="text/css" rel="stylesheet/index" href="/<%=CONST.WEBAPP_NAME %>/styles/style.css" />
 <title>Login</title>
 </head>

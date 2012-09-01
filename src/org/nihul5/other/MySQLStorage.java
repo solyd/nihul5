@@ -1073,6 +1073,49 @@ public class MySQLStorage implements Storage {
 		}
 	}
 	
+	@Override
+	public List<User> getEventRegisteredUsers(int eventid) {
+		Connection conn = null;
+		PreparedStatement prep_s = null;
+		ResultSet rs = null;
+
+		try {
+			conn = _dbcPool.getConnection();
+			conn.setAutoCommit(true);
+
+			String sql = "SELECT username FROM event_reg WHERE msgid = ?;";
+
+			prep_s = conn.prepareStatement(sql);
+			prep_s.setInt(1, eventid);
+
+			rs = prep_s.executeQuery();
+			
+			List<User> res = new ArrayList<User>();
+			while (rs.next()) {
+				User u = new User();
+				u.username = rs.getString("username");
+				res.add(u);
+			}
+
+			return res;
+		} 
+		catch (SQLException e) {
+			logger.error("", e);
+			//			if (conn != null)
+			//				try { conn.rollback(); } catch (SQLException e1) { logger.error("Can't roll back", e1); }
+
+			return null;
+		}
+		finally {
+			if (prep_s != null)
+				try { prep_s.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (rs != null)
+				try { rs.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (conn != null)
+				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
+		}
+	}
+	
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	private int getVoteCount(Connection conn, int consid) {

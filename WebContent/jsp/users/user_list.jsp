@@ -4,6 +4,7 @@
 
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/jquery.js"></script>
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/jquery.pajinate.js"></script>
+<script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/jquery.lightbox_me.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
     $('#page_container').pajinate({
@@ -32,6 +33,7 @@ $(document).ready(function(){
 
 	<div id="page_container" class="container">
 	<div class="page_navigation"></div>
+	<div class="iphone_list">
 	<ul class="list_content">
 		<%
 			for (String username : userList) {
@@ -42,6 +44,7 @@ $(document).ready(function(){
 		%>
 		
 	</ul>
+	</div>
 	</div>
 
 	<%

@@ -21,7 +21,7 @@ import org.nihul5.other.Storage;
 @WebServlet("/message/info/*")
 public class MessageInfo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = Logger.getLogger(UserProfile.class);
+	private static final Logger logger = Logger.getLogger(MessageInfo.class);
 
 	private Storage _storage;
     
@@ -54,7 +54,15 @@ public class MessageInfo extends HttpServlet {
 		}
 		
 		msg = _storage.getMessage(msgid);
+		if (msg == null) {
+			request.setAttribute(CONST.MSGBOX_TXT, "There is no such message in the system");
+			getServletContext().getRequestDispatcher("/jsp/notification_box.jsp").forward(request, response);
+			return;
+		}
+		
 		request.setAttribute(CONST.MSG, msg);
+		request.setAttribute(CONST.MSG_ID, msgid);
+		
 		getServletContext().getRequestDispatcher("/jsp/messages/message_info.jsp").forward(request, response);
 		//logger.debug("lat: " + Double.valueOf(msg.lat));
 	}

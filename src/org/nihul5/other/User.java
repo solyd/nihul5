@@ -7,11 +7,13 @@ import org.apache.log4j.Logger;
 public class User {
 	private static final Logger logger = Logger.getLogger(User.class);
 	
-	public final String username;
-	public final String password;
-	public final String firstName;
-	public final String lastName;
-	public final String email;
+	public String username;
+	public String password;
+	public String firstName;
+	public String lastName;
+	public String email;
+	
+	public User() {} 
 	
 	public User(String username, String password, String firstName, String lastName, String email) {
 		this.username = username;

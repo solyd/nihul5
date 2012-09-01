@@ -36,6 +36,7 @@ public interface Storage {
 	boolean isUserRegisteredToEvent(String username, int eventid);
 	
 	List<Consensus> getEventConsensusReqs(int eventid);
+	List<User> getEventRegisteredUsers(int eventid);
 	boolean voteOnConsensusReq(String username, int eventid, int reqid, boolean accept);
 	
 	List<Message> getUserCreatedMessages(String username);

@@ -96,10 +96,10 @@ public class Message {
 			sb.append("\n\t[Event]\n\towner: " + username);
 			sb.append("\n\tlat: " + lat);
 			sb.append("\n\tlng: " + lng);
-			sb.append("\n\tcreated on: " + Utility.millitimeToStr(creationTime));
+			sb.append("\n\tcreated on: " + Utility.millitimeToStr(creationTime) + " ( " + creationTime + " )");
 			sb.append("\n\ttitle: " + title);
 			sb.append("\n\tcontent: " + content);
-			sb.append("\n\tevent date: " + Utility.millitimeToStr(eventTime));
+			sb.append("\n\tevent date: " + Utility.millitimeToStr(eventTime)+ " ( " + eventTime + " )");
 			sb.append("\n\tcapacity: " + capacity);
 			sb.append("\n\t# of consensus req: " + consensusDescList.size());
 			break;
@@ -107,7 +107,7 @@ public class Message {
 			sb.append("\n\t[Post]\n\towner: " + username);
 			sb.append("\n\tlat: " + lat);
 			sb.append("\n\tlng: " + lng);
-			sb.append("\n\tcreated on: " + Utility.millitimeToStr(creationTime));
+			sb.append("\n\tcreated on: " + Utility.millitimeToStr(creationTime) + "( " + creationTime + " )");
 			sb.append("\n\ttitle: " + title);
 			sb.append("\n\tcontent: " + content);
 			break;
