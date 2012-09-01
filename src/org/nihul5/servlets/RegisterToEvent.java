@@ -63,12 +63,16 @@ public class RegisterToEvent extends HttpServlet {
 		}
 		
 		
-		if (_storage.saveEventRegistration(eventid, username)) {
-			Utility.writeResponse(response, true, "Registration successful");
+		try {
+			if (_storage.saveEventRegistration(eventid, username)) {
+				Utility.writeResponse(response, true, "Registration successful");
+			}
+			else {
+				Utility.writeResponse(response, false, "Registration failed");
+			}
 		}
-		else {
-			Utility.writeResponse(response, false, "Registration failed, try again");
+		catch (Exception e) {
+			Utility.writeResponse(response, false, e.getMessage());
 		}
 	}
-
 }

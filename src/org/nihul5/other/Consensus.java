@@ -1,11 +1,15 @@
 package org.nihul5.other;
 
+import java.util.List;
+
 public class Consensus {
 	public int eventid;
 	public String desc;
 	public Status status;
 	public int id;
 	public int nvotesForChange;
+	
+	public List<String> users;
 	
 	public static enum Status {
 		ACCEPTED,

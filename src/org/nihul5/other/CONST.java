@@ -59,6 +59,13 @@ public class CONST {
 	public static final String EVENT_CONSENSUSES = "EventConsensuses";
 	public static final String EVENT_ID = "Eventid";
 	
+	public static final String EVENT_FULL = "Event is full";
+	public static final String EVENT_PASSED = "Event deadline has passed";
+	public static final String EVENT_DELETED = "Event was deleted";
+	
+	public static final String CONSENSUS_ID = "considddd";
+	public static final String VOTE = "vote";
+	
 	public static final String ALPHANUMERIC_REGEX = "/^[a-z0-9]+$/i";
 	public static final String EMAIL_REGEX = "[^A-Za-z0-9\\.\\@_\\-~#]+";
 	public static final int MIN_LENGTH = 3;

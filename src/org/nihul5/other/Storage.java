@@ -31,13 +31,15 @@ public interface Storage {
 	 */
 	List<Message> searchMessages(double lat, double lng, double distance);
 	
-	boolean saveEventRegistration(int eventid, String username);
+	boolean saveEventRegistration(int eventid, String username) throws Exception;
 	boolean deleteEventRegistration(int eventid, String username);
 	boolean isUserRegisteredToEvent(String username, int eventid);
 	
 	List<Consensus> getEventConsensusReqs(int eventid);
 	List<User> getEventRegisteredUsers(int eventid);
+	
 	boolean voteOnConsensusReq(String username, int eventid, int reqid, boolean accept);
+	boolean didUserVote(String username, int consid);
 	
 	List<Message> getUserCreatedMessages(String username);
 	List<Message> getUserRegisteredEvents(String username);
