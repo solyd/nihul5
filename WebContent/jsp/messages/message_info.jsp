@@ -28,7 +28,7 @@
 	//Date date = new Date();
 	//date.setTime(message.creationTime);
 	/* ;
-	 //message.consensusDescList;
+	 
 	 ;
 	 ;
 	 ;
@@ -50,7 +50,7 @@
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/jquery.pajinate.js"></script>
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/menu_loader.js"></script>
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/map.js"></script>
-
+<script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/message.js"></script>
 
 <script type="text/javascript">
 	var latitude = <%=message.lat%>;
@@ -86,6 +86,7 @@
 		
 		showDateInFormat(messageCreateDate, 'craeted_date');
 		showDateInFormat(eventDate, 'event_date');
+		
 		$('#capacity').text(eventRegistered + "/" + eventCapacity);
 		
  		var msgId = <%=message.id%>;

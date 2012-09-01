@@ -78,12 +78,12 @@ $(document).ready(function(){
 	
 	alert(test[marker3.getTitle()]); */
 	
-	alert(map.getCenter());
+	//alert(map.getCenter());
     google.maps.event.addListenerOnce(map, 'idle', function(){
     	var bounds = this.getBounds();
-        alert(bounds.getNorthEast());
+       // alert(bounds.getNorthEast());
         var distance = google.maps.geometry.spherical.computeDistanceBetween(latlng, locationlatlng);
-        alert(distance);
+        //alert(distance);
         //alert(google.maps.geometry.spherical.computeDistanceBetween(map.getCenter(),bounds.getNorthEast()));
     });
 
