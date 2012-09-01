@@ -50,7 +50,12 @@ public class MySQLStorageTest {
 		_db.saveMessage(blaevent);
 		_db.saveMessage(blaevent2);
 		
-		_db.saveEventRegistration(3, "sol");
-		_db.saveEventRegistration(4, "sol");
+		try {
+			_db.saveEventRegistration(3, "sol");
+			_db.saveEventRegistration(4, "sol");
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		
 	}
 }

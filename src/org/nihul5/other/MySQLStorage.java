@@ -710,7 +710,7 @@ public class MySQLStorage implements Storage {
 	}
 
 	@Override
-	public boolean saveEventRegistration(int eventid, String username) {
+	public boolean saveEventRegistration(int eventid, String username) throws Exception {
 		Connection conn = null;
 		PreparedStatement prep_s = null;
 		PreparedStatement prepMsgCheck = null;
@@ -730,8 +730,9 @@ public class MySQLStorage implements Storage {
 
 			rsMsg = prepMsgCheck.executeQuery();
 			if (!rsMsg.next()) {
-				logger.error("Can't register to eventid " + eventid + " - event doesn't exist");
-				return false;
+				throw new Exception(CONST.EVENT_DELETED);
+//				logger.error("Can't register to eventid " + eventid + " - event doesn't exist");
+//				return false;
 			}
 			
 			long eventDate = rsMsg.getLong("event_date");
@@ -740,13 +741,15 @@ public class MySQLStorage implements Storage {
 			int registeredCount = getRegisteredCount(conn, eventid);
 			
 			if (registeredCount == capacity) {
-				logger.error("Can't register to event " + eventid + " - there is no room left");
-				return false;
+				throw new Exception(CONST.EVENT_FULL);
+//				logger.error("Can't register to event " + eventid + " - there is no room left");
+//				return false;
 			}
 			
 			if (eventDate < currDate) {
-				logger.error("Can't register to event " + eventid + " - deadline has passed");
-				return false;
+				throw new Exception(CONST.EVENT_PASSED);
+//				logger.error("Can't register to event " + eventid + " - deadline has passed");
+//				return false;
 			}
 
 			sql = "INSERT INTO event_reg (msgid, username) VALUES (?, ?);";
@@ -922,7 +925,7 @@ public class MySQLStorage implements Storage {
 		Connection conn = null;
 		PreparedStatement prep_s = null;
 		
-		logger.info(username + "votes on consensus req " + reqid + " of event " + eventid);
+		logger.info(username + "votes on consensus req " + reqid + " of event " + eventid + " for change? " + accept);
 
 		try {
 			conn = _dbcPool.getConnection();
@@ -935,18 +938,26 @@ public class MySQLStorage implements Storage {
 				return false;
 
 			StringBuilder sqlsb = new StringBuilder();
-			sqlsb.append("INSERT INTO consensus_votes (consid, msgid, username) ");
-			sqlsb.append("VALUES (?, ?, ?);");
-			
-			prep_s = conn.prepareStatement(sqlsb.toString());
-			prep_s.setInt(1, reqid);
-			prep_s.setInt(2, eventid);
-			prep_s.setString(3, username);
-			
+			if (accept) {
+				sqlsb.append("INSERT INTO consensus_votes (consid, msgid, username) ");
+				sqlsb.append("VALUES (?, ?, ?);");
+
+				prep_s = conn.prepareStatement(sqlsb.toString());
+				prep_s.setInt(1, reqid);
+				prep_s.setInt(2, eventid);
+				prep_s.setString(3, username);
+			} else  {
+				sqlsb.append("DELETE FROM consensus_votes WHERE consid = ? AND msgid = ? AND username = ?;");
+				
+				prep_s = conn.prepareStatement(sqlsb.toString());
+				prep_s.setInt(1, reqid);
+				prep_s.setInt(2, eventid);
+				prep_s.setString(3, username);
+			}
+
 			prep_s.executeUpdate();
-
 			toggleConsensusReqIfNeeded(conn, reqid);
-
+			
 			conn.commit();
 		} 
 		catch (SQLException e) {
@@ -1116,6 +1127,48 @@ public class MySQLStorage implements Storage {
 			//				try { conn.rollback(); } catch (SQLException e1) { logger.error("Can't roll back", e1); }
 
 			return null;
+		}
+		finally {
+			if (prep_s != null)
+				try { prep_s.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (rs != null)
+				try { rs.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (conn != null)
+				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
+		}
+	}
+	
+	@Override
+	public boolean didUserVote(String username, int consid) {
+		Connection conn = null;
+		PreparedStatement prep_s = null;
+		ResultSet rs = null;
+
+		try {
+			conn = _dbcPool.getConnection();
+			conn.setAutoCommit(true);
+
+			String sql = "SELECT username FROM consensus_votes WHERE consid = ?;";
+
+			prep_s = conn.prepareStatement(sql);
+			prep_s.setInt(1, consid);
+
+			rs = prep_s.executeQuery();
+			
+			while (rs.next()) {
+				String name = rs.getString("username");
+				if (name.equals(username))
+					return true;
+			}
+
+			return false;
+		} 
+		catch (SQLException e) {
+			logger.error("", e);
+			//			if (conn != null)
+			//				try { conn.rollback(); } catch (SQLException e1) { logger.error("Can't roll back", e1); }
+
+			return false;
 		}
 		finally {
 			if (prep_s != null)
