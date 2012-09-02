@@ -2,6 +2,7 @@ package org.nihul5.other;
 
 public class CONST {
 	public static final String WEBAPP_NAME = "nihul5";
+	//public static final String WEBAPP_NAME = "app306932039";
 	public static final boolean DEBUG_MODE = true;
 	public static final boolean RESET_DB = false;
 
