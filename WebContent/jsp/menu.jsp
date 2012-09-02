@@ -25,7 +25,9 @@
 		<li><a href="/<%=CONST.WEBAPP_NAME %>/">Browse Messages</a></li>
 		
 		<!-- TODO -->
-		<li><a href="/<%=CONST.WEBAPP_NAME %>/Search">Search Messages</a></li>
+
+		<li><a href="/<%=CONST.WEBAPP_NAME %>/message/search">Search Messages</a></li>
+
 		
 		
 

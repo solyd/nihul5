@@ -20,49 +20,67 @@
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/markerclusterer.js"></script>
 
 <script type="text/javascript">
+	var mainCircle = null;
+	var defaultRadius = 20000;
+	
 	$(document).ready(function(){
 		$('#lat').blur(function() {
 			var lat = $(this).val();
 			var lng = $('#lng').val();
-			deployPosition(lat, lng);
+			var radius = $('#radius').val();
+			deployPosition2(lat, lng, radius);
 		});
 		$('#lng').blur(function() {
-			var lng = $(this).val();
 			var lat = $('#lat').val();
-			deployPosition(lat, lng);
+			var lng = $(this).val();
+			var radius = $('#radius').val();
+			deployPosition2(lat, lng, radius);
+		});
+		$('#radius').blur(function() {
+			var lng = $('#lng').val();
+			var lat = $('#lat').val();
+			var radius = $(this).val();
+			deployPosition2(lat, lng, radius);
 		});
 		
 		google.maps.event.addListener(map, 'click', function(event) {
 			var marker = placeMarker(event.latLng);
-			marker.setDraggable(true);
 			changeLatLngValues(event);
 			google.maps.event.addListener(marker, "drag", function(event) {
 				changeLatLngValues(event);
 			});
-			
-			var circle = new google.maps.Circle({
-				  map: map,
-				  radius: 12000,    // 10 miles in metres
-				  fillColor: '#AA0000',
-				  editable: true
-			});
-			circle.bindTo('center', marker, 'position');
+			placeCircle(marker, defaultRadius);
 		});
-		$('#radius').blur(function() {
-
-		});
-/* 		$('#msg_container').pajinate({
-					items_per_page : 5,
-					item_container_id : '.list_content',
-					nav_panel_id : '.page_navigation'
-		});
-		$('#event_container').pajinate({
-					items_per_page : 5,
-					item_container_id : '.list_content',
-					nav_panel_id : '.page_navigation'
-		}); */
 	});
-
+	function deployPosition2(lat, lng, radius){
+		if ((lat) && (lng) && (radius)){
+			if (inRange(minLat, lat, maxLat) && (inRange(minLng, lng, maxLng))){
+				var newPosition = new google.maps.LatLng(lat, lng);
+				var marker = placeMarker(newPosition);
+				placeCircle(marker, radius);
+			}
+		}
+	}
+	
+	function placeCircle(marker ,radius) {
+		marker.setDraggable(true);
+		if (mainCircle){
+			mainCircle.unbind(marker);
+			mainCircle.setMap(null);
+		}
+		var circle = new google.maps.Circle({
+			  map: map,
+			  radius: parseInt(radius),
+			  fillColor: '#AA0000',
+			  editable: true
+		});
+		circle.bindTo('center', marker, 'position');
+		mainCircle = circle;
+ 		google.maps.event.addListener(circle, 'radius_changed', function(event) {
+			document.getElementById('radius').value = circle.getRadius();
+		});
+		return circle;
+	}
 </script>
 
 
@@ -84,16 +102,16 @@
 						<td colspan=2 align="center" height="10px"></td>
 					</tr>
 					<tr>
+						<td>Radius:</td>
+						<td><input id="radius" type="text" name="123" value=""/></td>
+					</tr>
+					<tr>
 						<td>Latitude:</td>
 						<td><input id="lat" type="text" name="123" value=""/></td>
 					</tr>
 					<tr>
 						<td>Longitude:</td>
 						<td><input id="lng" type="text" name="123" value=""/></td>
-					</tr>
-					<tr>
-						<td>Radius:</td>
-						<td><input id="radius" type="text" name="123" value=""/></td>
 					</tr>
 					<tr>
 						<td colspan=2 align="center" height="10px"></td>
