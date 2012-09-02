@@ -28,11 +28,11 @@ function placeMarker(position) {
 	markersArray.push(marker);
 	map.panTo(position);
 	
-	marker.setAnimation(google.maps.Animation.DROP);
+	//marker.setAnimation(google.maps.Animation.DROP);
 	marker.setAnimation(google.maps.Animation.BOUNCE);
 	setTimeout(function() {
 		marker.setAnimation(null);
-	}, 2500);
+	}, 1500);
 	
 	return marker;
 }
@@ -63,6 +63,10 @@ function inRange(min, number, max){
 	}
 }
 
+function changeLatLngValues(event){
+	document.getElementById('lat').value = event.latLng.lat();
+	document.getElementById('lng').value = event.latLng.lng();
+}
 
 
 /*	google.maps.event.addListener(map, 'click', function(event) {

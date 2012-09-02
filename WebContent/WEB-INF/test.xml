@@ -1,0 +1,47 @@
+<?XMLversion ="1.0" encoding="UTF-8“ standalone="no"?>
+<!DOCTYPE app306932039 SYSTEM "app306932039.dtd">
+<!-- File name: test.xml -->
+<app306932039>
+    <event id="21">
+        <username>sol</username>
+        <lat>32.2</lat>
+        <lng>1.22</lng>
+        <creation_date>129847122</creation_date>
+        <title>Something</title>
+        <content>this is the content of the message</content>
+   
+        <event_date>1982749102</event_date>
+        <capacity>142</capacity>
+       
+        <registered_users>
+            <username>blabla</username>
+            <username>wat</username>
+        </registered_users>
+
+        <consensus_reqs>
+            <consensus id="21">
+                <description>this is consensus req desc</description>
+                <status>NOT_ACCEPTED</status>
+
+            <votes_for_change>2</votes_for_change>
+            </consensus>  
+            <consensus id="22">
+                <description>this is consensus req desc</description>
+                <status>NOT_ACCEPTED</status>
+
+            <votes_for_change>2</votes_for_change>
+            </consensus>      
+            
+        </consensus_reqs>
+    </event>
+
+    <post id="21">
+       <username>sol</username>
+        <lat>32.2</lat>
+        <lng>1.22</lng>
+        <creation_date>129847122</creation_date>
+        <title>Something</title>
+        <content>this is the content of the message</content>
+    </post>
+
+</app306932039>

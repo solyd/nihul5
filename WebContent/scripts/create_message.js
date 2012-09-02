@@ -62,11 +62,6 @@ function addMessage() {
 	$('#add_row').click(addElement);
 }
 
-function changeLatLngValues(event){
-	document.getElementById('lat').value = event.latLng.lat();
-	document.getElementById('lng').value = event.latLng.lng();
-}
-
 function getEventDate(){
 
 	var splitDay = ($('#eventDay').val()).split("/");

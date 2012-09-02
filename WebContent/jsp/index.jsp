@@ -78,27 +78,28 @@ $(document).ready(function(){
 	
 	alert(test[marker3.getTitle()]); */
 
-	//alert(map.getCenter());
-    google.maps.event.addListenerOnce(map, 'idle', function(){
-    	var bounds = this.getBounds();
-/*     	alert(bounds.getCenter());
-        alert(bounds.getNorthEast());
-        alert(bounds.getSouthWest()); */
-        var x = new google.maps.LatLng(35,35);
-        var y = new google.maps.LatLng(25,25);
 
-        var nyc = new google.maps.LatLng(40.715, -74.002);
-        var london = new google.maps.LatLng(51.506, -0.119);
-        var distance = google.maps.geometry.spherical.computeDistanceBetween(nyc, london);
-        //alert(distance);
-        //alert(google.maps.geometry.spherical.computeDistanceBetween(map.getCenter(),bounds.getNorthEast()));
+    google.maps.event.addListener(map, 'idle', function(){
+    	var bounds = this.getBounds();
+    	var center = bounds.getCenter();
+    	var northEast = bounds.getNorthEast();
+    	var southWest = bounds.getSouthWest();
+
+        var distance1 = google.maps.geometry.spherical.computeDistanceBetween(center, northEast);
+        var distance2 = google.maps.geometry.spherical.computeDistanceBetween(center, southWest);
+        var radius = (distance1>distance2) ? distance1 : distance2;
+
     });
 
-/* 	 google.maps.event.addListener(map, 'bounds_changed', function() {
-         alert(map.getBounds());
-     }); */
+	//apply kml layer to map
+<%-- 	$('#display_kml').click(function(){
+		$.get('/<%=CONST.WEBAPP_NAME%>/CreateKml', {},
+			function(response) {
+				var kmlLayer = new google.maps.KmlLayer(response);
+				kmlLayer.setMap(map);
+		});
+	}); --%>
 
-	
 });
 
 
