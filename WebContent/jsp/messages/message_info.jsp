@@ -162,13 +162,6 @@
 			$('#reg_button').replaceWith('<i>The event has occured</i>');
 			$('#vote').hide();
 		}
-
-		function deselect() {
-    		$(".pop").slideFadeToggle(function() {
-	        	$("#contact").removeClass("selected");
-    		});    
-		}
-		
 		
        $('#show_reg_button').click(function(e) { //A button on clicking shows the popup
            	$.get('/<%=CONST.WEBAPP_NAME%>/EventRegisteredUsers',
@@ -181,8 +174,6 @@
            	
 			e.preventDefault();
 		});
-		        
-       
 		
  		$('#vote').click(function() {
  			var consid = $(this).attr('name');
