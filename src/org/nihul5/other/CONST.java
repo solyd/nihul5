@@ -6,6 +6,7 @@ public class CONST {
 	public static final boolean RESET_DB = false;
 
 	public static final double EARTH_RADIUS = 6371.01;
+	public static final String RADIUS = "RADIUS";
 	
 	public static final String MSGBOX_TXT = "msgboxtxt";
 	public static final String REDIRECT_URL = "";
@@ -55,6 +56,8 @@ public class CONST {
 	public static final String MSG_TYPE 		   = "MessageType";
 	public static final String MSG_ID   		   = "MessageId";
 	public static final String MSG  			   = "msggggg";
+	
+	public static final String MESSAGES = "MESSAGES";
 	
 	public static final String EVENT_DATE   	 = "EventDate";
 	public static final String EVENT_CAPACITY    = "EventCapacity";

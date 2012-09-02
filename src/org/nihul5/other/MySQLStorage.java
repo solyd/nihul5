@@ -1098,6 +1098,8 @@ public class MySQLStorage implements Storage {
 				msg.lat = rs.getDouble("lat");
 				msg.lng = rs.getDouble("lng");
 				msg.content = rs.getString("content");
+				msg.title = rs.getString("title");
+				msg.type = Message.stringToType(rs.getString("type"));
 				
 				res.add(msg);
 			}

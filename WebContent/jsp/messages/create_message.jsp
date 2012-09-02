@@ -19,6 +19,11 @@
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/create_message.js"></script>
 
 <script type="text/javascript">
+
+	$(document).ready(function() {
+		$('#msg_title').focus();
+	});
+
 	
 	function submitMsg() {
 		var data = $('#msg_form').serializeArray();
