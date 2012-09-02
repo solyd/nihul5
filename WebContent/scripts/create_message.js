@@ -1,6 +1,7 @@
 $(document).ready(addMessage);
 
 var messageType;
+var MAX_CONSENSUS = 5;
 
 function tagsAction(action){
 	$("#date_title").animate({ height: action, opacity: action }, 'slow');
@@ -112,7 +113,7 @@ var consensuses = [];
 
 function addElement() {
 	var text = $('#consensus_text').val();
-	if (text){
+	if ((text) && (consensusNum<MAX_CONSENSUS)){
 		var appendToText = document.getElementById('myDiv');
 		consensusNum++;
 		var divIdName = "my" + consensusNum + "Div";

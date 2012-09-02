@@ -26,8 +26,8 @@ $(document).ready(function(){
 	var marker2 = new google.maps.Marker({ position: latLng2 });
 	var marker3 = new google.maps.Marker({ position: latLng3 });
 	var marker4 = new google.maps.Marker({ position: latLng4 });
-	marker1.setTitle("1");
-	marker2.setTitle("2");
+	marker1.setTitle("4");
+	marker2.setTitle("3");
 	marker3.setTitle("28");
 	marker4.setTitle("31");
 	markersArray.push(marker1);
@@ -50,7 +50,7 @@ $(document).ready(function(){
 		$.get('/<%=CONST.WEBAPP_NAME%>/GetMessage',
 				{<%=CONST.MSG_ID%>: msgId}, function(response) {
 					$('#content').replaceWith(response);
-					var $data=$(response);
+ 					var $data=$(response);
 					var result = $data.find('#message_status').text();
 					if (result == 'Deleted'){
 						markerCluster.removeMarker(marker1);
@@ -63,11 +63,11 @@ $(document).ready(function(){
 		$.get('/<%=CONST.WEBAPP_NAME%>/GetMessage',
 				{<%=CONST.MSG_ID%>: msgId}, function(response) {
 					$('#content').replaceWith(response);
-					var $data=$(response);
+ 					var $data=$(response);
 					var result = $data.find('#message_status').text();
 					if (result == 'Deleted'){
 						markerCluster.removeMarker(marker2);
-					}
+					} 
 		});
 	}); 
 
