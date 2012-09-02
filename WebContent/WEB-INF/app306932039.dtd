@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT app306932039 (event*, post*)>
+<!ELEMENT event (username, lat, lng, creation_date, title, content, event_date, capacity, registered_users, consensus_reqs)>
+<!ELEMENT post (username, lat, lng, creation_date, title, content)>
+<!ATTLIST event
+	id CDATA #REQUIRED>
+<!ATTLIST post
+	id CDATA #REQUIRED>
+<!ELEMENT username (#PCDATA)>
+<!ELEMENT lat (#PCDATA)>
+<!ELEMENT lng (#PCDATA)>
+<!ELEMENT creation_date (#PCDATA)>
+<!ELEMENT title (#PCDATA)>
+<!ELEMENT content (#PCDATA)>
+<!ELEMENT event_date (#PCDATA)>
+<!ELEMENT capacity (#PCDATA)>
+<!ELEMENT registered_users (username*)>
+<!ELEMENT consensus_reqs (consensus*)>
+<!ELEMENT consensus (description, status, votes_for_change)>
+<!ATTLIST consensus
+	id CDATA #REQUIRED>
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT status (#PCDATA)>
+<!ELEMENT votes_for_change (#PCDATA)>
