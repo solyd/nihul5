@@ -55,8 +55,6 @@ public class IsUserRegisteredToEvent extends HttpServlet {
 		response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 		response.setContentType("application/json; charset=UTF-8");
 		
-		//PrintWriter out = response.getWriter();
-		
     	if ((userName == null) || (msgId == null)) {
     		logger.info("userName is " + userName + ", Message ID is: " + msgId);
     		Utility.writeResponse(response, false, "Bad Parameters");
@@ -74,9 +72,11 @@ public class IsUserRegisteredToEvent extends HttpServlet {
     	}
     	
     	if (_storage.isUserRegisteredToEvent(userName, eventid)) {
+    		logger.info("User " + userName + " is already registered to message" + eventid);
     		Utility.writeResponse(response, true, userName + " is registered to " + eventid);    		
     	}
     	else {
+    		logger.info("User " + userName + " is not registered to message" + eventid);
     		Utility.writeResponse(response, false, userName + " is not registered to " + eventid);
     	}
 	}

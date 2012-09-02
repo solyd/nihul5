@@ -36,9 +36,12 @@ function addMessage() {
 	});
 	
 	google.maps.event.addListener(map, 'click', function(event) {
-		placeMarker(event.latLng);
-		document.getElementById('lat').value = event.latLng.lat();
-		document.getElementById('lng').value = event.latLng.lng();
+		var marker = placeMarker(event.latLng);
+		marker.setDraggable(true);
+		changeLatLngValues(event);
+		google.maps.event.addListener(marker, "drag", function(event) {
+			changeLatLngValues(event);
+		});
 	});
 	
 	dateObject = new JsDatePick({
@@ -55,7 +58,12 @@ function addMessage() {
 		  step: 15});
 	document.getElementById('eventTime').value = getTime();
 	
-	$('#add_row').click(addEvent);
+	$('#add_row').click(addElement);
+}
+
+function changeLatLngValues(event){
+	document.getElementById('lat').value = event.latLng.lat();
+	document.getElementById('lng').value = event.latLng.lng();
 }
 
 function getEventDate(){
@@ -102,7 +110,7 @@ function getTime(){
 var consensusNum = 0;
 var consensuses = [];
 
-function addEvent() {
+function addElement() {
 	var text = $('#consensus_text').val();
 	if (text){
 		var appendToText = document.getElementById('myDiv');

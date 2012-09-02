@@ -27,6 +27,14 @@ function placeMarker(position) {
 	});
 	markersArray.push(marker);
 	map.panTo(position);
+	
+	marker.setAnimation(google.maps.Animation.DROP);
+	marker.setAnimation(google.maps.Animation.BOUNCE);
+	setTimeout(function() {
+		marker.setAnimation(null);
+	}, 2500);
+	
+	return marker;
 }
 
 function clearMap(){
@@ -38,9 +46,11 @@ function clearMap(){
 }
 
 function deployPosition(lat, lng){
-	if (inRange(minLat, lat, maxLat) && (inRange(minLng, lng, maxLng))){
-		var newPosition = new google.maps.LatLng(lat, lng);
-		placeMarker(newPosition);
+	if ((lat) && (lng)){
+		if (inRange(minLat, lat, maxLat) && (inRange(minLng, lng, maxLng))){
+			var newPosition = new google.maps.LatLng(lat, lng);
+			placeMarker(newPosition);
+		}
 	}
 }
 

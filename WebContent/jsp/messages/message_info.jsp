@@ -13,6 +13,7 @@
 <%@ page import="java.util.Date"%>
 
 <%
+
 	Message message = (Message) request.getAttribute(CONST.MSG);
 	Principal princ = request.getUserPrincipal();
 	String username = "";
@@ -27,7 +28,7 @@
 	//Date date = new Date();
 	//date.setTime(message.creationTime);
 	/* ;
-	 //message.consensusDescList;
+	 
 	 ;
 	 ;
 	 ;
@@ -85,6 +86,7 @@
 		
 		showDateInFormat(messageCreateDate, 'craeted_date');
 		showDateInFormat(eventDate, 'event_date');
+		
 		$('#capacity').text(eventRegistered + "/" + eventCapacity);
 		
  		var msgId = <%=message.id%>;
@@ -255,9 +257,8 @@
 			});
 		});
 	});
+
 </script>
-
-
 
 <title>Message Info</title>
 </head>
