@@ -280,6 +280,7 @@
 		
 		// Show or remove the ellipses that indicate that more page numbers exist in the page index than are currently shown
 		function toggleMoreLess(){
+			return;
 													 
 			if(!$nav_panels.children('.page_link:visible').hasClass('last')){					
 				$nav_panels.children('.more').show();

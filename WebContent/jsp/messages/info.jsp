@@ -59,6 +59,7 @@
 					item_container_id : '.list_content',
 					nav_panel_id : '.page_navigation'
 		});
+		$('#cons_container').show();
 		
 		//map.setZoom(11);
 		//deployPosition(latitude, longtitude);
@@ -83,10 +84,15 @@
 							}
 							$('#vote').hide();
 						}
+						$('#reg_button').show();
 			});
+			
+			
 		<%} else { %>
-		$('#reg_button').attr('disabled', 'disabled');
+			$('#reg_button').attr('disabled', 'disabled');
+			$('#reg_button').show();
 		<%}%>
+
 		
 		$('#reg_button').click(function() {
 			$('#reg_button').attr('disabled', 'disabled');
@@ -154,15 +160,11 @@
 			e.preventDefault();
 		});
 		
- 		$('#vote').click(function() {
+ 		$('.vote_cons').click(function() {
  			var consid = $(this).attr('name');
  			var vote = "cancel";
  			var isVoteForChange = $(this).val() == voteForChange;
- 			var buttonRef = $(this);
  			var votefield = $('#cons_votes').find('.nvotes');
- 			var accepttxt = $('#accept_state').html();
- 			var accept = 'Accepted';
- 			var notaccept = 'Not Accepted';
  			var nvotes = parseInt(votefield.html());
  			console.log(nvotes);
  			if (isVoteForChange) {
@@ -173,34 +175,13 @@
 					{ <%=CONST.EVENT_ID%>: msgId, <%=CONST.USERNAME%>: userName, 
 						<%=CONST.CONSENSUS_ID%>: consid, <%=CONST.VOTE%>: vote }, function(response) {
 						if (response.result == 'success') {
-							if (isVoteForChange) {
-								if (nvotes + 1 == eventRegistered) {
-									$.get('/<%=CONST.WEBAPP_NAME%>/VoteOnConsensusReq', 
-											{<%=CONST.USERNAME%>: userName,  <%=CONST.CONSENSUS_ID%>: consid},
-											function(response) {
-												if (response.result == 'success' && 
-														((response.reason == 'ACCEPTED' && accepttxt == notaccept) ||
-														  response.reason == 'NOT_ACCEPTED' && accepttxt == accept)) {
-													if (accepttxt == accept)
-														$('#accept_state').html(notaccept);
-													else
-														$('#accept_state').html(accept);
-												}
-											});
-									votefield.html('0');
-								}
-								else {
-									votefield.html(nvotes +  1);
-									buttonRef.attr('value', voteCancel);
-								}
-							}
-							else {
-								votefield.html(nvotes - 1);
-								buttonRef.attr('value', voteForChange);
-							}
+							$.get('/<%=CONST.WEBAPP_NAME%>/GetMessage',
+								{<%=CONST.MSG_ID%>: msgId}, function(response) {
+									$('#content').replaceWith(response);
+								});
 						}
 						else{
-							alert(response.reason);
+							$('#vote_fail').html(response.reason);
 						}
 			});
 		});
@@ -297,7 +278,7 @@
 			</tr>
 			<tr>
 				<td colspan=2>
-					<input id="reg_button" type="button" value="Register" />
+					<input id="reg_button" type="button" value="Register" style="display: none;"/>
 					<input id="show_reg_button" type="button" value="Who's registered >>" />
 					<div id="reg_fail" style="display: none;"></div>
 				<div id="reg_users" style="display: none;">
@@ -336,7 +317,7 @@
 							Storage storage = (Storage) getServletContext().getAttribute(CONST.STORAGE);
 					%>
 
-					<div id="cons_container">
+					<div id="cons_container" style="display: none;">
 					<div class="page_navigation"></div>
 					<div class="navlist">
 					<ul class="list_content">
@@ -361,10 +342,11 @@
 							
 							if (username != null && username.length() > 0) { %>
 								<% if (storage.didUserVote(username, consensus.id))  {%>
-								<input id="vote" name="<%=consensus.id %>" type="button" value="Cancel vote for status change" />
+								<input class="vote_cons" id="vote" name="<%=consensus.id %>" type="button" value="Cancel vote for status change" />
 								<%} else { %>
-								<input id="vote" name="<%=consensus.id %>" type="button" value="Vote for status change" />
+								<input class="vote_cons" id="vote" name="<%=consensus.id %>" type="button" value="Vote for status change" />
 								<%} %>
+								<div id="vote_fail"></div>
 								</li>
 							<%} %>
 						<%

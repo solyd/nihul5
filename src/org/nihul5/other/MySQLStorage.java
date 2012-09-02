@@ -118,7 +118,8 @@ public class MySQLStorage implements Storage {
 		sb.append("FOREIGN KEY (username) REFERENCES users(username) ");
 		sb.append("ON UPDATE CASCADE ON DELETE CASCADE, ");
 		sb.append("FOREIGN KEY (type) REFERENCES message_types(type) ");
-		sb.append("ON UPDATE CASCADE ON DELETE CASCADE");
+		sb.append("ON UPDATE CASCADE ON DELETE CASCADE, ");
+		sb.append("KEY(lat, lng) ");
 		sb.append(") ENGINE = InnoDB;");
 		initStatements.add(sb.toString());
 
@@ -1006,8 +1007,8 @@ public class MySQLStorage implements Storage {
 		} 
 		catch (SQLException e) {
 			logger.error("", e);
-			if (conn != null)
-				try { conn.rollback(); } catch (SQLException e1) { logger.error("Can't roll back", e1); }
+//			if (conn != null)
+//				try { conn.rollback(); } catch (SQLException e1) { logger.error("Can't roll back", e1); }
 			
 			return null;
 		}
@@ -1051,8 +1052,71 @@ public class MySQLStorage implements Storage {
 	
 	@Override
 	public List<Message> searchMessages(double lat, double lng, double distance) {
-		// TODO Auto-generated method stub
-		return null;
+		Connection conn = null;
+		PreparedStatement prep_s = null;
+		ResultSet rs = null;
+		List<Message> res = new ArrayList<Message>();
+		GeoLocation location = null;
+		
+		try {
+			location = GeoLocation.fromDegrees(lat, lng);
+		} 
+		catch (Exception e) {
+			logger.error("", e);
+			return res;
+		}
+		
+		try {
+			conn = _dbcPool.getConnection();
+			conn.setAutoCommit(true);
+
+			GeoLocation[] boundingCoordinates = location.boundingCoordinates(distance, CONST.EARTH_RADIUS);
+			boolean meridian180WithinDistance =
+					boundingCoordinates[0].getLongitudeInDegrees() > 
+					boundingCoordinates[1].getLongitudeInDegrees();
+
+			StringBuilder sqlsb = new StringBuilder();
+			sqlsb.append("SELECT * FROM messages WHERE (lat >= ? AND lat <= ?) AND (lng >= ? ");
+			sqlsb.append((meridian180WithinDistance ? "OR" : "AND") + " lng <= ?) AND ");
+			sqlsb.append("acos(sin(radians(?)) * sin(radians(lat)) + cos(radians(?)) * cos(radians(lat)) * cos(radians(lng - ?))) <= ?;");
+			
+			prep_s = conn.prepareStatement(sqlsb.toString());
+			prep_s.setDouble(1, boundingCoordinates[0].getLatitudeInDegrees());
+			prep_s.setDouble(2, boundingCoordinates[1].getLatitudeInDegrees());
+			prep_s.setDouble(3, boundingCoordinates[0].getLongitudeInDegrees());
+			prep_s.setDouble(4, boundingCoordinates[1].getLongitudeInDegrees());
+			prep_s.setDouble(5, location.getLatitudeInDegrees());
+			prep_s.setDouble(6, location.getLatitudeInDegrees());
+			prep_s.setDouble(7, location.getLongitudeInDegrees());
+			prep_s.setDouble(8, distance / CONST.EARTH_RADIUS);
+			
+			rs = prep_s.executeQuery();
+			
+			while (rs.next()) {
+				Message msg = new Message();
+				msg.id = rs.getInt("msgid");
+				msg.lat = rs.getDouble("lat");
+				msg.lng = rs.getDouble("lng");
+				msg.content = rs.getString("content");
+				
+				res.add(msg);
+			}
+			
+			return res;
+		}
+		catch (SQLException e) {
+			logger.error("", e);
+//			if (conn != null)
+//				try { conn.rollback(); } catch (SQLException e1) { logger.error("Can't roll back", e1); }
+		}
+		finally {
+			if (prep_s != null)
+				try { prep_s.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (conn != null)
+				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
+		}
+		
+		return res;
 	}	
 
 	@Override
