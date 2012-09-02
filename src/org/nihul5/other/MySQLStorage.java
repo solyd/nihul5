@@ -303,7 +303,7 @@ public class MySQLStorage implements Storage {
 			
 			for (Message event : userEvents) {
 				for (Integer consid : getEventConsensusIds(conn, event.id)) {
-					toggleConsensusReqIfNeeded(conn, consid);
+					toggleConsensusReqIfNeeded(conn, consid, event.id);
 				}
 			}
 
@@ -847,7 +847,7 @@ public class MySQLStorage implements Storage {
 			rs = prepCons.executeQuery();
 			while (rs.next()) {
 				int consid = rs.getInt("consid");
-				toggleConsensusReqIfNeeded(conn, consid);
+				toggleConsensusReqIfNeeded(conn, consid, eventid);
 			}
 			
 			conn.commit();
@@ -956,7 +956,7 @@ public class MySQLStorage implements Storage {
 			}
 
 			prep_s.executeUpdate();
-			toggleConsensusReqIfNeeded(conn, reqid);
+			toggleConsensusReqIfNeeded(conn, reqid, eventid);
 			
 			conn.commit();
 		} 
@@ -1178,6 +1178,66 @@ public class MySQLStorage implements Storage {
 			if (conn != null)
 				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
 		}
+	}
+	
+	@Override
+	public Consensus getConsensus(int consid) {
+		Connection conn = null;
+		PreparedStatement prepCons = null;
+		PreparedStatement prepVotes = null;		
+		ResultSet rs = null;
+		ResultSet rsVotes = null;
+
+		try {
+			conn = _dbcPool.getConnection();
+			conn.setAutoCommit(false);
+
+			String sql = "SELECT status FROM consensus WHERE consid = ?;";
+
+			prepCons = conn.prepareStatement(sql);
+			prepCons.setInt(1, consid);
+
+			rs = prepCons.executeQuery();
+			
+			if (!rs.next())
+				return null;
+			
+			Consensus cons = new Consensus();
+			cons.status = Consensus.getConsensusStatus(rs.getString("status"));
+			
+			sql = "SELECT COUNT(*) FROM consensus_votes WHERE consid = ?;";
+			
+			prepVotes = conn.prepareStatement(sql);
+			prepVotes.setInt(1, consid);
+			
+			rsVotes = prepVotes.executeQuery();
+			rsVotes.next();
+			
+			cons.nvotesForChange = rsVotes.getInt(1);
+
+			conn.commit();
+			
+			return cons;
+		} 
+		catch (SQLException e) {
+			logger.error("", e);
+			if (conn != null)
+				try { conn.rollback(); } catch (SQLException e1) { logger.error("Can't roll back", e1); }
+
+			return null;
+		}
+		finally {
+			if (prepCons != null)
+				try { prepCons.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (prepVotes != null)
+				try { prepVotes.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (rsVotes != null)
+				try { rsVotes.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (rs != null)
+				try { rs.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (conn != null)
+				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
+		}	
 	}
 	
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1444,9 +1504,9 @@ public class MySQLStorage implements Storage {
 		return false;
 	}
 	
-	private boolean toggleConsensusReqIfNeeded(Connection conn, int consid) throws SQLException {
+	private boolean toggleConsensusReqIfNeeded(Connection conn, int consid, int eventid) throws SQLException {
 		int votesCount = getVoteCount(conn, consid);
-		int nregistered = getRegisteredCount(conn, consid);
+		int nregistered = getRegisteredCount(conn, eventid);
 
 		if (votesCount < 0 || nregistered < 0) {
 			throw new SQLException();
