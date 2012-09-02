@@ -11,7 +11,7 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" type="text/css" rel="stylesheet/index" href="/<%=CONST.WEBAPP_NAME %>/styles/style.css" />
-<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=<%=CONST.GOOGLE_APIKEY%>&sensor=false"></script>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=<%=CONST.GOOGLE_APIKEY%>&sensor=false&libraries=geometry"></script>
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/jquery.js"></script>
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/map.js"></script>
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/markerclusterer.js"></script>
@@ -26,8 +26,8 @@ $(document).ready(function(){
 	var marker2 = new google.maps.Marker({ position: latLng2 });
 	var marker3 = new google.maps.Marker({ position: latLng3 });
 	var marker4 = new google.maps.Marker({ position: latLng4 });
-	marker1.setTitle("41");
-	marker2.setTitle("42");
+	marker1.setTitle("1");
+	marker2.setTitle("2");
 	marker3.setTitle("28");
 	marker4.setTitle("31");
 	markersArray.push(marker1);
@@ -77,12 +77,19 @@ $(document).ready(function(){
 	test[marker2.getTitle()] = true;
 	
 	alert(test[marker3.getTitle()]); */
-	
+
 	//alert(map.getCenter());
     google.maps.event.addListenerOnce(map, 'idle', function(){
     	var bounds = this.getBounds();
-       // alert(bounds.getNorthEast());
-        var distance = google.maps.geometry.spherical.computeDistanceBetween(latlng, locationlatlng);
+/*     	alert(bounds.getCenter());
+        alert(bounds.getNorthEast());
+        alert(bounds.getSouthWest()); */
+        var x = new google.maps.LatLng(35,35);
+        var y = new google.maps.LatLng(25,25);
+
+        var nyc = new google.maps.LatLng(40.715, -74.002);
+        var london = new google.maps.LatLng(51.506, -0.119);
+        var distance = google.maps.geometry.spherical.computeDistanceBetween(nyc, london);
         //alert(distance);
         //alert(google.maps.geometry.spherical.computeDistanceBetween(map.getCenter(),bounds.getNorthEast()));
     });
