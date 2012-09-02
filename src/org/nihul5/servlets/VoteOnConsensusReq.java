@@ -1,6 +1,7 @@
 package org.nihul5.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.nihul5.other.CONST;
+import org.nihul5.other.Consensus;
 import org.nihul5.other.Storage;
 import org.nihul5.other.Utility;
 
@@ -57,8 +59,12 @@ public class VoteOnConsensusReq extends HttpServlet {
 			Utility.writeResponse(response, false, "bad id");
 			return;
 		}
+		Consensus cons = _storage.getConsensus(consid);
+		if (cons == null) {
+			Utility.writeResponse(response, false, "No such consensus");
+		}
 		
-		Utility.writeResponse(response, true, new Boolean(_storage.didUserVote(username, consid)).toString());
+		Utility.writeResponse(response, true, cons.status.toString());
 	}
 
 	/**

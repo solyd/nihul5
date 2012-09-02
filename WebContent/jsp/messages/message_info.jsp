@@ -188,6 +188,9 @@
  			var isVoteForChange = $(this).val() == voteForChange;
  			var buttonRef = $(this);
  			var votefield = $('#cons_votes').find('.nvotes');
+ 			var accepttxt = $('#accept_state').html();
+ 			var accept = 'Accepted';
+ 			var notaccept = 'Not Accepted';
  			var nvotes = parseInt(votefield.html());
  			console.log(nvotes);
  			if (isVoteForChange) {
@@ -199,8 +202,25 @@
 						<%=CONST.CONSENSUS_ID%>: consid, <%=CONST.VOTE%>: vote }, function(response) {
 						if (response.result == 'success') {
 							if (isVoteForChange) {
-								votefield.html(nvotes +  1);
-								buttonRef.attr('value', voteCancel);
+								if (nvotes + 1 == eventRegistered) {
+									$.get('/<%=CONST.WEBAPP_NAME%>/VoteOnConsensusReq', 
+											{<%=CONST.USERNAME%>: userName,  <%=CONST.CONSENSUS_ID%>: consid},
+											function(response) {
+												if (response.result == 'success' && 
+														((response.reason == 'ACCEPTED' && accepttxt == notaccept) ||
+														  response.reason == 'NOT_ACCEPTED' && accepttxt == accept)) {
+													if (accepttxt == accept)
+														$('#accept_state').html(notaccept);
+													else
+														$('#accept_state').html(accept);
+												}
+											});
+									votefield.html('0');
+								}
+								else {
+									votefield.html(nvotes +  1);
+									buttonRef.attr('value', voteCancel);
+								}
 							}
 							else {
 								votefield.html(nvotes - 1);
@@ -369,11 +389,11 @@
 									<%
 										if (consensus.status == Consensus.Status.NOT_ACCEPTED) {
 									%>
-										<b>[Status]</b> Not Accepted <span id="cons_votes">(<span class="nvotes"><%=consensus.nvotesForChange%></span>/<span class="subs"><%=message.nSubs%></span>)</span>
+										<b>[Status]</b> <span id="accept_state">Not Accepted</span> <span id="cons_votes">(<span class="nvotes"><%=consensus.nvotesForChange%></span>/<span class="subs"><%=message.nSubs%></span>)</span>
 									<%
 										} else {
 									%>
-										<b>[Status]</b> Accepted <span id="cons_votes">(<span class="nvotes"><%=consensus.nvotesForChange%></span>/<span class="subs"><%=message.nSubs%></span>)</span>
+										<b>[Status]</b> <span id="accept_state">Accepted</span> <span id="cons_votes">(<span class="nvotes"><%=consensus.nvotesForChange%></span>/<span class="subs"><%=message.nSubs%></span>)</span>
 									<%
 										}
 									%> <br/>
