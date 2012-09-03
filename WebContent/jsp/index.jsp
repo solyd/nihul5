@@ -18,6 +18,20 @@
 
 <script>
 $(document).ready(function(){
+	
+	$('#demo_button').click(function() {
+		$.post('/<%=CONST.WEBAPP_NAME%>/message/search',
+				{<%=CONST.MSG_LATITUDE%>: 32.7101808529167, <%=CONST.MSG_LONGITUDE%>: 35.03469824218746, 
+					<%=CONST.RADIUS%>: 45, <%=CONST.IS_JSON%>: "true"}, function(response) {
+						var msgArr = response.result;
+						if (msgArr.length == 0)
+							console.log("no such messages");
+						for (var i = 0; i < msgArr.length; i++) {
+							console.log(msgArr[i].lat + ' ' + msgArr[i].lng + ' ' + msgArr[i].id);
+						}
+		});		
+	});
+	
 	var latLng1 = new google.maps.LatLng(31.962943042014572, 35.54006933593746);
 	var latLng2 = new google.maps.LatLng(32.2,35.2);
 	var latLng3 = new google.maps.LatLng(32.4,35.4);
@@ -116,6 +130,7 @@ $(document).ready(function(){
 		<div id="map_canvas" class="left"></div>
 		<div id="content" class="right" align="center">
 			<div id="center_box">Select messages on the map to see their info</div>
+			<input id="demo_button" type="button" value="demo"/>
 		</div>
 	</div>
 
