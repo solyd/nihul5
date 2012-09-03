@@ -17,93 +17,70 @@
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/markerclusterer.js"></script>
 
 <script>
+var markerCluster;
+
 $(document).ready(function(){
 	
-	$('#demo_button').click(function() {
-		$.post('/<%=CONST.WEBAPP_NAME%>/message/search',
-				{<%=CONST.MSG_LATITUDE%>: 32.7101808529167, <%=CONST.MSG_LONGITUDE%>: 35.03469824218746, 
-					<%=CONST.RADIUS%>: 45, <%=CONST.IS_JSON%>: "true"}, function(response) {
-						var msgArr = response.result;
-						if (msgArr.length == 0)
-							console.log("no such messages");
-						for (var i = 0; i < msgArr.length; i++) {
-							console.log(msgArr[i].lat + ' ' + msgArr[i].lng + ' ' + msgArr[i].id);
-						}
-		});		
-	});
+	markerCluster = new MarkerClusterer(map);
+	var markersToAdd = new Array();
+	var markersOnMap = new Array();
 	
-	var latLng1 = new google.maps.LatLng(31.962943042014572, 35.54006933593746);
-	var latLng2 = new google.maps.LatLng(32.2,35.2);
-	var latLng3 = new google.maps.LatLng(32.4,35.4);
-	var latLng4 = new google.maps.LatLng(32.6,35.6);
-	var marker1 = new google.maps.Marker({ position: latLng1 });
-	var marker2 = new google.maps.Marker({ position: latLng2 });
-	var marker3 = new google.maps.Marker({ position: latLng3 });
-	var marker4 = new google.maps.Marker({ position: latLng4 });
-	marker1.setTitle("4");
-	marker2.setTitle("3");
-	marker3.setTitle("28");
-	marker4.setTitle("31");
-	markersArray.push(marker1);
-	markersArray.push(marker2);
-	markersArray.push(marker3);
-	markersArray.push(marker4);
-//var mcOptions = {gridSize: 50, maxZoom: 15};
-/* 	var infowindow = new google.maps.InfoWindow(
-      { content: marker1.getTitle(),
-        size: new google.maps.Size(50,50)
-      }); */
-    var markerCluster = new MarkerClusterer(map, markersArray);
-      //markerCluster.clearMarkers(); //clear all markers
-      //markerCluster.resetViewport(); //regroup all markers
-      
-      //bounds_changed //event of bounds change
-
-	google.maps.event.addListener(marker1, 'click', function() {
-  		var msgId = marker1.getTitle();
-		$.get('/<%=CONST.WEBAPP_NAME%>/GetMessage',
-				{<%=CONST.MSG_ID%>: msgId}, function(response) {
-					$('#content').replaceWith(response);
- 					var $data=$(response);
-					var result = $data.find('#message_status').text();
-					if (result == 'Deleted'){
-						markerCluster.removeMarker(marker1);
-					}
-		});
-	}); 
-	
-	google.maps.event.addListener(marker2, 'click', function() {
-  		var msgId = marker2.getTitle();
-		$.get('/<%=CONST.WEBAPP_NAME%>/GetMessage',
-				{<%=CONST.MSG_ID%>: msgId}, function(response) {
-					$('#content').replaceWith(response);
- 					var $data=$(response);
-					var result = $data.find('#message_status').text();
-					if (result == 'Deleted'){
-						markerCluster.removeMarker(marker2);
-					} 
-		});
-	}); 
-
-
-/* 	var test = new Array();
-	test[marker1.getTitle()] = true;
-	test[marker2.getTitle()] = true;
-	
-	alert(test[marker3.getTitle()]); */
-
-
-    google.maps.event.addListener(map, 'idle', function(){
+	google.maps.event.addListener(map, 'idle', function(){
     	var bounds = this.getBounds();
     	var center = bounds.getCenter();
+    	var latitude = bounds.getCenter().lat();
+    	var longtitude = bounds.getCenter().lng();
     	var northEast = bounds.getNorthEast();
     	var southWest = bounds.getSouthWest();
-
         var distance1 = google.maps.geometry.spherical.computeDistanceBetween(center, northEast);
         var distance2 = google.maps.geometry.spherical.computeDistanceBetween(center, southWest);
         var radius = (distance1>distance2) ? distance1 : distance2;
+        
+        $.post('/<%=CONST.WEBAPP_NAME%>/message/search',
+				{<%=CONST.MSG_LATITUDE%>: latitude, <%=CONST.MSG_LONGITUDE%>: longtitude, 
+					<%=CONST.RADIUS%>: (radius/1000.0), <%=CONST.IS_JSON%>: "true"}, function(response) {
+						var msgArr = response.result;
+						
+						if (msgArr.length == 0)
+							console.log("no such messages");	
+						for (var i = 0; i < msgArr.length; i++) {
+							console.log(msgArr[i].lat + ' ' + msgArr[i].lng + ' ' + msgArr[i].id);
+							var msgId = msgArr[i].id;
+							if (markersOnMap[msgId] != true){ 
+								var position = new google.maps.LatLng(msgArr[i].lat, msgArr[i].lng);
+								var marker = new google.maps.Marker({ position: position });
+								marker.setTitle(msgId.toString());
+								
+								markersToAdd.push(marker);
+								markersOnMap[msgId] = true;
+								addMarkerListener(marker);
+							}
+						}
+						/*for (var i = 0; i < markersToAdd.length; i++) {
+							console.log(markersToAdd[i]);
+						}*/
+						markerCluster.addMarkers(markersToAdd); //add the markers to 
+						markersToAdd.splice(0, markersToAdd.length); //delete the array
+		});
+	});
+});
 
-    });
+function addMarkerListener(marker){
+	google.maps.event.addListener(marker, 'click', function() {
+		var messageId = marker.getTitle();
+		$.get('/<%=CONST.WEBAPP_NAME%>/GetMessage',
+				{<%=CONST.MSG_ID%>: messageId}, function(response) {
+					$('#content').replaceWith(response);
+ 					var $data=$(response);
+					var result = $data.find('#message_status').text();
+					if (result == 'Deleted'){
+						console.log(marker.getTitle());
+						google.maps.event.clearInstanceListeners(marker);
+						markerCluster.removeMarker(marker);
+					}
+		});
+	});	
+}
 
 	//apply kml layer to map
 <%-- 	$('#display_kml').click(function(){
@@ -113,10 +90,6 @@ $(document).ready(function(){
 				kmlLayer.setMap(map);
 		});
 	}); --%>
-
-});
-
-
 
 </script>
 <title>Home</title>
@@ -130,7 +103,6 @@ $(document).ready(function(){
 		<div id="map_canvas" class="left"></div>
 		<div id="content" class="right" align="center">
 			<div id="center_box">Select messages on the map to see their info</div>
-			<input id="demo_button" type="button" value="demo"/>
 		</div>
 	</div>
 

@@ -8,7 +8,6 @@ var maxLng = 180;
 
 var map;
 var mainMarker = null;
-var markersArray = new Array();
 
 function initialize() {
 	var mapOptions = {
