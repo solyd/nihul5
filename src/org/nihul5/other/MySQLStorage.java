@@ -1121,6 +1121,10 @@ public class MySQLStorage implements Storage {
 		return res;
 	}	
 
+	public List<Message> getAllMessages(){
+		return null;
+	}
+	
 	@Override
 	public boolean isUserRegisteredToEvent(String username, int eventid) {
 		Connection conn = null;

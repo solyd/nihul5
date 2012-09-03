@@ -32,6 +32,8 @@ public interface Storage {
 	 */
 	List<Message> searchMessages(double lat, double lng, double distance);
 	
+	List<Message> getAllMessages();
+	
 	boolean saveEventRegistration(int eventid, String username) throws Exception;
 	boolean deleteEventRegistration(int eventid, String username);
 	boolean isUserRegisteredToEvent(String username, int eventid);
