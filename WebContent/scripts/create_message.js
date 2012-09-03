@@ -37,12 +37,15 @@ function addMessage() {
 	});
 	
 	google.maps.event.addListener(map, 'click', function(event) {
-		var marker = placeMarker(event.latLng);
-		marker.setDraggable(true);
+		var marker = mainMarker;
+		placeMarker(event.latLng);
 		changeLatLngValues(event);
-		google.maps.event.addListener(marker, "drag", function(event) {
-			changeLatLngValues(event);
-		});
+		if (marker == null){
+			mainMarker.setDraggable(true);
+			google.maps.event.addListener(mainMarker, "drag", function(event) {
+				changeLatLngValues(event);
+			});
+		}
 	});
 	
 	dateObject = new JsDatePick({

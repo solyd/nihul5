@@ -33,8 +33,9 @@
 	var longtitude = <%=minfo_message.lng%>;
 	
 	$(document).ready(function() {
+		var newPosition = new google.maps.LatLng(latitude, longtitude);
 		map.setZoom(11);
-		deployPosition(latitude, longtitude);
+		placeMarker(newPosition);
 	});
 </script>
 

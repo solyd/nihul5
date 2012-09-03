@@ -7,6 +7,7 @@ var minLng = -180;
 var maxLng = 180;
 
 var map;
+var mainMarker = null;
 var markersArray = new Array();
 
 function initialize() {
@@ -20,36 +21,47 @@ function initialize() {
 }
 
 function placeMarker(position) {
-	clearMap();
-	var marker = new google.maps.Marker({
-		position: position,
-		map: map
-	});
-	markersArray.push(marker);
+	if (mainMarker){
+		mainMarker.setPosition(position);
+	}
+	else{
+		mainMarker = new google.maps.Marker({
+			position: position,
+			map: map,
+		});
+	}
 	map.panTo(position);
-	
-	//marker.setAnimation(google.maps.Animation.DROP);
-	marker.setAnimation(google.maps.Animation.BOUNCE);
+
+	mainMarker.setAnimation(google.maps.Animation.DROP);
+	mainMarker.setAnimation(google.maps.Animation.BOUNCE);
 	setTimeout(function() {
-		marker.setAnimation(null);
-	}, 1500);
+		mainMarker.setAnimation(null);
+	}, 2000);
 	
-	return marker;
+	return mainMarker;
 }
 
-function clearMap(){
+/*function clearMarkers(){
 	if (markersArray) {
 		for (var i = 0; i < markersArray.length; i++ ) {
+			google.maps.event.clearInstanceListeners(markersArray[i]);
 			markersArray[i].setMap(null);
 		}
 	}
-}
+}*/
 
 function deployPosition(lat, lng){
 	if ((lat) && (lng)){
 		if (inRange(minLat, lat, maxLat) && (inRange(minLng, lng, maxLng))){
 			var newPosition = new google.maps.LatLng(lat, lng);
+			var marker = mainMarker;
 			placeMarker(newPosition);
+			if (marker == null){
+				mainMarker.setDraggable(true);
+				google.maps.event.addListener(mainMarker, "drag", function(event) {
+					changeLatLngValues(event);
+				});
+			}
 		}
 	}
 }
