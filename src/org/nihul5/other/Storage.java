@@ -17,6 +17,8 @@ public interface Storage {
 	
 	List<Message> searchMessages(String[] keywords);
 	
+	List<Message> getAllMessages();
+	
 	/**
 	 * @param lat
 	 *            is the angular distance, in degrees of a point north or south

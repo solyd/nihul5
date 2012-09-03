@@ -68,7 +68,6 @@ public class YellowPages extends HttpServlet {
 				return;
 			}
 			
-			
 			for (String endpoint : endpoints) {
 				try {
 					SearchWSServiceLocator loc = new SearchWSServiceLocator();
@@ -78,7 +77,10 @@ public class YellowPages extends HttpServlet {
 					s.setTimeout(CONST.WEBSERVICE_TIMEOUT);
 					s._setProperty("javax.xml.rpc.service.endpoint.address", endpoint);
 					
-					wsres.addAll(Arrays.asList(binding.searchKeywords(split)));
+					Object[] blabla = binding.searchKeywords(split);
+					String[] stringArray = Arrays.copyOf(blabla, blabla.length, String[].class);
+					wsres.addAll(Arrays.asList(stringArray));
+					//wsres.addAll(Arrays.asList(binding.searchKeywords(split)));
 				}
 				catch (Exception e) {}
 			}
@@ -89,7 +91,7 @@ public class YellowPages extends HttpServlet {
 			String radius_str = request.getParameter(CONST.RADIUS);
 			
 			
-			double lat = 0, lng = 0, radius = 0;
+			Double lat = 0.0, lng = 0.0, radius = 0.0;
 			try {
 				lat = Double.valueOf(lat_str);
 				lng = Double.valueOf(lng_str);
@@ -106,6 +108,7 @@ public class YellowPages extends HttpServlet {
 			}
 			
 			for (String endpoint : endpoints) {
+				logger.info("Trying enpoint: " + endpoint);
 				try {
 					SearchWSServiceLocator loc = new SearchWSServiceLocator();
 					SearchWS binding = loc.getSearchWS();
@@ -113,17 +116,20 @@ public class YellowPages extends HttpServlet {
 					Stub s = (Stub) binding;
 					s.setTimeout(CONST.WEBSERVICE_TIMEOUT);
 					s._setProperty("javax.xml.rpc.service.endpoint.address", endpoint);
-
-					wsres.addAll(Arrays.asList(binding.searchLocal(lat, lng, radius)));
+					
+					Object[] blabla = binding.searchLocal(lat, lng, radius);
+					String[] stringArray = Arrays.copyOf(blabla, blabla.length, String[].class);
+					wsres.addAll(Arrays.asList(stringArray));
+					//wsres.addAll(Arrays.asList(binding.searchLocal(lat, lng, radius)));
 				}
-				catch (Exception e) {}
+				catch (Exception e) { logger.info("", e); }
 			}
 		}
 		
 		List<Message> res = new ArrayList<Message>();
 		for (String s : wsres) {
 			Message msg = new Message();
-			String[] parts = s.split("||");
+			String[] parts = s.split("\\|\\|");
 			if (parts.length != 3)
 				continue;
 			
