@@ -1339,6 +1339,7 @@ public class MySQLStorage implements Storage {
 				if (m.type == MessageType.EVENT) {
 					sql = "SELECT * FROM events WHERE msgid = ?";
 					prepEvent = conn.prepareStatement(sql);
+					prepEvent.setInt(1, m.id);
 					rsEvent = prepEvent.executeQuery();
 					
 					if (!rsEvent.next())

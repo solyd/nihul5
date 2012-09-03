@@ -1,14 +1,14 @@
 package org.nihul5.other;
 
 public class CONST {
-	public static final String HOST = "http://132.69.247.118:8080/";
-	//public static final String HOST = "http://localhost:8080/";
-	public static final String WEBAPP_NAME = "nihul5";
+	//public static final String HOST = "http://ibm411.cs.technion.ac.il/";
+	public static final String HOST = "http://localhost:8080/";
+	//public static final String WEBAPP_NAME = "nihul5";
 
 	//public static final String HOST = "http://localhost:8080/";
-	//public static final String WEBAPP_NAME = "app306932039";
+	public static final String WEBAPP_NAME = "app306932039";
 	
-	public static final Integer WEBSERVICE_TIMEOUT = 15 * 1000; // milliseconds
+	public static final Integer WEBSERVICE_TIMEOUT = 10 * 1000; // milliseconds
 	
 	public static final boolean DEBUG_MODE = false;
 	public static final boolean RESET_DB = false;
