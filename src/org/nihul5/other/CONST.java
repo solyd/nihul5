@@ -1,8 +1,14 @@
 package org.nihul5.other;
 
 public class CONST {
+	public static final String HOST = "http://localhost:8080/";
 	public static final String WEBAPP_NAME = "nihul5";
+
+	//public static final String HOST = "http://localhost:8080/";
 	//public static final String WEBAPP_NAME = "app306932039";
+	
+	public static final Integer WEBSERVICE_TIMEOUT = 5 * 1000; // milliseconds
+	
 	public static final boolean DEBUG_MODE = true;
 	public static final boolean RESET_DB = false;
 
@@ -69,8 +75,8 @@ public class CONST {
 	public static final String EVENT_PASSED = "Event deadline has passed";
 	public static final String EVENT_DELETED = "Event was deleted";
 	
-	public static final String CONSENSUS_ID = "considddd";
-	public static final String VOTE = "vote";
+	public static final String CONSENSUS_ID = "considdddDDDDDDD";
+	public static final String VOTE = "VOTE";
 	
 	public static final String ALPHANUMERIC_REGEX = "/^[a-z0-9]+$/i";
 	public static final String EMAIL_REGEX = "[^A-Za-z0-9\\.\\@_\\-~#]+";
@@ -78,4 +84,9 @@ public class CONST {
 	
 	public static final String YELLOW_PAGES_ENDPOINTS = "yellowpagesendpoints";
 	public static final String IS_JSON = "IS_JSON";
+	
+	public static final String SEARCH_TYPE = "SEARCH_TYPE";
+	public static final String SEARCH_KEYWORDS = "SEARCH_KEYWORDS";
+	public static final String SEARCH_LOCATION = "SEARCH_LOCATION";
+	public static final String KEYWORDS = "KEYWORDS";
 }

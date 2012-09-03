@@ -22,7 +22,7 @@ public class SearchWSServiceLocator extends org.apache.axis.client.Service imple
     }
 
     // Use to get a proxy class for SearchWS
-    private java.lang.String SearchWS_address = "http://ibm411.cs.technion.ac.il/HW5_copy/services/SearchWS";
+    private java.lang.String SearchWS_address = "http://localhost:8080/nihul5/services/SearchWS";
 
     public java.lang.String getSearchWSAddress() {
         return SearchWS_address;

@@ -50,7 +50,7 @@
 		</tr>
 		<tr>
 			<td>Keywords:</td>
-			<td><input id="lat" type="text" name="keywords" value=""></td>
+			<td><input id="lat" type="text" name="<%=CONST.KEYWORDS %>" value=""></td>
 		</tr>
 		<tr>
 			<td><i>(seperated by spaces)</i></td>
