@@ -26,14 +26,16 @@
 <%} else if (msgs.size() == 0){ %>
 <div id="center_box">No Results</div>
 <%} else { %>
+<div id="center_box">
 <div id="msg_container">
 	<div class="page_navigation"></div>
 	<div class="iphone_list">
 		<ul class="list_content">
 			<% for (Message msg : msgs) { %>
-			<li><a href="/<%=CONST.WEBAPP_NAME%>/message/info/<%=msg.id%>"><%=msg.title %>(<%=msg.type.toString() %>)</a></li>
+			<li><a href="/<%=CONST.WEBAPP_NAME%>/message/info/<%=msg.id%>"><%=msg.title %>    (<%=msg.type.toString() %>)</a></li>
 			<% } %>
 		</ul>
 	</div>
+</div>
 </div>
 <%}%>
