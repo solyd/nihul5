@@ -191,7 +191,7 @@
 					{ <%=CONST.MSG_ID%>: msgId }, function(response) {
 						if (response.result == 'success') {
 							$('#content').hide('slow', function() {
-								$('#content').replaceWith('<h2 align="center">Message was successfuly deleted</h2>');
+								$('#content').replaceWith('<div id="content" class="right" align="center"><h2>Message was successfuly deleted</h2><div>');
 								$('#content').show('slow', function() {});
 							});
 						}

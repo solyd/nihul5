@@ -21,7 +21,7 @@
 
 <script type="text/javascript">
 	var mainCircle = null;
-	var defaultRadius = 20000;
+	var defaultRadius = 30000;
 	
 	$(document).ready(function(){
 		$('#lat').blur(function() {
@@ -44,12 +44,16 @@
 		});
 		
 		google.maps.event.addListener(map, 'click', function(event) {
-			var marker = placeMarker(event.latLng);
+			var marker = mainMarker;
+			placeMarker(event.latLng);
 			changeLatLngValues(event);
-			google.maps.event.addListener(marker, "drag", function(event) {
-				changeLatLngValues(event);
-			});
-			placeCircle(marker, defaultRadius);
+			createCircle(defaultRadius);
+			if (marker == null){
+				mainMarker.setDraggable(true);
+				google.maps.event.addListener(mainMarker, "drag", function(event) {
+					changeLatLngValues(event);
+				});
+			}
 		});
 	});
 	
@@ -57,30 +61,35 @@
 		if ((lat) && (lng) && (radius)){
 			if (inRange(minLat, lat, maxLat) && (inRange(minLng, lng, maxLng))){
 				var newPosition = new google.maps.LatLng(lat, lng);
-				var marker = placeMarker(newPosition);
-				placeCircle(marker, radius);
+				var marker = mainMarker;
+				placeMarker(newPosition);
+				createCircle(parseInt(radius)*1000);
+				if (marker == null){
+					mainMarker.setDraggable(true);
+					google.maps.event.addListener(mainMarker, "drag", function(event) {
+						changeLatLngValues(event);
+					});
+				}
 			}
 		}
 	}
 	
-	function placeCircle(marker ,radius) {
-		marker.setDraggable(true);
-		if (mainCircle){
-			mainCircle.unbind(marker);
-			mainCircle.setMap(null);
+	function createCircle(radius) {
+		if (!mainCircle){
+			mainCircle = new google.maps.Circle({
+				  map: map,
+				  radius: parseInt(radius),
+				  fillColor: '#AA0000',
+				  editable: true
+			});
+			mainCircle.bindTo('center', mainMarker, 'position');
+
+	 		google.maps.event.addListener(mainCircle, 'radius_changed', function(event) {
+				document.getElementById('radius').value = mainCircle.getRadius() / 1000.0;
+			});
 		}
-		var circle = new google.maps.Circle({
-			  map: map,
-			  radius: parseInt(radius),
-			  fillColor: '#AA0000',
-			  editable: true
-		});
-		circle.bindTo('center', marker, 'position');
-		mainCircle = circle;
- 		google.maps.event.addListener(circle, 'radius_changed', function(event) {
-			document.getElementById('radius').value = circle.getRadius() / 1000.0;
-		});
-		return circle;
+		mainCircle.setRadius(radius);
+		document.getElementById('radius').value = parseInt(radius) / 1000.0;
 	}
 	
 	function onLocationSearch() {

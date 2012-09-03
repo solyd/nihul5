@@ -1,8 +1,8 @@
-var markersArray = new Array();
+/*var markersArray = new Array();
 var minLat = -90;
 var maxLat = 90;
 var minLng = -180;
-var maxLng = 180;
+var maxLng = 180;*/
 
 function bindMenuClicks() {
 	$("#menu li a").click(function (event) {
