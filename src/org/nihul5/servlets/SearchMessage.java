@@ -1,6 +1,7 @@
 package org.nihul5.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletConfig;
@@ -14,7 +15,6 @@ import org.apache.log4j.Logger;
 import org.nihul5.other.CONST;
 import org.nihul5.other.Message;
 import org.nihul5.other.Storage;
-import org.nihul5.other.Utility;
 
 /**
  * Servlet implementation class SearchMessage
@@ -53,6 +53,7 @@ public class SearchMessage extends HttpServlet {
 		String lat_str = request.getParameter(CONST.MSG_LATITUDE);
 		String lng_str = request.getParameter(CONST.MSG_LONGITUDE);
 		String radius_str = request.getParameter(CONST.RADIUS);
+		String isjson = request.getParameter(CONST.IS_JSON);
 		
 		double lat = 0, lng = 0, radius = 0;
 		try {
@@ -68,7 +69,36 @@ public class SearchMessage extends HttpServlet {
 		List<Message> res = _storage.searchMessages(lat, lng, radius);
 		if (res != null)
 			request.setAttribute(CONST.MESSAGES, res);
+		
+		if (isjson != null && isjson.equals("true")) {
+			writeJson(response, res);
+			return;
+		}
+		
 		getServletContext().getRequestDispatcher("/jsp/messages/search_results.jsp").forward(request, response);
 	}
 
+	
+	private void writeJson(HttpServletResponse response, List<Message> res) throws IOException {
+		response.setContentType("application/json; charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		StringBuilder sb = new StringBuilder();
+		
+		if (res == null || res.size() == 0) {
+			out.println("{\"result\": [] }");
+			return;
+		}
+		
+		sb.append("{\"result\": [");
+		for (Message msg : res) {
+			sb.append(String.format("{\"lat\": " + msg.lat + ", \"lng\": " + msg.lng + ", \"id\": " + msg.id + "},"));
+		}
+		sb.deleteCharAt(sb.length() - 1);
+		sb.append("]}");
+		
+		String r = sb.toString();
+		logger.debug(r);
+		
+		out.println(r);
+	}
 }
