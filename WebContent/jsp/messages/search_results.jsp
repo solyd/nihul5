@@ -28,6 +28,7 @@
 <%} else { %>
 <div id="center_box">
 <div id="msg_container">
+	<h3>Search Results</h3>
 	<div class="page_navigation"></div>
 	<div class="iphone_list">
 		<ul class="list_content">

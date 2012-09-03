@@ -43,7 +43,7 @@ public class SearchMessage extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		getServletContext().getRequestDispatcher("/jsp/messages/search.jsp").forward(request, response);
+		getServletContext().getRequestDispatcher("/jsp/messages/graphic_search.jsp").forward(request, response);
 	}
 
 	/**

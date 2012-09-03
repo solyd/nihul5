@@ -12,17 +12,17 @@
 		<tr>
 			<td>Latitude (degrees):</td>
 			<td><input id="lat" type="text" name="<%=CONST.MSG_LATITUDE%>"
-				value=""></td>
+				value=""/></td>
 		</tr>
 		<tr>
 			<td>Longitude (degrees):</td>
 			<td><input id="lng" type="text" name="<%=CONST.MSG_LONGITUDE%>"
-				value=""></td>
+				value=""/></td>
 		</tr>
 		<tr>
 			<td>Search radius (km):</td>
-			<td><input id="lng" type="text" name="<%=CONST.RADIUS%>"
-				value=""></td>
+			<td><input id="radius" type="text" name="<%=CONST.RADIUS%>"
+				value=""/></td>
 		</tr>
 
 		<tr>
