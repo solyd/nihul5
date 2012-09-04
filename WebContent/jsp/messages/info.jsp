@@ -213,7 +213,7 @@
 	<%
 		if (princ != null && princ.getName().equals(message.username)) {
 	%>
-		<input id="delete_message" type="button" value="Delete Message"/>
+		<input class="cool_button2" id="delete_message" type="button" value="Delete Message"/>
 	<%
 		}
 	%>
@@ -278,8 +278,8 @@
 			</tr>
 			<tr>
 				<td colspan=2>
-					<input id="reg_button" type="button" value="Register" style="display: none;"/>
-					<input id="show_reg_button" type="button" value="Who's registered >>" />
+					<input class="cool_button2" id="reg_button" type="button" value="Register" style="display: none;"/>
+					<input class="cool_button2" id="show_reg_button" type="button" value="Who's registered >>" />
 					<div id="reg_fail" style="display: none;"></div>
 				<div id="reg_users" style="display: none;">
 				</div>
@@ -342,9 +342,9 @@
 							
 							if (username != null && username.length() > 0) { %>
 								<% if (storage.didUserVote(username, consensus.id))  {%>
-								<input class="vote_cons" id="vote" name="<%=consensus.id %>" type="button" value="Cancel vote for status change" />
+								<input class="vote_cons cool_button2" id="vote" name="<%=consensus.id %>" type="button" value="Cancel vote for status change" />
 								<%} else { %>
-								<input class="vote_cons" id="vote" name="<%=consensus.id %>" type="button" value="Vote for status change" />
+								<input class="vote_cons cool_button2" id="vote" name="<%=consensus.id %>" type="button" value="Vote for status change" />
 								<%} %>
 								<div id="vote_fail"></div>
 								</li>

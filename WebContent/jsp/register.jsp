@@ -97,14 +97,14 @@
 	window.onload = initRegister;
 	
 	function checkBeforeSubmit(){
-// 		$.ajax({async:false});
-// 		checkUserName();
-// 		$.ajax({async:true});
-// 		if (userNameBool && checkPassword() && checkEmail()){
-// 			return true;
-// 		}
-// 		return false;
-		return true;
+		$.ajax({async:false});
+		checkUserName();
+		$.ajax({async:true});
+		if (userNameBool && checkPassword() && checkEmail()){
+			return true;
+		}
+		return false;
+		//return true;
 	}
 	
 </script>
@@ -162,7 +162,7 @@
 					</tr>
 					<tr>
 						<td></td>
-						<td><input type="submit" name="Submit" value="Register" /></td>
+						<td><input class="cool_button2" type="submit" name="Submit" value="Register" /></td>
 					</tr>
 					<tr>
 						<td colspan=2 align="center" height="10px"></td>

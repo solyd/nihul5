@@ -35,7 +35,7 @@
 					</tr>
 					<tr>
 						<td></td>
-						<td colspan="2"><input type="submit" value="Go" /></td>
+						<td colspan="2"><input class="cool_button2" type="submit" value="Go" /></td>
 					</tr>
 					<tr>
 						<td colspan=2 align="center" height="10px"></td>

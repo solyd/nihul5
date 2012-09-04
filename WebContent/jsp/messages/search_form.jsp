@@ -31,7 +31,7 @@
 
 		<tr>
 			<td></td>
-			<td><input type="submit" name="Submit"
+			<td><input class="cool_button2" type="submit" name="Submit"
 				value="Search by location" /></td>
 		</tr>
 	</table>
@@ -62,7 +62,7 @@
 
 		<tr>
 			<td></td>
-			<td><input type="submit" name="Submit" value="Search by keywords" /></td>
+			<td><input class="cool_button2" type="submit" name="Submit" value="Search by keywords" /></td>
 		</tr>
 	</table>
 </form>

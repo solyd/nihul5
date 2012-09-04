@@ -118,7 +118,7 @@ function addElement() {
 		var newDiv = document.createElement('tr');
 		newDiv.setAttribute("id", divIdName);
 		//newDiv.innerHTML = text + " <a href=\"javascript:;\" onclick=\"removeElement(\'"+divIdName+"\')\">Remove</a>";
-		newDiv.innerHTML = text + " <button onclick=\"removeElement(\'"+divIdName+"','" +text+"\')\">Remove</button>";
+		newDiv.innerHTML = text + " <button class='cool_button2' onclick=\"removeElement(\'"+divIdName+"','" +text+"\')\">Remove</button>";
 		appendToText.appendChild(newDiv);
 		consensuses.push(text);
 		document.getElementById('consensus_text').value = "";

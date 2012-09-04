@@ -139,8 +139,7 @@
 
 					<tr>
 						<td></td>
-						<td><input type="submit" name="Submit"
-							value="Search by location" /></td>
+						<td><input class="cool_button2" type="submit" name="Submit" value="Search" /></td>
 					</tr>
 				</table>
 			</form>

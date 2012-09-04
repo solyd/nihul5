@@ -92,4 +92,6 @@ public class CONST {
 	public static final String SEARCH_KEYWORDS = "SEARCH_KEYWORDS";
 	public static final String SEARCH_LOCATION = "SEARCH_LOCATION";
 	public static final String KEYWORDS = "KEYWORDS";
+	
+	public static final String DTD_FILE_NAME = "app306932039";
 }
