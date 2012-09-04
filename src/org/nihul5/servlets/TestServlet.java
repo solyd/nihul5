@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 
 import cs236369.hw5.RegistrationServiceProxy;
 import cs236369.hw5.RegistrationServiceSoapBindingStub;
-import cs236369.hw5.SearchWSProxy;
+
 
 
 /**
@@ -49,17 +49,8 @@ public class TestServlet extends HttpServlet {
     	*/
     	
     	try {
-    		RegistrationServiceProxy proxy = new RegistrationServiceProxy();
-    		SearchWSProxy searchproxy = new SearchWSProxy();
-    		
-    		// doesn't work without this
-    		searchproxy.setEndpoint("http://localhost:6367/nihul5/services/SearchWS");
-    		
-    		String[] blaaaa = searchproxy.searchLocal(1, 1, 1);
-    		
-    		String tmp = proxy.getEndpoint();
-    		String[] bla = proxy.getRegisteredEndpoints();
-    		int x = 2;
+
+
     		
     	}
 

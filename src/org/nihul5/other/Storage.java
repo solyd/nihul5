@@ -17,6 +17,8 @@ public interface Storage {
 	
 	List<Message> searchMessages(String[] keywords);
 	
+	List<Message> getAllMessages();
+	
 	/**
 	 * @param lat
 	 *            is the angular distance, in degrees of a point north or south
@@ -31,8 +33,6 @@ public interface Storage {
 	 * @return all messages that are within distance from the given coordinates.
 	 */
 	List<Message> searchMessages(double lat, double lng, double distance);
-	
-	List<Message> getAllMessages();
 	
 	boolean saveEventRegistration(int eventid, String username) throws Exception;
 	boolean deleteEventRegistration(int eventid, String username);

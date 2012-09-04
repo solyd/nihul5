@@ -2,11 +2,11 @@
 <%@ page import="org.nihul5.other.CONST"%>
 
 <div id="status_bar">
-	<div class="left">
-		<%=new java.util.Date()%>
+	<div style="float: left;">
+		Welcome to LOL, The Location Oriented LOL
 	</div>
 
-	<div id="login_info" class="right">
+	<div id="login_info" style="float: right;">
 		<%
 			Principal p = request.getUserPrincipal();
 			String name = "";

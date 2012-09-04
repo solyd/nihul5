@@ -94,7 +94,7 @@ markerCluster.onClick = function() { return multiChoice(markerCluster); }
 						if (msgArr.length == 0)
 							console.log("no such messages");	
 						for (var i = 0; i < msgArr.length; i++) {
-							console.log(msgArr[i].lat + ' ' + msgArr[i].lng + ' ' + msgArr[i].id);
+							//console.log(msgArr[i].lat + ' ' + msgArr[i].lng + ' ' + msgArr[i].id);
 							var msgId = msgArr[i].id;
 							if (markersOnMap[msgId] != true){ 
 								var position = new google.maps.LatLng(msgArr[i].lat, msgArr[i].lng);

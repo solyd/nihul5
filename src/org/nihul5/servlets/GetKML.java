@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
 @WebServlet("/GetKML")
 public class GetKML extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = Logger.getLogger(MessageInfo.class);
+	private static final Logger logger = Logger.getLogger(GetKML.class);
 
 	private Storage _storage;
 	
@@ -84,7 +84,7 @@ public class GetKML extends HttpServlet {
 			doc.appendChild(rootElement);
 	 
 			for (Message msg : messages) {
-				if (msg.type == MessageType.EVENT){
+				if (msg.type == MessageType.EVENT) {
 					Element event = doc.createElement("event");
 					rootElement.appendChild(event);
 					event.setAttribute("id", Integer.toString(msg.id));
@@ -103,10 +103,9 @@ public class GetKML extends HttpServlet {
 					event.appendChild(registered_users);
 					
 					//User user; add all registered users
-					List<User> users = null; //msg.
-					for (User user : users){
+					for (String username : msg.registeredUsers) {
 						Element reg_username = doc.createElement("username");
-						reg_username.appendChild(doc.createTextNode(user.username));
+						reg_username.appendChild(doc.createTextNode(username));
 						registered_users.appendChild(reg_username);
 					}
 
@@ -148,10 +147,10 @@ public class GetKML extends HttpServlet {
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File("C:\\file.xml"));
-	 
+	//		StreamResult result = new StreamResult(new File("C:\\file.xml"));
+
 			// Output to console for testing
-			// StreamResult result = new StreamResult(System.out);
+			StreamResult result = new StreamResult(System.out);
 	 
 			transformer.transform(source, result);
 	 

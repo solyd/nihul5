@@ -16,13 +16,28 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		$('#page_container').pajinate({
-					items_per_page : 10,
+		$('#endpoints_container').pajinate({
+					items_per_page : 4,
 					item_container_id : '.list_content',
 					nav_panel_id : '.page_navigation'
 		});
 	});
+
+	function onLocationSearch() {
+		var data = $('#location_form').serializeArray();
+		data.push({ name: '<%=CONST.SEARCH_TYPE%>', value: '<%=CONST.SEARCH_LOCATION%>' });
+		$.post('/<%=CONST.WEBAPP_NAME%>/yellow_pages', data, function(response) {
+			$('#search_results').html(response);
+		});
+	}
 	
+	function onKeywordsSearch() {
+		var data = $('#keywords_form').serializeArray();
+		data.push({ name: '<%=CONST.SEARCH_TYPE%>', value: '<%=CONST.SEARCH_KEYWORDS%>' });
+		$.post('/<%=CONST.WEBAPP_NAME%>/yellow_pages', data, function(response) {
+			$('#search_results').html(response);
+		});	
+	}
 	
 </script>
 
@@ -30,21 +45,25 @@
 	String[] regEndpoints = (String[]) request.getAttribute(CONST.YELLOW_PAGES_ENDPOINTS);
 %>
 
-
 <title>Yellow Pages</title>
 </head>
 <body>
 	<%@ include file="/jsp/status_bar.jsp" %>
 	<%@ include file="/jsp/menu.jsp"%>
 	<div id="container">
-		<div id="center_box">
-			
+		<div id="endpoints" class="left">
+			<div id="search_form">
+				<%@ include file="/jsp/messages/search_form.jsp"%>
+			</div>
+		
 			<% if (regEndpoints != null) { %>
 				
 				<%if (regEndpoints.length > 0) { %>
 				
-				<div id="page_container">
-					<div class="page_navigation"></div>
+				</br>
+				<div id="endpoints_container" class="center">
+					<h3>Registered search web services</h3>
+					<div class="page_navigation" ></div>
 					<div class="navlist">
 					<ul class="list_content">
 						<%
@@ -62,9 +81,13 @@
 				<%} %>
 				</div>
 			<% } else { %>
-			There is a problem with the yellow pages service, please try again later.
+			<br/><br/>
+			<b>There is a problem with the yellow pages service, please try again later.</b>
 			<%} %>
 
+		</div>
+		
+		<div id="search_results" class="right">
 		</div>
 	</div>
 

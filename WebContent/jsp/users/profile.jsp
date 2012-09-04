@@ -67,10 +67,10 @@
 			
 			<h1><%=user.username%>'s Profile</h1>
 			
-			<div id="center_box">
+			<div class="center_box_colorless">
 				<table align="center">
 					<tr>
-						<td colspan=2 align="center">Details</td>
+						<td colspan=2 align="center"><h3>Details</h3></td>
 					</tr>
 					<tr>
 						<td colspan=2 align="center" height="10px"></td>

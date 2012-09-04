@@ -36,7 +36,6 @@
 		
 		<div id="search_results" class="right">
 		</div>
-				
 	</div>
 
 	<%@ include file="/jsp/footer.jsp"%>

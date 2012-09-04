@@ -1121,10 +1121,6 @@ public class MySQLStorage implements Storage {
 		return res;
 	}	
 
-	public List<Message> getAllMessages(){
-		return null;
-	}
-	
 	@Override
 	public boolean isUserRegisteredToEvent(String username, int eventid) {
 		Connection conn = null;
@@ -1308,6 +1304,79 @@ public class MySQLStorage implements Storage {
 			if (conn != null)
 				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
 		}	
+	}
+	
+	@Override
+	public List<Message> getAllMessages() {
+		Connection conn = null;
+		PreparedStatement prepMsg = null;
+		PreparedStatement prepEvent = null;		
+		ResultSet rsMsg = null;
+		ResultSet rsEvent = null;
+		List<Message> res = new ArrayList<Message>();
+
+		try {
+			conn = _dbcPool.getConnection();
+			conn.setAutoCommit(false);
+			
+			conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+
+			String sql = "SELECT * FROM messages;";
+			prepMsg = conn.prepareStatement(sql);
+			rsMsg = prepMsg.executeQuery();
+			
+			while(rsMsg.next()) {
+				Message m = new Message();
+				m.id = rsMsg.getInt("msgid");
+				m.username = rsMsg.getString("username");
+				m.lat = rsMsg.getDouble("lat");
+				m.lng = rsMsg.getDouble("lng");
+				m.creationTime = rsMsg.getLong("creation_date");
+				m.title = rsMsg.getString("title");
+				m.content = rsMsg.getString("content");
+				m.type = Message.stringToType(rsMsg.getString("type"));
+				
+				if (m.type == MessageType.EVENT) {
+					sql = "SELECT * FROM events WHERE msgid = ?";
+					prepEvent = conn.prepareStatement(sql);
+					prepEvent.setInt(1, m.id);
+					rsEvent = prepEvent.executeQuery();
+					
+					if (!rsEvent.next())
+						continue;
+					
+					m.eventTime = rsEvent.getLong("event_date");
+					m.capacity = rsEvent.getInt("capacity");
+					m.registeredUsers = getEventRegistered(conn, m.id);
+					m.consReqList = getEventConsensusList(conn, m.id);
+				}
+				
+				res.add(m);
+			}
+
+			conn.commit();
+			
+			return res;
+		} 
+		catch (SQLException e) {
+			logger.error("", e);
+			if (conn != null)
+				try { conn.rollback(); } catch (SQLException e1) { logger.error("Can't roll back", e1); }
+
+			return null;
+		}
+		finally {
+			if (prepMsg != null)
+				try { prepMsg.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (prepEvent != null)
+				try { prepEvent.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (rsEvent != null)
+				try { rsEvent.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (rsMsg != null)
+				try { rsMsg.close(); } catch (SQLException e) { logger.error("Can't close statement", e); }
+			if (conn != null)
+				try { conn.close(); } catch (SQLException e) { logger.error("Can't close DB connection", e); }
+		}
 	}
 	
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1715,6 +1784,37 @@ public class MySQLStorage implements Storage {
 			}
 			if (consVotesRs != null) {
 				try { consRs.close(); } catch (SQLException e) { logger.error("", e); }
+			}
+		}		
+	}
+	
+	private List<String> getEventRegistered(Connection conn, int eventid) {
+		PreparedStatement prep = null;
+		ResultSet rs = null;
+		List<String> res = new ArrayList<String>();
+
+		try {
+			String sql = "SELECT * FROM event_reg WHERE msgid = ?;";
+			prep = conn.prepareStatement(sql);
+			prep.setInt(1, eventid);
+
+			rs = prep.executeQuery();
+			while (rs.next()) {
+				res.add(rs.getString("username"));
+			}
+
+			return res;
+		}
+		catch (SQLException e) {
+			logger.error("", e);
+			return null;
+		}
+		finally {
+			if (prep != null) {
+				try { prep.close(); } catch (SQLException e) { logger.error("", e); }
+			}
+			if (rs != null) {
+				try { rs.close(); } catch (SQLException e) { logger.error("", e); }
 			}
 		}		
 	}
