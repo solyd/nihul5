@@ -10,7 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.OutputKeys;
+
 
 import org.apache.log4j.Logger;
 import org.nihul5.other.CONST;
@@ -83,7 +83,6 @@ public class KMLExport extends HttpServlet {
 			// create an instance of TransformerFactory
 			javax.xml.transform.TransformerFactory transFact = javax.xml.transform.TransformerFactory.newInstance();
 			javax.xml.transform.Transformer trans = transFact.newTransformer(xsltSource);
-			trans.setOutputProperty(OutputKeys.INDENT, "yes");
 			trans.transform(xmlSource, result);
 		}
 		catch (Exception e) {

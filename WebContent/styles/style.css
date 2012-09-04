@@ -110,10 +110,8 @@ textarea {
 }
 
 #menu {
-
 	width: 10%;
 	height: 95%;
-	
 	
 	font-family: 'Trebuchet MS', 'Lucida Grande',
 	  Verdana, Lucida, Geneva, Helvetica, 
@@ -184,6 +182,20 @@ html>body #menu li a {
   left:50%;
   
   margin-left:-200px; /*this is half of width of your div*/
+
+}
+
+#center_box_padless {
+
+	text-align: center;
+	width: 400px;
+	margin: 0 auto;
+	padding:15px;
+	border: 1px dashed #333;
+	background-color: #E7E7E7;
+	
+		  position:relative;
+ 
 
 }
 

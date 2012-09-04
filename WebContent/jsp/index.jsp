@@ -138,6 +138,7 @@ function addMarkerListener(marker){
 						markerCluster.removeMarker(marker);
 					}
 		});
+
 	});
 }
 

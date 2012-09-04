@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.nihul5.other.CONST;
 import org.nihul5.other.Storage;
 import org.nihul5.other.User;
+import org.nihul5.other.Utility;
 
 /**
  * Servlet implementation class Register
@@ -58,11 +59,15 @@ public class CreateUser extends HttpServlet {
 		String lastName = request.getParameter(CONST.LAST_NAME);
 		String email = request.getParameter(CONST.EMAIL);
 		
-		// TODO using ajax, send user feedback on wrong input type for the fields
-//		if (username == null || !username.matches(CONST.REGX_ALPHANUMERIC) ||
-//				password == null || !password.matches(CONST.REGX_ALPHANUMERIC)) {
-//			
-//		}
+		if (username == null || password == null || 
+				Utility.verifyAlphaNumeric(username, CONST.MAX_USERNAME_LEN) ||
+				Utility.verifyAlphaNumeric(password, CONST.MAX_PASSWORD_LEN)) {
+
+			request.setAttribute(CONST.REDIRECT_URL, "jsp/register.jsp");
+			request.setAttribute(CONST.MSGBOX_TXT, "Registration has failed. You have entered invalid username/password.");
+			getServletContext().getRequestDispatcher("/jsp/notification_box.jsp").forward(request, response);
+			return;
+		}
 		
 		User user = new User(username, password, firstName, lastName, email);
 		String msg = null;
