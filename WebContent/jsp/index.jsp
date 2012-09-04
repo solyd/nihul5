@@ -25,7 +25,7 @@ $(document).ready(function(){
 	var markersToAdd = new Array();
 	var markersOnMap = new Array();
 	
-	google.maps.event.addListener(map, 'idle', function(){
+	google.maps.event.addListener(map, 'idle', function() {
     	var bounds = this.getBounds();
     	var center = bounds.getCenter();
     	var latitude = bounds.getCenter().lat();
@@ -70,7 +70,9 @@ function addMarkerListener(marker){
 		var messageId = marker.getTitle();
 		$.get('/<%=CONST.WEBAPP_NAME%>/GetMessage',
 				{<%=CONST.MSG_ID%>: messageId}, function(response) {
+					
 					$('#content').replaceWith(response);
+								
  					var $data=$(response);
 					var result = $data.find('#message_status').text();
 					if (result == 'Deleted'){
