@@ -22,62 +22,44 @@
 var markerCluster;
 var markersToAdd = new Array();
 var markersOnMap = new Array();
-/* var info;    // global InfoWindow object
-
-function multiChoice(mc) {
-     var cluster = mc.clusters_;
-     // if more than 1 point shares the same lat/long
-     // the size of the cluster array will be 1 AND
-     // the number of markers in the cluster will be > 1
-     // REMEMBER: maxZoom was already reached and we can't zoom in anymore
-     
-     if (cluster.length == 1 && cluster[0].markers_.length > 1)
-     {
-          var markers = cluster[0].markers_;
-          var html = '';
-       html += '<div id="infoWin">';
-       html += '<h3>'+markers.length+' properties at this location:</h3>';
-       html += '<div class="tab_content">';
-       html += '<ul class="addrlist">';
-       for (var i=0; i < markers.length; i++)
-       {
-      html += '<li><a id="p' + markers[i].getTitle() + '" href="javascript:;" rel="'+i+'">' + markers[i].getTitle() + '</a></li>';
-       }
-       html += '</ul>';
-       html += '</div>';
-       html += '</div>';
-
-          // I'm re-using the same global InfoWindow object here
-       //info.close();
-       $('#infoWin').remove();
-       $(html).appendTo('body');
-
-      info.setContent(document.getElementById('infoWin'));
-      info.open(map, markers[0]);
-          // bind a click event to the list items to popup an InfoWindow
-       $('ul.addrlist li').click(function() {
-              var p = $(this).find("a").attr("rel");
-       return infopop(markers[p]);
-       }); 
-          return false;
-     }
-
-     return true;
-} */
 
 function multiChoice(clickedCluster) {
 	//console.log(clickedCluster.getMarkers().length);
 	if (clickedCluster.getMarkers().length > 1){
 		var markers = clickedCluster.getMarkers();
+		var messageNumber = 1;
+		$('#list_content').empty();
 		for (var i=0; i < markers.length; i++){
-			console.log(markers[i].getTitle());
-
-			   	$('#multiple_markers').lightbox_me({
-   					centered: true
-   				});
-			// do something creative!
+			//console.log(markers[i].getTitle());
+			var appendToText = document.getElementById('list_content');
+			var liIdName = markers[i].getTitle();
+			var newLi = document.createElement('li');
+			newLi.setAttribute("id", liIdName);
+			newLi.innerHTML = "<a>" + liIdName + "<a>";
+			appendToText.appendChild(newLi);
+			messageNumber++;
 		}
-		
+		for (var i=0; i < markers.length; i++){
+			$('#'+markers[i].getTitle()).click(function (event) {
+				var messageId = parseInt(event.target.innerHTML);
+				//console.log(event.target.innerHTML);
+				$.get('/<%=CONST.WEBAPP_NAME%>/GetMessage',
+						{<%=CONST.MSG_ID%>: messageId}, function(response) {
+							$('#content').replaceWith(response);
+								var $data=$(response);
+							var result = $data.find('#message_status').text();
+							if (result == 'Deleted'){
+								//console.log(marker.getTitle());
+								google.maps.event.clearInstanceListeners(marker);
+								markerCluster.removeMarker(marker);
+							}
+				});
+				
+			});
+		}
+		$('#multiple_markers').lightbox_me({
+				centered: true
+		});
 		return false;
 	}
 	return true;
@@ -120,9 +102,7 @@ $(document).ready(function(){
         nav_panel_id : '.page_navigation'
     });
 	markerCluster = new MarkerClusterer(map);
-	
-	//{ maxZoom: 18 }
-	//markerCluster.onClick = function() { return multiChoice(markerCluster); }
+
 	// onClick OVERRIDE
 	markerCluster.onClick = function(clickedClusterIcon) { 
   		return multiChoice(clickedClusterIcon.cluster_); 
@@ -144,36 +124,22 @@ $(document).ready(function(){
 	});
 });
 
-function getMessage(marker){
-	var messageId = marker.getTitle();
-	$.get('/<%=CONST.WEBAPP_NAME%>/GetMessage',
-			{<%=CONST.MSG_ID%>: messageId}, function(response) {
-				$('#content').replaceWith(response);
-					var $data=$(response);
-				var result = $data.find('#message_status').text();
-				if (result == 'Deleted'){
-					//console.log(marker.getTitle());
-					google.maps.event.clearInstanceListeners(marker);
-					markerCluster.removeMarker(marker);
-				}
-	});
-}
-
 function addMarkerListener(marker){
 	google.maps.event.addListener(marker, 'click', function() {
-
-		getMessage(marker);
+		var messageId = marker.getTitle();
+		$.get('/<%=CONST.WEBAPP_NAME%>/GetMessage',
+				{<%=CONST.MSG_ID%>: messageId}, function(response) {
+					$('#content').replaceWith(response);
+						var $data=$(response);
+					var result = $data.find('#message_status').text();
+					if (result == 'Deleted'){
+						//console.log(marker.getTitle());
+						google.maps.event.clearInstanceListeners(marker);
+						markerCluster.removeMarker(marker);
+					}
+		});
 	});
 }
-
-	//apply kml layer to map
-<%-- 	$('#display_kml').click(function(){
-		$.get('/<%=CONST.WEBAPP_NAME%>/CreateKml', {},
-			function(response) {
-				var kmlLayer = new google.maps.KmlLayer(response);
-				kmlLayer.setMap(map);
-		});
-	}); --%>
 
 </script>
 <title>Home</title>
@@ -187,20 +153,20 @@ function addMarkerListener(marker){
 		<div id="map_canvas" class="left"></div>
 		<div id="content" class="right" align="center">
 			<div id="center_box">Select messages on the map to see their info</div>
-			<div id="multiple_markers" style="display: none;">
-				<div id="page_container">
+			
+		</div>
+		
+		<div id="multiple_markers" style="display: none;">
+				<div id="center_box">
 					<div id="page_container" class="container">
 						<div class="page_navigation"></div>
 						<div class="iphone_list">
-						<ul class="list_content">
-							<li><a>123</a></li>
-							<li><a>123</a></li>
+						<ul id="list_content" class="list_content">
 						</ul>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 	</div>
 
 	<%@ include file="/jsp/footer.jsp"%>
