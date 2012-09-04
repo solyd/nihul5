@@ -99,6 +99,10 @@ public class GetKML extends HttpServlet {
 					capacity.appendChild(doc.createTextNode(Integer.toString(msg.capacity)));
 					event.appendChild(capacity);
 					
+					Element num_of_registered = doc.createElement("num_of_registered");
+					num_of_registered.appendChild(doc.createTextNode(Integer.toString(msg.nSubs)));
+					event.appendChild(num_of_registered);
+					
 					Element registered_users = doc.createElement("registered_users");
 					event.appendChild(registered_users);
 					
@@ -146,11 +150,13 @@ public class GetKML extends HttpServlet {
 			// write the content into xml file
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
 			DOMSource source = new DOMSource(doc);
-	//		StreamResult result = new StreamResult(new File("C:\\file.xml"));
+			StreamResult result = new StreamResult(new File("C:\\file.xml"));
 
 			// Output to console for testing
-			StreamResult result = new StreamResult(System.out);
+			//StreamResult result = new StreamResult(System.out);
 	 
 			transformer.transform(source, result);
 	 
@@ -196,10 +202,6 @@ public class GetKML extends HttpServlet {
 		Element content = doc.createElement("content");
 		content.appendChild(doc.createTextNode(msg.content));
 		post.appendChild(content);
-		
-		Element num_of_registered = doc.createElement("num_of_registered");
-		num_of_registered.appendChild(doc.createTextNode(Integer.toString(msg.nSubs)));
-		post.appendChild(num_of_registered);
 	}
 	
 	private void DOMValidateDTD(){

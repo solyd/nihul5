@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!ELEMENT app306932039 (event*, post*)>
-<!ELEMENT event (username, lat, lng, creation_date, title, content, num_of_registered, event_date, capacity, registered_users, consensus_reqs)>
+<!ELEMENT event (username, lat, lng, creation_date, title, content, event_date, capacity, num_of_registered, registered_users, consensus_reqs)>
 <!ELEMENT post (username, lat, lng, creation_date, title, content)>
 <!ATTLIST event
 	id CDATA #REQUIRED>
@@ -12,9 +12,9 @@
 <!ELEMENT creation_date (#PCDATA)>
 <!ELEMENT title (#PCDATA)>
 <!ELEMENT content (#PCDATA)>
-<!ELEMENT num_of_registered (#PCDATA)>
 <!ELEMENT event_date (#PCDATA)>
 <!ELEMENT capacity (#PCDATA)>
+<!ELEMENT num_of_registered (#PCDATA)>
 <!ELEMENT registered_users (username*)>
 <!ELEMENT consensus_reqs (consensus*)>
 <!ELEMENT consensus (description, status, votes_for_change)>

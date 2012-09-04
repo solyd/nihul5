@@ -9,11 +9,11 @@
         <creation_date>129847122</creation_date>
         <title>Something</title>
         <content>this is the content of the message</content>
-        <num_of_registered>142</num_of_registered>
+        
    
         <event_date>1982749102</event_date>
         <capacity>142</capacity>
-        
+        <num_of_registered>142</num_of_registered>
         <registered_users>
             <username>blabla</username>
             <username>wat</username>
