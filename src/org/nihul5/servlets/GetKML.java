@@ -152,6 +152,7 @@ public class GetKML extends HttpServlet {
 			transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, CONST.HOST + "/" + CONST.WEBAPP_NAME + "/" + CONST.DTD_FILE_NAME);
 
 			DOMSource source = new DOMSource(doc);
+			
 			StreamResult result = new StreamResult(new File("C:\\file.xml"));
 
 			// Output to console for testing

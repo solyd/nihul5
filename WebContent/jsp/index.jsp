@@ -13,6 +13,8 @@
 <link rel="stylesheet" type="text/css" rel="stylesheet/index" href="/<%=CONST.WEBAPP_NAME %>/styles/style.css" />
 <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=<%=CONST.GOOGLE_APIKEY%>&sensor=false&libraries=geometry"></script>
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/jquery.js"></script>
+<script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/jquery.pajinate.js"></script>
+<script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/jquery.lightbox_me.js"></script>
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/map.js"></script>
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/markerclusterer.js"></script>
 
@@ -68,7 +70,11 @@ function multiChoice(clickedCluster) {
 	if (clickedCluster.getMarkers().length > 1){
 		var markers = clickedCluster.getMarkers();
 		for (var i=0; i < markers.length; i++){
-			//console.log(markers[i].getTitle());
+			console.log(markers[i].getTitle());
+
+			   	$('#multiple_markers').lightbox_me({
+   					centered: true
+   				});
 			// do something creative!
 		}
 		
@@ -108,7 +114,11 @@ function getNewMarkers(latitude, longtitude, radius){
 }
 
 $(document).ready(function(){
-	
+    $('#page_container').pajinate({
+        items_per_page : 10,
+        item_container_id : '.list_content',
+        nav_panel_id : '.page_navigation'
+    });
 	markerCluster = new MarkerClusterer(map);
 	
 	//{ maxZoom: 18 }
@@ -176,6 +186,19 @@ function addMarkerListener(marker){
 		<div id="map_canvas" class="left"></div>
 		<div id="content" class="right" align="center">
 			<div id="center_box">Select messages on the map to see their info</div>
+			<div id="multiple_markers" style="display: none;">
+				<div id="page_container">
+					<div id="page_container" class="container">
+						<div class="page_navigation"></div>
+						<div class="iphone_list">
+						<ul class="list_content">
+							<li><a>123</a></li>
+							<li><a>123</a></li>
+						</ul>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
