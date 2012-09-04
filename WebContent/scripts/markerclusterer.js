@@ -392,6 +392,14 @@ MarkerClusterer.prototype.getCalculator = function() {
 };
 
 
+
+/*CHANGED*/
+MarkerClusterer.prototype.onClick = function() { 
+    return true; };
+/*CHANGED*/
+
+
+
 /**
  * Add an array of markers to the clusterer.
  *
@@ -1047,7 +1055,25 @@ ClusterIcon.prototype.triggerClusterClick = function() {
 
   // Trigger the clusterclick event.
   google.maps.event.trigger(markerClusterer, 'clusterclick', this.cluster_);
+  
+  
+  
+  /*CHANGED*/
+  var zoom = this.map_.getZoom();
+//Trying to pull this dynamically made the more zoomed in clusters not render
+//when then kind of made this useless. -NNC @ BNB
+//var maxZoom = mc.getMaxZoom();
+var maxZoom = 15;
+//if we have reached the maxZoom and there is more than 1 marker in this cluster
+//use our onClick method to popup a list of options
+if (zoom >= maxZoom && this.cluster_.markers_.length > 1) {
+	return markerClusterer.onClick(this);
+}
 
+  /*CHANGED*/
+  
+  
+  
   if (markerClusterer.isZoomOnClick()) {
     // Zoom into the cluster.
     this.map_.fitBounds(this.cluster_.getBounds());
