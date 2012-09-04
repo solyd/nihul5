@@ -20,7 +20,17 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
- 
+
+import java.io.*;
+import org.w3c.dom.*;
+import org.xml.sax.*;
+import javax.xml.parsers.*;
+import javax.xml.validation.*;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.apache.log4j.Logger;
 import org.nihul5.other.CONST;
 import org.nihul5.other.Consensus;
@@ -89,6 +99,10 @@ public class GetKML extends HttpServlet {
 					capacity.appendChild(doc.createTextNode(Integer.toString(msg.capacity)));
 					event.appendChild(capacity);
 					
+					Element num_of_registered = doc.createElement("num_of_registered");
+					num_of_registered.appendChild(doc.createTextNode(Integer.toString(msg.nSubs)));
+					event.appendChild(num_of_registered);
+					
 					Element registered_users = doc.createElement("registered_users");
 					event.appendChild(registered_users);
 					
@@ -136,11 +150,13 @@ public class GetKML extends HttpServlet {
 			// write the content into xml file
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
 			DOMSource source = new DOMSource(doc);
-	//		StreamResult result = new StreamResult(new File("C:\\file.xml"));
+			StreamResult result = new StreamResult(new File("C:\\file.xml"));
 
 			// Output to console for testing
-			StreamResult result = new StreamResult(System.out);
+			//StreamResult result = new StreamResult(System.out);
 	 
 			transformer.transform(source, result);
 	 
@@ -186,10 +202,45 @@ public class GetKML extends HttpServlet {
 		Element content = doc.createElement("content");
 		content.appendChild(doc.createTextNode(msg.content));
 		post.appendChild(content);
-		
-		Element num_of_registered = doc.createElement("num_of_registered");
-		num_of_registered.appendChild(doc.createTextNode(Integer.toString(msg.nSubs)));
-		post.appendChild(num_of_registered);
+	}
+	
+	private void DOMValidateDTD(){
+		try{
+			  DocumentBuilderFactory factory = 
+			  DocumentBuilderFactory.newInstance();
+			  factory.setValidating(true);
+			  DocumentBuilder builder = factory.newDocumentBuilder();
+			  builder.setErrorHandler(new org.xml.sax.ErrorHandler() {
+			  //Ignore the fatal errors
+			  public void fatalError(SAXParseException exception)
+			   throws SAXException { }
+			  //Validation errors 
+			  public void error(SAXParseException e)
+			  throws SAXParseException {
+			  System.out.println("Error at " +e.getLineNumber() + " line.");
+			  System.out.println(e.getMessage());
+			  System.exit(0);
+			  }
+			  //Show warnings
+			  public void warning(SAXParseException err)
+			  throws SAXParseException{
+			  System.out.println(err.getMessage());
+			  System.exit(0);
+			  }
+			  });
+			  Document xmlDocument = builder.parse(
+			   new FileInputStream("Employeexy.xml"));
+			  DOMSource source = new DOMSource(xmlDocument);
+			  StreamResult result = new StreamResult(System.out);
+			  TransformerFactory tf = TransformerFactory.newInstance();
+			  Transformer transformer = tf.newTransformer();
+			  transformer.setOutputProperty(
+			  OutputKeys.DOCTYPE_SYSTEM, "Employee.dtd");
+			  transformer.transform(source, result);
+			  }
+			  catch (Exception e) {
+			  System.out.println(e.getMessage());
+			  }
 	}
 
 }

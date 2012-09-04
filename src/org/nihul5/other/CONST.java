@@ -4,6 +4,7 @@ public class CONST {
 	//public static final String HOST = "http://ibm411.cs.technion.ac.il/";
 	public static final String HOST = "http://ibm411.cs.technion.ac.il/";
 	//public static final String HOST = "http://localhost:8080/";
+
 	public static final String WEBAPP_NAME = "nihul5";
 
 

@@ -18,12 +18,105 @@
 
 <script>
 var markerCluster;
+var markersToAdd = new Array();
+var markersOnMap = new Array();
+/* var info;    // global InfoWindow object
+
+function multiChoice(mc) {
+     var cluster = mc.clusters_;
+     // if more than 1 point shares the same lat/long
+     // the size of the cluster array will be 1 AND
+     // the number of markers in the cluster will be > 1
+     // REMEMBER: maxZoom was already reached and we can't zoom in anymore
+     
+     if (cluster.length == 1 && cluster[0].markers_.length > 1)
+     {
+          var markers = cluster[0].markers_;
+          var html = '';
+       html += '<div id="infoWin">';
+       html += '<h3>'+markers.length+' properties at this location:</h3>';
+       html += '<div class="tab_content">';
+       html += '<ul class="addrlist">';
+       for (var i=0; i < markers.length; i++)
+       {
+      html += '<li><a id="p' + markers[i].getTitle() + '" href="javascript:;" rel="'+i+'">' + markers[i].getTitle() + '</a></li>';
+       }
+       html += '</ul>';
+       html += '</div>';
+       html += '</div>';
+
+          // I'm re-using the same global InfoWindow object here
+       //info.close();
+       $('#infoWin').remove();
+       $(html).appendTo('body');
+
+      info.setContent(document.getElementById('infoWin'));
+      info.open(map, markers[0]);
+          // bind a click event to the list items to popup an InfoWindow
+       $('ul.addrlist li').click(function() {
+              var p = $(this).find("a").attr("rel");
+       return infopop(markers[p]);
+       }); 
+          return false;
+     }
+
+     return true;
+} */
+
+function multiChoice(clickedCluster) {
+	//console.log(clickedCluster.getMarkers().length);
+	if (clickedCluster.getMarkers().length > 1){
+		var markers = clickedCluster.getMarkers();
+		for (var i=0; i < markers.length; i++){
+			//console.log(markers[i].getTitle());
+			// do something creative!
+		}
+		
+		return false;
+	}
+	return true;
+}
+
+function getNewMarkers(latitude, longtitude, radius){
+    $.post('/<%=CONST.WEBAPP_NAME%>/message/search',
+			{<%=CONST.MSG_LATITUDE%>: latitude, <%=CONST.MSG_LONGITUDE%>: longtitude, 
+				<%=CONST.RADIUS%>: (radius/1000.0), <%=CONST.IS_JSON%>: "true"}, function(response) {
+					var msgArr = response.result;
+					
+					//if (msgArr.length == 0)
+					//	console.log("no such messages");	
+					for (var i = 0; i < msgArr.length; i++) {
+						//console.log(msgArr[i].lat + ' ' + msgArr[i].lng + ' ' + msgArr[i].id);
+						var msgId = msgArr[i].id;
+						if (markersOnMap[msgId] != true){ 
+							var position = new google.maps.LatLng(msgArr[i].lat, msgArr[i].lng);
+							var marker = new google.maps.Marker({ position: position });
+							marker.setTitle(msgId.toString());
+							
+							markersToAdd.push(marker);
+							markersOnMap[msgId] = true;
+							addMarkerListener(marker);
+						}
+					}
+					/*for (var i = 0; i < markersToAdd.length; i++) {
+						console.log(markersToAdd[i]);
+					}*/
+					markerCluster.addMarkers(markersToAdd); //add the markers to 
+					//markerCluster.resetViewport();
+					markersToAdd.splice(0, markersToAdd.length); //delete the array
+	});
+}
 
 $(document).ready(function(){
 	
 	markerCluster = new MarkerClusterer(map);
-	var markersToAdd = new Array();
-	var markersOnMap = new Array();
+	
+	//{ maxZoom: 18 }
+	//markerCluster.onClick = function() { return multiChoice(markerCluster); }
+	// onClick OVERRIDE
+	markerCluster.onClick = function(clickedClusterIcon) { 
+  		return multiChoice(clickedClusterIcon.cluster_); 
+	};
 	
 	google.maps.event.addListener(map, 'idle', function() {
     	var bounds = this.getBounds();
@@ -36,52 +129,31 @@ $(document).ready(function(){
         var distance2 = google.maps.geometry.spherical.computeDistanceBetween(center, southWest);
         var radius = (distance1>distance2) ? distance1 : distance2;
         
-        $.post('/<%=CONST.WEBAPP_NAME%>/message/search',
-				{<%=CONST.MSG_LATITUDE%>: latitude, <%=CONST.MSG_LONGITUDE%>: longtitude, 
-					<%=CONST.RADIUS%>: (radius/1000.0), <%=CONST.IS_JSON%>: "true"}, function(response) {
-						var msgArr = response.result;
-						
-						if (msgArr.length == 0)
-							console.log("no such messages");	
-						for (var i = 0; i < msgArr.length; i++) {
-							//console.log(msgArr[i].lat + ' ' + msgArr[i].lng + ' ' + msgArr[i].id);
-							var msgId = msgArr[i].id;
-							if (markersOnMap[msgId] != true){ 
-								var position = new google.maps.LatLng(msgArr[i].lat, msgArr[i].lng);
-								var marker = new google.maps.Marker({ position: position });
-								marker.setTitle(msgId.toString());
-								
-								markersToAdd.push(marker);
-								markersOnMap[msgId] = true;
-								addMarkerListener(marker);
-							}
-						}
-						/*for (var i = 0; i < markersToAdd.length; i++) {
-							console.log(markersToAdd[i]);
-						}*/
-						markerCluster.addMarkers(markersToAdd); //add the markers to 
-						markersToAdd.splice(0, markersToAdd.length); //delete the array
-		});
+        getNewMarkers(latitude, longtitude, radius);
+
 	});
 });
 
+function getMessage(marker){
+	var messageId = marker.getTitle();
+	$.get('/<%=CONST.WEBAPP_NAME%>/GetMessage',
+			{<%=CONST.MSG_ID%>: messageId}, function(response) {
+				$('#content').replaceWith(response);
+					var $data=$(response);
+				var result = $data.find('#message_status').text();
+				if (result == 'Deleted'){
+					//console.log(marker.getTitle());
+					google.maps.event.clearInstanceListeners(marker);
+					markerCluster.removeMarker(marker);
+				}
+	});
+}
+
 function addMarkerListener(marker){
 	google.maps.event.addListener(marker, 'click', function() {
-		var messageId = marker.getTitle();
-		$.get('/<%=CONST.WEBAPP_NAME%>/GetMessage',
-				{<%=CONST.MSG_ID%>: messageId}, function(response) {
-					
-					$('#content').replaceWith(response);
-								
- 					var $data=$(response);
-					var result = $data.find('#message_status').text();
-					if (result == 'Deleted'){
-						console.log(marker.getTitle());
-						google.maps.event.clearInstanceListeners(marker);
-						markerCluster.removeMarker(marker);
-					}
-		});
-	});	
+
+		getMessage(marker);
+	});
 }
 
 	//apply kml layer to map
