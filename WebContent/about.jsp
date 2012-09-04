@@ -16,8 +16,7 @@
 	<%@ include file="/jsp/menu.jsp"%>
 	<div id="container">
 		<div id="center_box">
-
-			Made by Alex & Grisha
+			Made by Grisha & Alex
 		</div>
 	</div>
 

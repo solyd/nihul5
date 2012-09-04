@@ -26,7 +26,7 @@
 <%} else if (msgs.size() == 0){ %>
 <div id="center_box">No Results</div>
 <%} else { %>
-<div id="center_box">
+<div class="center_box_colorless">
 <div id="msg_container">
 	<h3>Search Results</h3>
 	<div class="page_navigation"></div>

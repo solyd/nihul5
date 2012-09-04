@@ -213,7 +213,7 @@
 	<%
 		if (princ != null && princ.getName().equals(message.username)) {
 	%>
-		<input id="delete_message" type="button" value="Delete Message" class="right" align="middle" />
+		<input id="delete_message" type="button" value="Delete Message"/>
 	<%
 		}
 	%>

@@ -50,6 +50,8 @@ public class Initializer implements ServletContextListener {
     	initDB(event);
     	if (!CONST.DEBUG_MODE)
     		registerSearchWS();
+    	
+    	logger.info("init complete");    	
     }
 
 	/**
@@ -105,7 +107,6 @@ public class Initializer implements ServletContextListener {
     		logger.error("Failed to register search web service with the registration service", e);
     	}
 
-    	logger.info("init complete");    	
     }
     
     private void unregisterSearchWS() {

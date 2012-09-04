@@ -61,9 +61,9 @@
 				<%if (regEndpoints.length > 0) { %>
 				
 				</br>
-				<div id="endpoints_container">
+				<div id="endpoints_container" class="center">
 					<h3>Registered search web services</h3>
-					<div class="page_navigation"></div>
+					<div class="page_navigation" ></div>
 					<div class="navlist">
 					<ul class="list_content">
 						<%
