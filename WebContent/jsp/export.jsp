@@ -17,6 +17,33 @@
 		$('#xml_button').click(function() {
 		    window.location.href = '/<%=CONST.WEBAPP_NAME %>/XMLExport';
 		});
+		
+		$('#post_button').click(function() {
+			window.location.href ='/<%=CONST.WEBAPP_NAME %>/KMLExport/<%=CONST.KML_EXPORT_POST%>';
+			
+<%-- 			$.get('/<%=CONST.WEBAPP_NAME %>/KMLExport/<%=CONST.KML_EXPORT_POST%>', {}, --%>
+// 			function(response) {
+// 				var kmlLayer = new google.maps.KmlLayer(response);
+// 				kmlLayer.setMap(map);
+// 			});
+		});
+		
+		$('#event_button').click(function() {
+			window.location.href ='/<%=CONST.WEBAPP_NAME %>/KMLExport/<%=CONST.KML_EXPORT_EVENT%>';
+		});
+		
+		$('#path_button').click(function() {
+			window.location.href ='/<%=CONST.WEBAPP_NAME %>/KMLExport/<%=CONST.KML_EXPORT_PATH%>';
+		});
+		
+	 	$('#display_kml').click(function(){
+			$.get('/<%=CONST.WEBAPP_NAME%>/CreateKml', {},
+			function(response) {
+				var kmlLayer = new google.maps.KmlLayer(response);
+				kmlLayer.setMap(map);
+			});
+		});
+	 	
 	});
 </script>
 
@@ -31,8 +58,8 @@
 		<div id="content" class="right" align="center">
 			<div class="center_box_colorless">
 				<button class="cool_button" id="xml_button" type="button">Export all messages to XML</button>
-				<button class="cool_button" id="posts_button" type="button">Export Posts to KML (and show on map)</button>
-				<button class="cool_button" id="events_button" type="button">Export Events to KML (and show on map)</button>
+				<button class="cool_button" id="post_button" type="button">Export Posts to KML (and show on map)</button>
+				<button class="cool_button" id="event_button" type="button">Export Events to KML (and show on map)</button>
 				<button class="cool_button" id="path_button" type="button">Export Path to KML (and show on map)</button>
 			</div>
 		</div>
