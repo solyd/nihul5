@@ -128,7 +128,7 @@
 
 			
 			<%} else { %>
-			<div id="center_box">
+			<div id="center_box_padless">
 				No created messages for this user
 			</div>
 			<%} %>
@@ -153,7 +153,7 @@
 			
 			
 			<%} else { %>
-			<div id="center_box">
+			<div id="center_box_padless">
 				This user hasn't registered to any events yet.
 			</div>
 			<%} %>			

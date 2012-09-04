@@ -12,39 +12,59 @@
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/jquery.js"></script>
 <script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/map.js"></script>
 
+<script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/geoxml3.js"></script>
+<script type="text/javascript" src="/<%=CONST.WEBAPP_NAME%>/scripts/ProjectOverlay.js"></script>
+
+
+
 <script type="text/javascript">
+
+	var toremove= '<?xml version="1.0" encoding="UTF-8"?>';
+	var lastParser = null;
+
 	$(document).ready(function() {
 		$('#xml_button').click(function() {
 		    window.location.href = '/<%=CONST.WEBAPP_NAME %>/XMLExport';
 		});
 		
-		$('#post_button').click(function() {
+		$('#export_post_button').click(function() {
 			window.location.href ='/<%=CONST.WEBAPP_NAME %>/KMLExport/<%=CONST.KML_EXPORT_POST%>';
-			
-<%-- 			$.get('/<%=CONST.WEBAPP_NAME %>/KMLExport/<%=CONST.KML_EXPORT_POST%>', {}, --%>
-// 			function(response) {
-// 				var kmlLayer = new google.maps.KmlLayer(response);
-// 				kmlLayer.setMap(map);
-// 			});
 		});
 		
-		$('#event_button').click(function() {
+		$('#export_event_button').click(function() {
 			window.location.href ='/<%=CONST.WEBAPP_NAME %>/KMLExport/<%=CONST.KML_EXPORT_EVENT%>';
 		});
 		
-		$('#path_button').click(function() {
+		$('#export_path_button').click(function() {
 			window.location.href ='/<%=CONST.WEBAPP_NAME %>/KMLExport/<%=CONST.KML_EXPORT_PATH%>';
 		});
 		
-	 	$('#display_kml').click(function(){
-			$.get('/<%=CONST.WEBAPP_NAME%>/CreateKml', {},
-			function(response) {
-				var kmlLayer = new google.maps.KmlLayer(response);
-				kmlLayer.setMap(map);
-			});
-		});
-	 	
+
+		$('#render_kml').click(function(event) {
+			var files = document.getElementById('files').files;
+	    	if (!files.length) {
+    	  		alert('Please select a file!');
+      			return;
+    		}
+	
+		    var file = files[0];
+		    var reader = new FileReader();
+
+		    // If we use onloadend, we need to check the readyState.
+		    reader.onloadend = function(evt) {
+		      	if (evt.target.readyState == FileReader.DONE) { // DONE == 2
+		      		var kmlstr = evt.target.result.replace(toremove, '');
+		      		if (lastParser != null) 
+		      			lastParser.hideDocument();
+		      		lastParser = new geoXML3.parser({map: map});
+					lastParser.parseKmlString(kmlstr);
+		      	}
+	    	};
+
+		    reader.readAsBinaryString(file);
+		 });
 	});
+
 </script>
 
 
@@ -58,9 +78,16 @@
 		<div id="content" class="right" align="center">
 			<div class="center_box_colorless">
 				<button class="cool_button" id="xml_button" type="button">Export all messages to XML</button>
-				<button class="cool_button" id="post_button" type="button">Export Posts to KML (and show on map)</button>
-				<button class="cool_button" id="event_button" type="button">Export Events to KML (and show on map)</button>
-				<button class="cool_button" id="path_button" type="button">Export Path to KML (and show on map)</button>
+			</div>
+			<div class="center_box_colorless">
+				<button class="cool_button" id="export_post_button" type="button">Export Posts to KML</button>
+				<button class="cool_button" id="export_event_button" type="button">Export Events to KML</button>
+				<button class="cool_button" id="export_path_button" type="button">Export Path to KML</button>
+			</div>
+			
+			<div class="center_box_colorless">
+				<input type="file" id="files" name="file" />
+				<input type="button" class="cool_button2" id="render_kml" value="Render KML on map"/>
 			</div>
 		</div>
 	</div>
