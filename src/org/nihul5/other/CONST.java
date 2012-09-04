@@ -11,7 +11,7 @@ public class CONST {
 	
 	public static final Integer WEBSERVICE_TIMEOUT = 10 * 1000; // milliseconds
 	
-	public static final boolean DEBUG_MODE = false;
+	public static final boolean DEBUG_MODE = true;
 	public static final boolean RESET_DB = false;
 
 	public static final double EARTH_RADIUS = 6371.01;
@@ -91,4 +91,6 @@ public class CONST {
 	public static final String SEARCH_KEYWORDS = "SEARCH_KEYWORDS";
 	public static final String SEARCH_LOCATION = "SEARCH_LOCATION";
 	public static final String KEYWORDS = "KEYWORDS";
+	
+	public static final String DTD_FILE_NAME = "app306932039.dtd";
 }

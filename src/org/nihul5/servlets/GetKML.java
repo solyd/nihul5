@@ -1,34 +1,30 @@
 package org.nihul5.servlets;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.Date;
+import java.util.List;
+
+import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import java.io.File;
-import java.sql.Date;
-import java.util.List;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import java.io.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import javax.xml.parsers.*;
-import javax.xml.validation.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.dom.DOMSource; 
+import javax.xml.transform.stream.StreamSource; 
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
@@ -37,10 +33,12 @@ import org.nihul5.other.Consensus;
 import org.nihul5.other.Message;
 import org.nihul5.other.Message.MessageType;
 import org.nihul5.other.Storage;
-import org.nihul5.other.User;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
+
 
 /**
  * Servlet implementation class GetKML
@@ -151,6 +149,7 @@ public class GetKML extends HttpServlet {
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, CONST.HOST + "/" + CONST.WEBAPP_NAME + "/" + CONST.DTD_FILE_NAME);
 
 			DOMSource source = new DOMSource(doc);
 			StreamResult result = new StreamResult(new File("C:\\file.xml"));
@@ -159,6 +158,32 @@ public class GetKML extends HttpServlet {
 			//StreamResult result = new StreamResult(System.out);
 	 
 			transformer.transform(source, result);
+			
+			
+			
+/*			File xmlFile = new File(args[0]);
+			File xsltFile = new File(args[1]);
+			 
+			    javax.xml.transform.Source xmlSource =
+			        new javax.xml.transform.stream.StreamSource(xmlFile);
+			    javax.xml.transform.Source xsltSource =
+			        new javax.xml.transform.stream.StreamSource(xsltFile);
+			    javax.xml.transform.Result result =
+			        new javax.xml.transform.stream.StreamResult(System.out);
+			 
+			    // create an instance of TransformerFactory
+			    javax.xml.transform.TransformerFactory transFact =
+			        javax.xml.transform.TransformerFactory.newInstance( );
+			 
+			    javax.xml.transform.Transformer trans =
+			        transFact.newTransformer(xsltSource);
+			 
+			    trans.transform(xmlSource, result);*/
+			      
+			    
+			    
+			    
+
 	 
 			System.out.println("File saved!");
 	 
