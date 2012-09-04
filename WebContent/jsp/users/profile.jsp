@@ -100,7 +100,7 @@
 					if (user != null && princ != null
 								&& user.username.equals(princ.getName())) {
 				%>
-				<button id="delete_button" type="button" onClick="deleteProfile('<%=user.username%>')">Delete Profile</button>
+				<button id="delete_button" type="button" class="cool_button2" onClick="deleteProfile('<%=user.username%>')">Delete Profile</button>
 				<%
 					}
 				%>

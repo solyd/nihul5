@@ -95,7 +95,9 @@
 	function onLocationSearch() {
 		$.post('/<%=CONST.WEBAPP_NAME%>/message/search',
 				$('#location_form').serialize(), function(response) {
+			$('#search_results').hide();
 			$('#search_results').html(response);
+			$("#search_results").animate({ height: 'show', opacity: 'show' }, 'slow');
 		});
 	}
 </script>
@@ -137,8 +139,7 @@
 
 					<tr>
 						<td></td>
-						<td><input type="submit" name="Submit"
-							value="Search by location" /></td>
+						<td><input class="cool_button2" type="submit" name="Submit" value="Search" /></td>
 					</tr>
 				</table>
 			</form>

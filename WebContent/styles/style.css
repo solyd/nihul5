@@ -90,6 +90,11 @@ textarea {
 	height: 95%;
 }
 
+.padding {
+	padding: 10px;
+	clear: both;
+}
+
 #map_canvas {
 	width: 60%;
 	height: 100%;
@@ -172,7 +177,7 @@ html>body #menu li a {
 	margin: 0 auto;
 	padding:15px;
 	border: 1px dashed #333;
-	background-color: #FEF5D9;
+	background-color: #E7E7E7;
 	
 		  position:relative;
   top:5%;
@@ -222,6 +227,20 @@ html>body #menu li a {
 	height: 100%;
 	margin: 0px;
 	padding: 0px;
+}
+
+.even_left {
+	float: left;
+	width: 50%;
+	height: 100%;
+	margin: 0px;
+}
+
+.even_right {
+	float: right;
+	width: 50%;
+	height: 100%;
+	margin: 0px;
 }
 
 div.time-picker {
@@ -337,12 +356,23 @@ div.time-picker li.selected {
 	margin-right: 10px;
 }
 
+.simple_list {
+	width: 100%;
+	font-size: 15px;
+}
+
+.simple_list ul {
+	list-style: square;
+}
+
 #delete_message {
 	float: right;
 }
 
 
 .cool_button {
+	width: 100%;
+	
 	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
 	box-shadow:inset 0px 1px 0px 0px #ffffff;
@@ -368,6 +398,36 @@ div.time-picker li.selected {
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
 	background-color:#dfdfdf;
 }.cool_button:active {
+	position:relative;
+	top:1px;
+}
+
+.cool_button2 {
+	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #f6f6f6) );
+	background:-moz-linear-gradient( center top, #ffffff 5%, #f6f6f6 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f6f6f6');
+	background-color:#ffffff;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	color:#666666;
+	font-family:arial;
+	font-size:12px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #ffffff;
+}.cool_button2:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f6f6f6), color-stop(1, #ffffff) );
+	background:-moz-linear-gradient( center top, #f6f6f6 5%, #ffffff 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f6f6f6', endColorstr='#ffffff');
+	background-color:#f6f6f6;
+}.cool_button2:active {
 	position:relative;
 	top:1px;
 }

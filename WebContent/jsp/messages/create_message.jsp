@@ -74,8 +74,8 @@
 					<tr>
 						<td id="title" colspan=2 align="center">
 							<h2 id="create_head">New Post</h2>
-							<button id="messageType" type="button">Post</button>
-							<button id="eventType" type="button">Event</button>
+							<button id="messageType" class="cool_button2"  type="button">Post</button>
+							<button id="eventType" class="cool_button2"  type="button">Event</button>
 						</td>
 					</tr>
 					<tr>
@@ -113,7 +113,7 @@
 						<td><textarea id="consensus_text" rows="10" cols="10"></textarea></td>
 					</tr>
 					<tr id="consensus2" style="display: none">
-						<td><input id="add_row" type="button" value="Add Consensus" /></td>
+						<td><input id="add_row" type="button" class="cool_button2" value="Add Consensus" /></td>
     					<td></td>
 					</tr>
 					<tr id="consensus3" style="display: none">
@@ -126,7 +126,7 @@
 					<tr>
 						<td></td>
 						<td>
-							<input id="submit_button" type="submit" name="Submit" value="Create" />
+							<input id="submit_button" class="cool_button2" type="submit" name="Submit" value="Create" />
 							<div id="try_again"></div>
 						</td>
 					</tr>

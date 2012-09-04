@@ -128,7 +128,7 @@ $(document).ready(function(){
   		return multiChoice(clickedClusterIcon.cluster_); 
 	};
 	
-	google.maps.event.addListener(map, 'idle', function(){
+	google.maps.event.addListener(map, 'idle', function() {
     	var bounds = this.getBounds();
     	var center = bounds.getCenter();
     	var latitude = bounds.getCenter().lat();
@@ -161,6 +161,7 @@ function getMessage(marker){
 
 function addMarkerListener(marker){
 	google.maps.event.addListener(marker, 'click', function() {
+
 		getMessage(marker);
 	});
 }

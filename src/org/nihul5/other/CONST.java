@@ -2,8 +2,9 @@ package org.nihul5.other;
 
 public class CONST {
 	//public static final String HOST = "http://ibm411.cs.technion.ac.il/";
-	//public static final String HOST = "http://ibm411.cs.technion.ac.il/";
+//	public static final String HOST = "http://ibm411.cs.technion.ac.il/";
 	public static final String HOST = "http://localhost:8080/";
+
 	public static final String WEBAPP_NAME = "nihul5";
 
 
@@ -92,5 +93,15 @@ public class CONST {
 	public static final String SEARCH_LOCATION = "SEARCH_LOCATION";
 	public static final String KEYWORDS = "KEYWORDS";
 	
+
 	public static final String DTD_FILE_NAME = "app306932039.dtd";
+	
+	public static final String KML_EXPORT_TYPE = "KML_EXPORT_TYPE";
+	public static final String KML_EXPORT_POST = "KML_EXPORT_POST";
+	public static final String KML_EXPORT_EVENT = "KML_EXPORT_EVENT";
+	public static final String KML_EXPORT_PATH = "KML_EXPORT_PATH";
+
+	public static final String POST_XSL_PATH = "WEB-INF/xsl/post.xsl";
+	public static final String EVENT_XSL_PATH = "WEB-INF/xsl/event.xsl";
+	public static final String MESSAGES_XSL_PATH = "WEB-INF/xsl/messages.xsl";
 }
