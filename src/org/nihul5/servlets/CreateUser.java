@@ -60,8 +60,8 @@ public class CreateUser extends HttpServlet {
 		String email = request.getParameter(CONST.EMAIL);
 		
 		if (username == null || password == null || 
-				Utility.verifyAlphaNumeric(username, CONST.MAX_USERNAME_LEN) ||
-				Utility.verifyAlphaNumeric(password, CONST.MAX_PASSWORD_LEN)) {
+				!Utility.verifyAlphaNumeric(username, CONST.MAX_USERNAME_LEN) ||
+				!Utility.verifyAlphaNumeric(password, CONST.MAX_PASSWORD_LEN)) {
 
 			request.setAttribute(CONST.REDIRECT_URL, "jsp/register.jsp");
 			request.setAttribute(CONST.MSGBOX_TXT, "Registration has failed. You have entered invalid username/password.");
